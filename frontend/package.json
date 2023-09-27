@@ -12,6 +12,7 @@
     "@mantine/code-highlight": "^7.0.0",
     "@mantine/core": "^7.0.0",
     "@mantine/dates": "^7.0.0",
+    "@mantine/ds": "^7.0.2",
     "@mantine/form": "^7.0.0",
     "@mantine/hooks": "^7.0.0",
     "@mantine/modals": "^7.0.0",
