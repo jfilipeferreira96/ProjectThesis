@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import "@mantine/core/styles.css";
-import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import Theme from "./theme";
 
 export const metadata: Metadata = {
@@ -13,7 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Theme>{children}</Theme>
+        <Theme>
+          {children}
+        </Theme>
       </body>
     </html>
   );

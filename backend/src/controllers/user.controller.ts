@@ -20,8 +20,7 @@ class UserController {
           _id: user._id,
           username: user.username,
           email: user.email,
-          avatarImage: user.avatarImage,
-          isAvatarImageSet: user.isAvatarImageSet,
+          avatar: user.avatar
         },
       });
     } catch (ex) {
@@ -51,9 +50,10 @@ class UserController {
         user: {
           _id: user._id,
           username: user.username,
+          fullname: user.fullname,
+          numberid: user.numberid,
           email: user.email,
-          avatarImage: user.avatarImage,
-          isAvatarImageSet: user.isAvatarImageSet,
+          avatar: user.avatar
         },
       });
     } catch (ex) {
@@ -66,35 +66,11 @@ class UserController {
       const users = await User.find({ _id: { $ne: req.params.id } }).select([
         "email",
         "username",
-        "avatarImage",
+        "avatar",
         "_id",
       ]);
 
       return res.json(users);
-    } catch (ex) {
-      next(ex);
-    }
-  }
-
-  static async setAvatar(req: Request, res: Response, next: NextFunction) {
-    try {
-      const userId = req.params.id;
-      const avatarImage = req.body.image;
-
-      const userData = await User.findByIdAndUpdate(
-        userId,
-        { isAvatarImageSet: true, avatarImage },
-        { new: true }
-      );
-
-      if (!userData) {
-        return res.status(404).json({ msg: "User not found" });
-      }
-
-      return res.json({
-        isSet: userData.isAvatarImageSet,
-        image: userData.avatarImage,
-      });
     } catch (ex) {
       next(ex);
     }
@@ -105,9 +81,6 @@ class UserController {
       if (!req.params.id) {
         return res.json({ msg: "User id is required " });
       }
-
-      // Note que 'onlineUsers' ainda não está definido, você deve substituir isso pela sua lógica real.
-      // onlineUsers.delete(req.params.id);
 
       return res.status(200).send({ status: true });
     } catch (ex) {

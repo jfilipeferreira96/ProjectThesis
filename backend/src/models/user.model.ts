@@ -3,10 +3,11 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 interface IUser extends Document
 {
   username: string;
+  fullname: string;
   email: string;
   password: string;
-  isAvatarImageSet: boolean;
-  avatarImage: string;
+  avatar: string;
+  numberid?: number | string;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -16,6 +17,12 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     min: 3,
     max: 20,
     unique: true,
+  },
+  fullname: {
+    type: String,
+    required: true,
+    min: 3,
+    max: 60,
   },
   email: {
     type: String,
@@ -28,13 +35,9 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     required: true,
     min: 6,
   },
-  isAvatarImageSet: {
-    type: Boolean,
-    default: false,
-  },
-  avatarImage: {
+  avatar: {
     type: String,
-    default: "",
+    required: true,
   },
 });
 

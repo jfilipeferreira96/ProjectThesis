@@ -1,16 +1,17 @@
 // AuthService.ts
 import api from "@/config/api";
 import { loginRoute, registerRoute } from "@/config/routes";
+import { notifications } from '@mantine/notifications';
 
-interface LoginData
+export interface LoginData
 {
-  username: string;
+  email: string;
   password: string;
 }
 
 interface RegisterData
 {
-  username: string;
+  email: string;
   fullname: string;
   password: string;
   avatar: string;
