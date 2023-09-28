@@ -1,14 +1,23 @@
 "use client";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm } from '@mantine/form';
 import { useRouter } from "next/navigation";
 
-export default function SignIn() {
+export default function SignIn(){
   const router = useRouter();
+
+  const form = useForm({
+    initialValues: {
+      email: '',
+    },
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    },
+  });
 
   return (
     <Container size={420} my={200}>
-      <form>
+      <form onSubmit={form.onSubmit((values) => console.log(values))}>
         <Title ta="center">Welcome back!</Title>
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?
@@ -18,15 +27,14 @@ export default function SignIn() {
         </Text>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Email" placeholder="you@gmail.com" required />
+          <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps('email')} />
           <PasswordInput label="Password" placeholder="Your password" required mt="md" />
-          <Group justify="space-between" mt="lg">
-            <Checkbox label="Remember me" />
+          <Group justify={'flex-end'} mt="lg">
             <Anchor component="button" size="sm">
               Forgot password?
             </Anchor>
           </Group>
-          <Button fullWidth mt="xl">
+          <Button fullWidth mt="xl" type="submit">
             Sign in
           </Button>
         </Paper>
