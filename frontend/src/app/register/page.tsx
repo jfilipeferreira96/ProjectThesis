@@ -1,49 +1,60 @@
 "use client";
+import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
 import { register, RegisterData } from "@/services/auth.service";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button } from "@mantine/core";
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Register() {
   const router = useRouter();
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
-   const form = useForm({
-     initialValues: {
-       fullname: "",
-       email: "",
-       studentId: "", 
-       password: "",
-       avatar: "", 
-     },
-     validate: {
-       fullname: (value) => (value.trim() !== "" ? null : "Please enter your name"),
-       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email address"),
-       password: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
-     },
-   });
+  const form = useForm({
+    initialValues: {
+      fullname: "",
+      email: "",
+      studentId: "",
+      password: "",
+      avatar: "",
+    },
+    validate: {
+      fullname: (value) => (value.trim() !== "" ? null : "Please enter your name"),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email address"),
+      password: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
+      avatar: (value) => (value.length > 1 ? null : "Please select an avatar"),
+    },
+  });
   
-    const onSubmitHandler = useCallback(async (data: RegisterData) => {
-      try {
-        const response = await register(data);
-        console.log("Login bem-sucedido:", response);
-        notifications.show({
-          title: "You've been compromised",
-          message: "Leave the building immediately",
-          color: "green",
-        });
-      } catch (error) {
-        console.error("Erro ao fazer login:", error);
-        notifications.show({
-          title: "You've been compromised",
-          message: "Leave the building immediately",
-          color: "red",
-        });
-      }
-    }, []);
-  
+  useEffect(() => {
+    if (selectedAvatar) {
+      form.setValues({
+        avatar: selectedAvatar,
+      });
+    }
+  }, [selectedAvatar]);
+
+  const onSubmitHandler = useCallback(async (data: RegisterData) => {
+    try {
+      const response = await register(data);
+      console.log("Login bem-sucedido:", response);
+      notifications.show({
+        title: "You've been compromised",
+        message: "Leave the building immediately",
+        color: "green",
+      });
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      notifications.show({
+        title: "You've been compromised",
+        message: "Leave the building immediately",
+        color: "red",
+      });
+    }
+  }, []);
+
   return (
     <Container size="responsive">
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
@@ -62,12 +73,10 @@ export default function Register() {
             <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
             <TextInput label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
             <PasswordInput label="Password" placeholder="Your password" required {...form.getInputProps("password")} />
-            <div>
-              <label htmlFor="avatar" style={{ display: "block", marginBottom: "8px" }}>
-                Avatar
-              </label>
-              <input type="file" id="avatar" accept="image/*" />
-            </div>
+
+            <Input.Wrapper label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
+              <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
+            </Input.Wrapper>
             <Button fullWidth mt="xl" type="submit">
               Register
             </Button>

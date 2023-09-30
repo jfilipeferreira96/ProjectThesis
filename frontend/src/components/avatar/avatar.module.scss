@@ -1,0 +1,21 @@
+.avatars {
+  justify-content: center;
+  display: flex;
+}
+
+.avatar {
+  border: 0.4rem solid transparent;
+  padding: 0.2rem;
+  border-radius: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s ease-in-out;
+  img {
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+  }
+}
+.selected {
+  border: 0.4rem solid var(--mantine-primary-color-filled);
+}
