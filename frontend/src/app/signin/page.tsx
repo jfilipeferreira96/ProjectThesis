@@ -5,6 +5,7 @@ import { useForm } from '@mantine/form';
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { notifications } from '@mantine/notifications';
+import { routes } from "@/config/routes";
 
 export default function SignIn(){
   const router = useRouter();
@@ -44,29 +45,31 @@ export default function SignIn(){
   });
 
   return (
-    <Container size={420} my={200}>
-      <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-        <Title ta="center">Welcome back!</Title>
-        <Text c="dimmed" size="sm" ta="center" mt={5}>
-          Do not have an account yet?
-          <Anchor size="sm" component="button" ml={2} onClick={() => router.push("/register")}>
-            Create account
-          </Anchor>
-        </Text>
+    <Container size="responsive">
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+            <Title ta="center">Welcome back!</Title>
+            <Text c="dimmed" size="sm" ta="center" mt={5}>
+              Do not have an account yet?
+              <Anchor size="sm" component="button" ml={2} onClick={() => router.push(routes.register.url)}>
+                Create account
+              </Anchor>
+            </Text>
 
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps('email')} />
-          <PasswordInput label="Password" placeholder="Your password" required mt="md" {...form.getInputProps('password')} />
-          <Group justify={'flex-end'} mt="lg">
-            <Anchor component="button" size="sm">
-              Forgot password?
-            </Anchor>
-          </Group>
-          <Button fullWidth mt="xl" type="submit">
-            Sign in
-          </Button>
-        </Paper>
-      </form>
+            <Paper withBorder shadow="md" p={30} mt={30} radius="md" w={500}>
+              <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
+              <PasswordInput label="Password" placeholder="Your password" required mt="md" {...form.getInputProps("password")} />
+              <Group justify={"flex-end"} mt="lg">
+                <Anchor component="button" size="sm">
+                  Forgot password?
+                </Anchor>
+              </Group>
+              <Button fullWidth mt="xl" type="submit">
+                Sign in
+              </Button>
+            </Paper>
+          </form>
+      </div>
     </Container>
   );
 }

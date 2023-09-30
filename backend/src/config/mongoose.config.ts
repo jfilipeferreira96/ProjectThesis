@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import config from "./db.config";
+import Logger from "../utils/Logger";
 
 mongoose.Promise = global.Promise;
 mongoose.set("strictQuery", true);
@@ -8,8 +9,8 @@ mongoose.set("strictQuery", true);
 mongoose
   .connect(config.local.localUrlDatabase)
   .then(() => {
-    console.log("Connected to Database");
+    Logger.info("Connected to Database");
   })
   .catch((err) => {
-    console.log("Not Connected to Database ERROR! ", err);
+    Logger.error(`Not Connected to Database ERROR! ${err}`);
   });

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { host } from './routes';
+import { endpoints } from './routes';
 import qs from 'qs';
 
 const paramsSerializer = (params: any) =>{
@@ -7,7 +7,7 @@ const paramsSerializer = (params: any) =>{
 };
 
 const api = axios.create({
-  baseURL: host, 
+  baseURL: endpoints.host, 
   withCredentials: true, 
   headers: {
     'Content-Type': 'application/json',

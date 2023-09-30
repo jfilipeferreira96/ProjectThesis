@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "nodemon --exec ts-node-dev src/server.ts",
+    "dev": "nodemon src/server.ts",
+    "teste": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
     "start": "node dist/server.js"
   },
   "keywords": [],

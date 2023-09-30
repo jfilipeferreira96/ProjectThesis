@@ -1,7 +1,6 @@
 // AuthService.ts
 import api from "@/config/api";
-import { loginRoute, registerRoute } from "@/config/routes";
-import { notifications } from '@mantine/notifications';
+import { endpoints } from "@/config/routes";
 
 export interface LoginData
 {
@@ -9,19 +8,19 @@ export interface LoginData
   password: string;
 }
 
-interface RegisterData
+export interface RegisterData
 {
   email: string;
   fullname: string;
   password: string;
   avatar: string;
-  numberid?: number | string;
+  studentId?: number | string;
 }
 
 export const login = async (data: LoginData) => {
   try
   {
-    const response = await api.post(loginRoute, data);
+    const response = await api.post(endpoints.loginRoute, data);
     return response.data;
   }
   catch (error)
@@ -33,7 +32,7 @@ export const login = async (data: LoginData) => {
 export const register = async (data: RegisterData) => {
   try
   {
-    const response = await api.post(registerRoute, data);
+    const response = await api.post(endpoints.registerRoute, data);
     return response.data;
   }
   catch (error)
