@@ -13,7 +13,7 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
   const [loading, setLoading] = useState(true);
 
   const fetchAvatars = async () => {
-    setLoading(true); // Set loading to true
+    setLoading(true); 
 
     const newAvatars = [];
     for (let i = 0; i <= 4; i++) {
