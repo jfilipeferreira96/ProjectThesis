@@ -12,6 +12,7 @@
 
   @media (max-width: $mantine-breakpoint-xs) {
     flex-direction: column;
+    gap: 0.5rem;
   }
 }
 

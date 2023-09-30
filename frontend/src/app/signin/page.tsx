@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { notifications } from '@mantine/notifications';
 import { routes } from "@/config/routes";
+import styled from "styled-components";
+
+const StyledPaper = styled(Paper)`
+  width: 500px;
+  @media (max-width: 600px) {
+    width: 94vw;
+  }
+`;
 
 export default function SignIn(){
   const router = useRouter();
@@ -56,7 +64,7 @@ export default function SignIn(){
               </Anchor>
             </Text>
 
-            <Paper withBorder shadow="md" p={30} mt={30} radius="md" w={500}>
+            <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
               <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
               <PasswordInput label="Password" placeholder="Your password" required mt="md" {...form.getInputProps("password")} />
               <Group justify={"flex-end"} mt="lg">
@@ -67,7 +75,7 @@ export default function SignIn(){
               <Button fullWidth mt="xl" type="submit">
                 Sign in
               </Button>
-            </Paper>
+            </StyledPaper>
           </form>
       </div>
     </Container>

@@ -7,6 +7,14 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import styled from "styled-components";
+
+const StyledPaper = styled(Paper)`
+  width: 500px;
+  @media (max-width: 600px) {
+    width: 94vw;
+  }
+`;
 
 export default function Register() {
   const router = useRouter();
@@ -56,7 +64,7 @@ export default function Register() {
   }, []);
 
   return (
-    <Container size="responsive">
+    <Container>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
           <Title ta="center">Create an account!</Title>
@@ -68,7 +76,7 @@ export default function Register() {
             </Anchor>
           </Text>
 
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md" w={600}>
+          <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
             <TextInput label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
             <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
             <TextInput label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
@@ -80,7 +88,7 @@ export default function Register() {
             <Button fullWidth mt="xl" type="submit">
               Register
             </Button>
-          </Paper>
+          </StyledPaper>
         </form>
       </div>
     </Container>
