@@ -16,7 +16,7 @@ export default function SignIn(){
         const response = await login(data);
         console.log('Login bem-sucedido:', response);
         notifications.show({
-          title: "You've been compromised",
+          title: "Success",
           message: 'Leave the building immediately',
           color: 'green'
         })
@@ -25,8 +25,8 @@ export default function SignIn(){
       {
         console.error('Erro ao fazer login:', error);
         notifications.show({
-          title: "You've been compromised",
-          message: 'Leave the building immediately',
+          title: "Error",
+          message: 'Something went wrong',
           color: 'red',
         })
       }

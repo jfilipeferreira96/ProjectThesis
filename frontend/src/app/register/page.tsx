@@ -28,28 +28,28 @@ export default function Register() {
     },
   });
   
-/*   useEffect(() => {
+  useEffect(() => {
     if (selectedAvatar) {
       form.setValues({
         avatar: selectedAvatar,
       });
     }
   }, [selectedAvatar]);
- */
+
   const onSubmitHandler = useCallback(async (data: RegisterData) => {
     try {
       const response = await register(data);
-      console.log("Login bem-sucedido:", response);
+      console.log("Register bem-sucedido:", response);
       notifications.show({
-        title: "You've been compromised",
+        title: "Success",
         message: "Leave the building immediately",
         color: "green",
       });
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
+      console.error("Erro ao fazer register:", error);
       notifications.show({
-        title: "You've been compromised",
-        message: "Leave the building immediately",
+        title: "Error",
+        message: "Something went wrong",
         color: "red",
       });
     }
