@@ -7,7 +7,7 @@ export default function Home() {
    
   return (
     <>
-      <HeaderMenu />
+      <h1>Landing Page</h1>
     </>
   );
 }

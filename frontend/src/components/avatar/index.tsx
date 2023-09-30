@@ -4,23 +4,24 @@ import classes from "./avatar.module.scss";
 import { Loader } from "@mantine/core";
 
 type Props = {
-    setSelectedAvatar: Dispatch<SetStateAction<string | null>>;
-    selectedAvatar: string | null;
+  setSelectedAvatar: Dispatch<SetStateAction<string | null>>;
+  selectedAvatar: string | null;
 };
 
 const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
   const [avatars, setAvatars] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const fetchAvatars = async () => {
-    setLoading(true); 
-
+    setLoading(true);
     const newAvatars = [];
+   
     for (let i = 0; i <= 4; i++) {
-      const response = await fetch(`https://api.multiavatar.com/4645646/${Math.round(Math.random() * 1000)}`);
-      const data = await response.text();
-      const encodedData = btoa(unescape(encodeURIComponent(data)));
-      newAvatars.push(encodedData);
+      const response = await fetch(`https://robohash.org/${Math.round(Math.random() * 1000)}?set=set3`);
+      const data = await response.arrayBuffer();
+      const array = Array.from(new Uint8Array(data));
+      const encodedData = btoa(array.map((byte) => String.fromCharCode(byte)).join(""));
+      newAvatars.push(`data:image/png;base64,${encodedData}`);
     }
     setAvatars(newAvatars);
 
@@ -30,7 +31,7 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
   const setClickedAvatar = (id: number) => {
     setSelectedAvatar(avatars[id]);
   };
-
+ 
   useEffect(() => {
     fetchAvatars();
   }, []);
@@ -41,8 +42,8 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
         <Loader color="blue" />
       ) : (
         avatars.map((avatar, index) => (
-          <div key={avatar} className={`${classes.avatar} ${avatar === selectedAvatar ? classes.selected : ""}`}>
-            <Avatar size={"lg"} src={`data:image/svg+xml;base64,${avatar}`} alt="avatar" onClick={() => setClickedAvatar(index)} />
+          <div key={index} className={`${classes.avatar} ${avatar === selectedAvatar ? classes.selected : ""}`}>
+            <Avatar size={"lg"} src={`${avatar}`} alt="avatar" onClick={() => setClickedAvatar(index)} />
           </div>
         ))
       )}
@@ -50,4 +51,4 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
   );
 };
 
-export default SetAvatar;
+export default React.memo(SetAvatar);

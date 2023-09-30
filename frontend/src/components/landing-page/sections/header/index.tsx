@@ -1,5 +1,5 @@
 "use client";
-import { HoverCard, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, rem, useMantineTheme, Container } from "@mantine/core";
+import { HoverCard, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, rem, useMantineTheme, Container, Image, Title, Flex } from "@mantine/core";
 import { MantineLogo } from "@mantine/ds";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./header.module.css";
@@ -13,10 +13,15 @@ export const HeaderMenu = () => {
   const router = useRouter();
 
   return (
-    <Box pb={120}>
+    <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%" ml={10} mr={10}>
-          <MantineLogo size={30} onClick={() => router.push(routes.landingpage.url)} />
+          <Flex align={"center"} onClick={() => router.push(routes.landingpage.url)} style={{ cursor: "pointer" }}>
+            <Image src={"./logo.png"} alt="My image" radius="md" h={40} w="auto" />
+            <Title  size="h2" ml={10}>
+              Score
+            </Title>
+          </Flex>
 
           <Group visibleFrom="sm">
             <Link href={routes.signin.url}>

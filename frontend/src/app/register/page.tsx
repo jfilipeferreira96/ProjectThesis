@@ -28,14 +28,14 @@ export default function Register() {
     },
   });
   
-  useEffect(() => {
+/*   useEffect(() => {
     if (selectedAvatar) {
       form.setValues({
         avatar: selectedAvatar,
       });
     }
   }, [selectedAvatar]);
-
+ */
   const onSubmitHandler = useCallback(async (data: RegisterData) => {
     try {
       const response = await register(data);
