@@ -1,12 +1,13 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface IUser extends Document
+export interface IUser extends Document
 {
   fullname: string;
   email: string;
   password: string;
   avatar: string;
   studentId?: number | string;
+  createdAt: Date;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -34,11 +35,14 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
     min: 6,
-    select: false,
   },
   avatar: {
     type: String,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
