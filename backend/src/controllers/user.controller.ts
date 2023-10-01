@@ -3,7 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-interface AccessToken {
+export interface User {
   _id: string;
   fullname: string;
   studentId: string | number | undefined;
@@ -17,7 +17,7 @@ interface RefreshToken {
 }
 
 class UserController {
-  static generateAccessToken(user: AccessToken) {
+  static generateAccessToken(user: User) {
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
