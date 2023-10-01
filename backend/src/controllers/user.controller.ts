@@ -6,19 +6,23 @@ class UserController {
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { username, password } = req.body;
-
+      console.log(req.body)
       const user = await User.findOne({ username });
 
-      if (!user) return res.json({ msg: "Incorrect Username or Password", status: false });
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized", message: "Incorrect Username or Password" });
+      }
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid)
-        return res.json({ msg: "Incorrect Username or Password", status: false });
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: "Unauthorized", message: "Incorrect Username or Password" });
+      }
 
       return res.json({
         status: true,
         user: {
           _id: user._id,
-          username: user.username,
+          fullname: user.fullname,
+          studentId: user.studentId,
           email: user.email,
           avatar: user.avatar
         },
@@ -30,18 +34,17 @@ class UserController {
 
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const { username, email, password } = req.body;
-
-      const usernameCheck = await User.findOne({ username });
-      if (usernameCheck) return res.json({ msg: "Username already used", status: false });
-
+      const { fullname, studentId, avatar, email, password } = req.body;
+      console.log(req.body)
       const emailCheck = await User.findOne({ email });
-      if (emailCheck) return res.json({ msg: "Email already used", status: false });
+      if (emailCheck) return res.status(400).json({ error: "Bad Request", message: "Email already used" });
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         email,
-        username,
+        fullname,
+        studentId,
+        avatar,
         password: hashedPassword,
       });
 
@@ -49,9 +52,8 @@ class UserController {
         status: true,
         user: {
           _id: user._id,
-          username: user.username,
           fullname: user.fullname,
-          numberid: user.numberid,
+          studentId: user.studentId,
           email: user.email,
           avatar: user.avatar
         },

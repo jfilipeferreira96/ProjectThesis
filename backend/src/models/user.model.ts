@@ -2,38 +2,39 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 interface IUser extends Document
 {
-  username: string;
   fullname: string;
   email: string;
   password: string;
   avatar: string;
-  numberid?: number | string;
+  studentId?: number | string;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    min: 3,
-    max: 20,
-    unique: true,
-  },
   fullname: {
     type: String,
     required: true,
-    min: 3,
+    min: 5,
     max: 60,
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
     max: 50,
+    trim: true,
+    lowercase: true,
+    match: /^\S+@\S+\.\S+$/,
+  },
+  studentId: {
+    type: String,
+    required: false,
   },
   password: {
     type: String,
     required: true,
     min: 6,
+    select: false,
   },
   avatar: {
     type: String,
@@ -41,6 +42,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   },
 });
 
-const UserModel: Model<IUser> = mongoose.model<IUser>("Users", userSchema);
+const UserModel: Model<IUser> = mongoose.model<IUser>("User", userSchema);
 
 export default UserModel;

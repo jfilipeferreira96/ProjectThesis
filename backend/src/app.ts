@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-//import mongooseConnection from "./config/mongoose.config";
-import { Request, Response } from "express";
-const app = express();
 import authRoutes from "./routes/user.routes";
+import connectToDatabase from "./config/mongoose.config";
+const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,12 +13,12 @@ app.use(cors());
 
 require("dotenv").config();
 
-//app.set("mongoose connection", mongooseConnection);
+connectToDatabase();
 
 // Routes:
-app.use("/api", (req: Request, res: Response) => {
+/* app.use("/", (req: Request, res: Response) => {
   res.sendFile("views/index.html", { root: __dirname });
-});
+}); */
 app.use("/api/auth", authRoutes);
 
 export default app;
