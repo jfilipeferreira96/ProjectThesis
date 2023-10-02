@@ -1,16 +1,84 @@
 "use client";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Button, Group, Center, SimpleGrid, Grid } from '@mantine/core';
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput } from '@mantine/core';
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDisclosure } from '@mantine/hooks';
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
-export default function Home()
-{
+type LeagueProps = {
+  _id: string;
+  name: string,
+}[]
+
+export default function Home(){
   const router = useRouter();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [leagues, setLeagues] = useState<LeagueProps>([])
+
+  /* TODO */
+  //  useEffect com async function getLeagues/getChallenges
+  // async function join league
+  // join -> refresh leagues
+  // card join league/create league
+  // leagues.map
+
+  const form = useForm({
+    initialValues: {
+      token: "",
+    },
+    validate: {
+      token: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
+    },
+  });
+
+  const onSubmitHandler = useCallback(async (data:{token:string}) =>{
+    console.log(data)
+    try
+    {
+      //const response = await register(token);
+      //console.log("Register bem-sucedido:", response);
+      notifications.show({
+        title: "Success",
+        message: "Leave the building immediately",
+        color: "green",
+      });
+
+      // chamada da funçao fetchLeagues
+    }
+    catch (error)
+    {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  }, []);
 
   return (
     <Grid justify="center" align="stretch" mt={10}>
+      <Modal opened={opened} onClose={close} title="" size="md">
+              
+        <Title ta="center">JOIN A LEAGUE</Title>
+
+        <Text c="dimmed" size="md" ta="center" mt={5}>
+          Do you hold the token for league access?
+          <br />
+          Great! Paste it here.
+        </Text>
+          <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+
+          <TextInput mt={10} placeholder="League token" required {...form.getInputProps("token")} />
+          <Center>
+            <Button mt={10} type="submit">Submit</Button>
+          </Center>
+        </form>
+      </Modal>
+
+      <Button onClick={open}>Open modal</Button>
 
       <Grid.Col span={{ md: 6, sm: 6, xs:12, lg: 3 }}>
         <Card shadow="sm" padding="lg" radius="md" withBorder>

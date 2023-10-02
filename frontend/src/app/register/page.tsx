@@ -47,8 +47,7 @@ export default function Register()
     }
   }, [selectedAvatar]);
 
-  const onSubmitHandler = useCallback(async (data: RegisterData) =>
-  {
+  const onSubmitHandler = useCallback(async (data: RegisterData) => {
     try
     {
       const response = await register(data);
