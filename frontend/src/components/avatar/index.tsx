@@ -16,8 +16,8 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
     setLoading(true);
     const newAvatars = [];
    
-    for (let i = 0; i <= 4; i++) {
-      const response = await fetch(`https://robohash.org/${Math.round(Math.random() * 1000)}?set=set3`);
+    for (let i = 0; i < 4; i++) {
+      const response = await fetch(`https://robohash.org/${Math.round(Math.random() * 1000)}?set=set5`);
       const data = await response.arrayBuffer();
       const array = Array.from(new Uint8Array(data));
       const encodedData = btoa(array.map((byte) => String.fromCharCode(byte)).join(""));

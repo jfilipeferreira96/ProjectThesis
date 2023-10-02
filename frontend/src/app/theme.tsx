@@ -1,5 +1,5 @@
 "use client";
-import { MantineProvider, createTheme, Button, Group, localStorageColorSchemeManager  } from "@mantine/core";
+import { MantineProvider, createTheme, Button, Group, localStorageColorSchemeManager, Container  } from "@mantine/core";
 import { Notifications } from '@mantine/notifications';
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
@@ -21,7 +21,9 @@ const Theme = ({ children }: { children: React.ReactNode }) => {
     <MantineProvider theme={theme} defaultColorScheme="dark" colorSchemeManager={colorSchemeManager}>
       <Notifications position="top-center" zIndex={1000} limit={3} />
       <HeaderMenu />
-      {children}
+      <Container size="responsive">
+        {children}
+      </Container>
     </MantineProvider>
   );
 };
