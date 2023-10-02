@@ -7,6 +7,10 @@ import { HeaderMenu } from "@/components/landing-page/sections/header";
 
 export const theme = createTheme({
   /* Put your mantine theme override here */
+ //  type DefaultMantineColor = 'dark' | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'teal' | (string & {});
+/*   primaryShade: { light: 6, dark: 4 } ,
+  fontFamily: "Open Sans, sans-serif",
+  primaryColor: "cyan", */
 });
 
 const colorSchemeManager = localStorageColorSchemeManager({ key: "color-scheme" });
