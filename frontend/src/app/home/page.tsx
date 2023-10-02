@@ -2,7 +2,7 @@
 import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
 import { register, RegisterData } from "@/services/auth.service";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center } from "@mantine/core";
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -16,8 +16,7 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-export default function Register()
-{
+export default function Home() {
   const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
@@ -36,21 +35,17 @@ export default function Register()
       avatar: (value) => (value.length > 1 ? null : "Please select an avatar"),
     },
   });
-
-  useEffect(() =>
-  {
-    if (selectedAvatar)
-    {
+  
+  useEffect(() => {
+    if (selectedAvatar) {
       form.setValues({
         avatar: selectedAvatar,
       });
     }
   }, [selectedAvatar]);
 
-  const onSubmitHandler = useCallback(async (data: RegisterData) =>
-  {
-    try
-    {
+  const onSubmitHandler = useCallback(async (data: RegisterData) => {
+    try {
       const response = await register(data);
       console.log("Register bem-sucedido:", response);
       notifications.show({
@@ -58,8 +53,7 @@ export default function Register()
         message: "Leave the building immediately",
         color: "green",
       });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Erro ao fazer register:", error);
       notifications.show({
         title: "Error",
@@ -70,33 +64,10 @@ export default function Register()
   }, []);
 
   return (
-    <Center>
-      <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-        
-        <Title ta="center" mt={100}>Create an account!</Title>
+    <>
+      <div>
 
-        <Text c="dimmed" size="sm" ta="center" mt={5}>
-          Already have an account?
-          <Anchor size="sm" component="button" ml={2} onClick={() => router.push(routes.signin.url)}>
-            Sign In
-          </Anchor>
-        </Text>
-
-        <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
-          <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
-          <TextInput label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
-          <PasswordInput label="Password" placeholder="Your password" required {...form.getInputProps("password")} />
-
-          <Input.Wrapper label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
-            <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
-          </Input.Wrapper>
-          <Button fullWidth mt="xl" type="submit">
-            Register
-          </Button>
-        </StyledPaper>
-      </form>
-    </Center>
-
+      </div>
+    </>
   );
 }
