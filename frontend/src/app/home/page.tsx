@@ -1,73 +1,71 @@
 "use client";
-import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
-import { register, RegisterData } from "@/services/auth.service";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
+import { Card, Image, Text, Badge, Button, Group, Center, SimpleGrid, Grid } from '@mantine/core';
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
-const StyledPaper = styled(Paper)`
-  width: 500px;
-  @media (max-width: 600px) {
-    width: 94vw;
-  }
-`;
-
-export default function Home() {
+export default function Home()
+{
   const router = useRouter();
-  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-
-  const form = useForm({
-    initialValues: {
-      fullname: "",
-      email: "",
-      studentId: "",
-      password: "",
-      avatar: "",
-    },
-    validate: {
-      fullname: (value) => (value.trim() !== "" ? null : "Please enter your name"),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email address"),
-      password: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
-      avatar: (value) => (value.length > 1 ? null : "Please select an avatar"),
-    },
-  });
-  
-  useEffect(() => {
-    if (selectedAvatar) {
-      form.setValues({
-        avatar: selectedAvatar,
-      });
-    }
-  }, [selectedAvatar]);
-
-  const onSubmitHandler = useCallback(async (data: RegisterData) => {
-    try {
-      const response = await register(data);
-      console.log("Register bem-sucedido:", response);
-      notifications.show({
-        title: "Success",
-        message: "Leave the building immediately",
-        color: "green",
-      });
-    } catch (error) {
-      console.error("Erro ao fazer register:", error);
-      notifications.show({
-        title: "Error",
-        message: "Something went wrong",
-        color: "red",
-      });
-    }
-  }, []);
 
   return (
-    <>
-      <div>
+    <Grid justify="center" align="stretch" mt={10}>
 
-      </div>
-    </>
+      <Grid.Col span={{ md: 6, sm: 6, xs:12, lg: 3 }}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section>
+            <Image
+              src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
+              height={160}
+              alt="Norway"
+            />
+          </Card.Section>
+
+          <Group justify="space-between" mt="md" mb="xs">
+            <Text fw={500}>Norway Fjord Adventures</Text>
+            <Badge color="pink" variant="light">
+              On Sale
+            </Badge>
+          </Group>
+
+          <Text size="sm" c="dimmed">
+            With Fjord Tours you can explore more of the magical fjord landscapes with tours and
+            activities on and around the fjords of Norway
+          </Text>
+
+          <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+            Book classic tour now
+          </Button>
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={{ md: 6, sm: 6, xs:12, lg: 3 }}>
+        <Card shadow="sm" padding="lg" radius="md" withBorder>
+          <Card.Section>
+            <Image
+              src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
+              height={160}
+              alt="Norway"
+            />
+          </Card.Section>
+
+          <Group justify="space-between" mt="md" mb="xs">
+            <Text fw={500}>Norway Fjord Adventures</Text>
+            <Badge color="pink" variant="light">
+              On Sale
+            </Badge>
+          </Group>
+
+          <Text size="sm" c="dimmed">
+            With Fjord Tours you can explore more of the magical fjord landscapes with tours and
+            activities on and around the fjords of Norway
+          </Text>
+
+          <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+            Book classic tour now
+          </Button>
+        </Card>
+      </Grid.Col>
+    </Grid>
   );
 }
