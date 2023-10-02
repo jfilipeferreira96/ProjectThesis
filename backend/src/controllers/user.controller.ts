@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
 
 export interface User {
   _id: string;
@@ -44,12 +45,12 @@ class UserController {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(401).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
       }
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(401).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
+        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
       }
 
       const accessToken = UserController.generateAccessToken({
@@ -85,10 +86,14 @@ class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullname, studentId, avatar, email, password } = req.body;
-      console.log(req.body);
+      
       const emailCheck = await User.findOne({ email });
-      if (emailCheck) return res.status(400).json({ error: "Bad Request", message: "Email already used" });
-
+      console.log(emailCheck);
+      if (emailCheck) {
+        console.log('entrei')
+         return res.json({ error: "Bad Request", message: "Email already used" });
+      }
+       
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         email,
@@ -98,7 +103,7 @@ class UserController {
         password: hashedPassword,
       });
 
-      const accessToken = this.generateAccessToken({
+      const accessToken = UserController.generateAccessToken({
         _id: user._id,
         fullname: user.fullname,
         studentId: user.studentId,
@@ -106,11 +111,11 @@ class UserController {
         avatar: user.avatar,
       });
 
-      const refreshToken = this.generateRefreshToken({
+      const refreshToken = UserController.generateRefreshToken({
         _id: user._id,
         email: user.email,
       });
-
+      
       return res.status(200).json({
         status: true,
         user: {
@@ -144,7 +149,7 @@ class UserController {
         return res.json({ msg: "User id is required " });
       }
 
-      return res.status(200).send({ status: true });
+      return res.status(StatusCodes.OK).send({ status: true });
     } catch (ex) {
       next(ex);
     }

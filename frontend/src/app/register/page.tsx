@@ -37,8 +37,7 @@ export default function Register()
     },
   });
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (selectedAvatar)
     {
       form.setValues({
@@ -48,18 +47,24 @@ export default function Register()
   }, [selectedAvatar]);
 
   const onSubmitHandler = useCallback(async (data: RegisterData) => {
-    try
-    {
+    try {
       const response = await register(data);
-      console.log("Register bem-sucedido:", response);
-      notifications.show({
-        title: "Success",
-        message: "Leave the building immediately",
-        color: "green",
-      });
-    } catch (error)
-    {
-      console.error("Erro ao fazer register:", error);
+      if (response.status) {
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+      } else {
+        notifications.show({
+          title: "Error",
+          message: response.message,
+          color: "red",
+        });
+      }
+      
+    }
+    catch (error){
       notifications.show({
         title: "Error",
         message: "Something went wrong",
