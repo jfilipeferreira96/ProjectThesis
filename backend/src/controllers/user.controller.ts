@@ -88,9 +88,8 @@ class UserController {
       const { fullname, studentId, avatar, email, password } = req.body;
       
       const emailCheck = await User.findOne({ email });
-      console.log(emailCheck);
+      
       if (emailCheck) {
-        console.log('entrei')
          return res.json({ error: "Bad Request", message: "Email already used" });
       }
        

@@ -25,7 +25,7 @@ export default function SignIn(){
     try
     {
       const response = await login(data);
-      console.log('Login bem-sucedido:', response);
+     
       notifications.show({
         title: "Success",
         message: '',
@@ -35,7 +35,6 @@ export default function SignIn(){
     }
     catch (error)
     {
-      console.error('Erro ao fazer login:', error);
       notifications.show({
         title: "Error",
         message: 'Something went wrong',
