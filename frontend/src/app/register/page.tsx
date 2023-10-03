@@ -1,6 +1,7 @@
 "use client";
 import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
+import { useSession } from "@/providers/SessionProvider";
 import { register, RegisterData } from "@/services/auth.service";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -16,10 +17,10 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-export default function Register()
-{
+export default function Register() {
   const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const { registerSession } = useSession();
 
   const form = useForm({
     initialValues: {
@@ -55,6 +56,9 @@ export default function Register()
           message: "",
           color: "green",
         });
+
+        register(response.user);
+
       } else {
         notifications.show({
           title: "Error",

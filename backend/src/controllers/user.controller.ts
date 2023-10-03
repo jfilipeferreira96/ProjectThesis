@@ -68,13 +68,13 @@ class UserController {
 
       return res.json({
         status: true,
-        /*         user: {
+        user: {
           _id: user._id,
           fullname: user.fullname,
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
-        }, */
+        },
         accessToken,
         refreshToken,
       });

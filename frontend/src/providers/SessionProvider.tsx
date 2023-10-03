@@ -1,15 +1,20 @@
+"use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 
-interface User {
-  // Defina a estrutura do objeto de usuário aqui
+export interface User {
+  _id: string,
+  fullname: string,
+  studentId: string,
+  email: string,
+  avatar: string,
 }
 
 interface SessionContextProps {
   user: User | null;
-  login: (userData: User) => void;
-  register: (userData: User) => void;
+  sessionLogin: (userData: User) => void;
+  registerSession: (userData: User) => void;
   logout: () => void;
 }
 
@@ -23,28 +28,25 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const router = useRouter(); 
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (userData: User) => {
-    // Implemente a lógica de login aqui, incluindo a chamada API
-    // ...
+  const sessionLogin = (userData: User) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-    router.push(routes.landingpage.url);
+    router.push(routes.home.url);
   };
 
-  const register = (userData: User) => {
-    // Implemente a lógica de registro aqui, incluindo a chamada API
-    // ...
+  const registerSession = (userData: User) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    router.push(routes.home.url);
   };
 
   const logout = () => {
     setUser(null);
-      localStorage.removeItem("user");
-      router.push(routes.landingpage.url);
+    localStorage.removeItem("user");
+    router.push(routes.landingpage.url);
   };
 
-  return <SessionContext.Provider value={{ user, login, register, logout }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ user, sessionLogin, registerSession, logout }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = (): SessionContextProps => {

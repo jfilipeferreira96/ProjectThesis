@@ -12,7 +12,7 @@ app.use("/views", express.static("views"));
 app.use(morgan("dev"));
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://meu-site2.com"],
+  origin: ["http://localhost:3000", "http://localhost:3001"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -23,11 +23,6 @@ require("dotenv").config();
 
 connectToDatabase();
 
-// Routes:
-/* app.use("/", (req: Request, res: Response) => {
-  res.sendFile("views/index.html", { root: __dirname });
-}); */
-//app.use("/api/auth", authRoutes);
 app.use(routes);
 
 export default app;

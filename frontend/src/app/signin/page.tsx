@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { notifications } from '@mantine/notifications';
 import { routes } from "@/config/routes";
 import styled from "styled-components";
+import { useSession } from "@/providers/SessionProvider";
 
 const StyledPaper = styled(Paper)`
   width: 500px;
@@ -15,8 +16,8 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-export default function SignIn()
-{
+export default function SignIn(){
+  const { sessionLogin } = useSession();
   const router = useRouter();
 
   const onSubmitHandler = useCallback(async (data: LoginData) =>
@@ -30,6 +31,7 @@ export default function SignIn()
         message: 'Leave the building immediately',
         color: 'green'
       })
+      sessionLogin(response.user);
     }
     catch (error)
     {
