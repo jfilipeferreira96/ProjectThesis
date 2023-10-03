@@ -28,10 +28,10 @@ export default function SignIn(){
       console.log('Login bem-sucedido:', response);
       notifications.show({
         title: "Success",
-        message: 'Leave the building immediately',
+        message: '',
         color: 'green'
       })
-      sessionLogin(response.user);
+      sessionLogin(response.user, response.accessToken, response.refreshToken);
     }
     catch (error)
     {

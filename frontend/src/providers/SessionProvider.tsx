@@ -1,7 +1,9 @@
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { notifications } from '@mantine/notifications';
 
 export interface User {
   _id: string,
@@ -11,10 +13,15 @@ export interface User {
   avatar: string,
 }
 
+interface DecodedToken extends JwtPayload{
+  user: User;
+  exp: number;
+}
+
 interface SessionContextProps {
   user: User | null;
-  sessionLogin: (userData: User) => void;
-  registerSession: (userData: User) => void;
+  sessionLogin: (userData: User, accessToken: string, refreshToken: string) => void;
+  registerSession: (userData: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -28,23 +35,66 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const router = useRouter(); 
   const [user, setUser] = useState<User | null>(null);
 
-  const sessionLogin = (userData: User) => {
+  const sessionLogin = (userData: User, accessToken: string, refreshToken: string) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     router.push(routes.home.url);
   };
 
-  const registerSession = (userData: User) => {
+  const registerSession = (userData: User, accessToken: string, refreshToken: string) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     router.push(routes.home.url);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("refresh_token");
     router.push(routes.landingpage.url);
   };
+
+  const getSession = () => {
+    try
+    {
+      const accessToken = localStorage.getItem('accessToken') ?? "";
+      const refreshToken = localStorage.getItem('refreshToken') ?? "";
+      const currentDate = new Date();
+      if (accessToken)
+      {
+        const decodedToken = jwt.decode(accessToken) as DecodedToken;
+
+        if (decodedToken.exp * 1000 < currentDate.getTime())
+        {
+          console.log("Token expired.");
+          //mensagem de erro
+          notifications.show({
+            title: "Error",
+            message: 'Session expired',
+            color: 'red',
+          })
+          logout();
+        } else{
+          console.log("Valid token");
+          const userData = decodedToken.user;
+          sessionLogin(userData, accessToken, refreshToken)
+        }       
+      }
+      else{
+        logout();
+      }
+    } catch (error)
+    {
+      console.error("Erro ao decodificar o token:", error);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    getSession();
+  }, [])
 
   return <SessionContext.Provider value={{ user, sessionLogin, registerSession, logout }}>{children}</SessionContext.Provider>;
 };
