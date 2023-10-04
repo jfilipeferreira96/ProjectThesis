@@ -7,13 +7,12 @@ import { routes } from "@/config/routes";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/providers/SessionProvider";
 
-export const HeaderMenu = () =>
-{
+export const HeaderMenu = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const theme = useMantineTheme();
   const router = useRouter();
   const { user, logout } = useSession();
-  console.log(user)
+  
   return (
     <Box>
       <header className={classes.header}>

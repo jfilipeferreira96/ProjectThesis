@@ -51,13 +51,10 @@ export default function Home()
     },
   });
 
-  const onSubmitHandler = useCallback(async (data: { token: string }) =>
-  {
-    console.log(data)
+  const onSubmitHandler = useCallback(async (data: { token: string }) => {
     try
     {
-      //const response = await register(token);
-      //console.log("Register bem-sucedido:", response);
+
       notifications.show({
         title: "Success",
         message: "Leave the building immediately",
@@ -120,7 +117,7 @@ export default function Home()
                 src="https://learnenglishkids.britishcouncil.org/sites/kids/files/styles/top_level_landing/public/field/section/image/fun_games_tongue.png?itok=pBtq9jrX"
                 alt="Create image" />
             </div>
-            <Button radius="xl" fullWidth onClick={() => router.push(routes.register.url)}>
+            <Button radius="xl" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
               Create
             </Button>
           </Card.Section>
