@@ -142,17 +142,6 @@ class UserController {
     }
   }
 
-  static logOut(req: Request, res: Response, next: NextFunction) {
-    try {
-      if (!req.params.id) {
-        return res.json({ msg: "User id is required " });
-      }
-
-      return res.status(StatusCodes.OK).send({ status: true });
-    } catch (ex) {
-      next(ex);
-    }
-  }
 }
 
 export default UserController;

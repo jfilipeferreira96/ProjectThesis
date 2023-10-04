@@ -1,6 +1,7 @@
 import { Router } from "express";
 import path from "path";
 import authRoutes from "./user.routes";
+import challengeRoutes from "./challenge.routes.";
 const routes = Router();
 
 
@@ -12,6 +13,7 @@ routes.get("/api", (req, res) => {
 
 /***************** AUTH ROUTES *****************/
 routes.use("/api/auth", authRoutes); 
+routes.use("/api/challenge", challengeRoutes); 
 
 
 export default routes;

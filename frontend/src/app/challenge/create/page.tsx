@@ -8,8 +8,8 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { z } from 'zod';
 import { routes } from '@/config/routes';
-import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
 import classes from './create.module.css';
+import { ChallengeType, CreateChallengeData, createChallenge } from '@/services/challenge.service';
 
 const StyledPaper = styled(Paper)`
   width: 800px;
@@ -28,10 +28,6 @@ const schema = z.object({
     type: z.string(),
 });
 
-enum ChallengeType{
-    TYPE_A = 'Type A',
-    TYPE_B = 'Type B',
-}
 
 function CreateChallengePage()
 {
@@ -46,21 +42,17 @@ function CreateChallengePage()
         validate: zodResolver(schema),
     });
 
-    const onSubmitHandler = useCallback(async (data: any) =>
-    {
-        try
-        {
-
-            console.log(data)
-        }
-        catch (error)
-        {
-            notifications.show({
-                title: "Error",
-                message: "Something went wrong",
-                color: "red",
-            });
-        }
+    const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
+      try {
+        createChallenge(data);
+        console.log(data);
+      } catch (error) {
+        notifications.show({
+          title: "Error",
+          message: "Something went wrong",
+          color: "red",
+        });
+      }
     }, []);
 
     return (

@@ -5,6 +5,7 @@ export const endpoints = {
   loginRoute: `${host}/api/auth/login`,
   registerRoute: `${host}/api/auth/register`,
   logoutRoute: `${host}/api/auth/logout`,
+  createChallengeRoute: `${host}/api/challenge/create`,
 };
 
 export const routes = {

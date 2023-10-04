@@ -1,4 +1,3 @@
-// AuthService.ts
 import api from "@/config/api";
 import { endpoints } from "@/config/routes";
 
