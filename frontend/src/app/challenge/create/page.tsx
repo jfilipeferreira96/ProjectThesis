@@ -73,6 +73,7 @@ function CreateChallengePage()
                         label="Description"
                         placeholder="Enter a description for this challenge"
                         mt="md"
+                        {...form.getInputProps("description")}
                     />
 
                     <Radio.Group
