@@ -20,8 +20,11 @@ export const routes = {
   home: {
     url: "/home",
   },
-  leagues: {
-    url: "/leagues",
+  challenge: {
+    url: "/challenge",
+    create: {
+      url: "/challenge/create"
+    }
   },
   teams: {
     url: "/teams",

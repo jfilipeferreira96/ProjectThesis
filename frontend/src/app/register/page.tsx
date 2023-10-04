@@ -27,7 +27,7 @@ const schema = z.object({
 export default function Register() {
   const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const { registerSession } = useSession();
+  const { sessionLogin } = useSession();
 
   const form = useForm({
     initialValues: {
@@ -59,8 +59,7 @@ export default function Register() {
           color: "green",
         });
 
-        register(response.user);
-
+        sessionLogin(response.user, response.accessToken, response.refreshToken);
       } else {
         notifications.show({
           title: "Error",

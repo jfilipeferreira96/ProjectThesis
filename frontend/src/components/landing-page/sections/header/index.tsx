@@ -13,7 +13,7 @@ export const HeaderMenu = () =>
   const theme = useMantineTheme();
   const router = useRouter();
   const { user, logout } = useSession();
-
+  console.log(user)
   return (
     <Box>
       <header className={classes.header}>

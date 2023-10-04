@@ -21,7 +21,6 @@ interface DecodedToken extends JwtPayload{
 interface SessionContextProps {
   user: User | null;
   sessionLogin: (userData: User, accessToken: string, refreshToken: string) => void;
-  registerSession: (userData: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -36,13 +35,6 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
 
   const sessionLogin = (userData: User, accessToken: string, refreshToken: string) => {
-    setUser(userData);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    router.push(routes.home.url);
-  };
-
-  const registerSession = (userData: User, accessToken: string, refreshToken: string) => {
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
@@ -68,17 +60,22 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
         if (decodedToken.exp * 1000 < currentDate.getTime())
         {
-          console.log("Token expired.");
-          //mensagem de erro
           notifications.show({
             title: "Error",
             message: 'Session expired',
             color: 'red',
           })
           logout();
-        } else{
-          console.log("Valid token");
-          const userData = decodedToken.user;
+
+        }
+        else{
+          const userData = {
+            _id: decodedToken._id,
+            fullname: decodedToken.fullname,
+            studentId: decodedToken.studentId,
+            email: decodedToken.email,
+            avatar: decodedToken.avatar
+          };
           sessionLogin(userData, accessToken, refreshToken)
         }       
       }
@@ -96,7 +93,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     getSession();
   }, [])
 
-  return <SessionContext.Provider value={{ user, sessionLogin, registerSession, logout }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ user, sessionLogin, logout }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = (): SessionContextProps => {
