@@ -1,13 +1,14 @@
 "use client";
 import { login, LoginData } from "@/services/auth.service";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Center } from "@mantine/core";
-import { useForm } from '@mantine/form';
+import { useForm, zodResolver } from '@mantine/form';
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { notifications } from '@mantine/notifications';
 import { routes } from "@/config/routes";
 import styled from "styled-components";
 import { useSession } from "@/providers/SessionProvider";
+import { z } from 'zod';
 
 const StyledPaper = styled(Paper)`
   width: 500px;
@@ -15,6 +16,12 @@ const StyledPaper = styled(Paper)`
     width: 94vw;
   }
 `;
+
+const schema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z.string().min(4, { message: 'Password must be at least 4 characters long' }),
+});
+
 
 export default function SignIn(){
   const { sessionLogin } = useSession();
@@ -49,10 +56,7 @@ export default function SignIn(){
       email: '',
       password: ''
     },
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email address'),
-      password: (value) => (value.length >= 4 ? null : 'Password must be at least 4 characters long'),
-    },
+    validate: zodResolver(schema),
   });
 
   return (

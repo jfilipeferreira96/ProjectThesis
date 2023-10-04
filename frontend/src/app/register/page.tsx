@@ -4,11 +4,12 @@ import { routes } from "@/config/routes";
 import { useSession } from "@/providers/SessionProvider";
 import { register, RegisterData } from "@/services/auth.service";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { z } from 'zod';
 
 const StyledPaper = styled(Paper)`
   width: 500px;
@@ -16,6 +17,12 @@ const StyledPaper = styled(Paper)`
     width: 94vw;
   }
 `;
+
+const schema = z.object({
+  fullname: z.string().min(2, { message: 'Full name should have at least 2 letters' }),
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z.string().min(4, { message: 'Password must be at least 4 characters long' }),
+});
 
 export default function Register() {
   const router = useRouter();
@@ -30,12 +37,7 @@ export default function Register() {
       password: "",
       avatar: "",
     },
-    validate: {
-      fullname: (value) => (value.trim() !== "" ? null : "Please enter your name"),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email address"),
-      password: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
-      avatar: (value) => (value.length > 1 ? null : "Please select an avatar"),
-    },
+    validate: zodResolver(schema), 
   });
 
   useEffect(() => {
