@@ -41,7 +41,7 @@ function CreateChallengePage()
         initialValues: {
             title: "",
             description: "",
-            favoriteFramework: ChallengeType.TYPE_A,
+            type: ChallengeType.TYPE_A,
         },
         validate: zodResolver(schema),
     });
