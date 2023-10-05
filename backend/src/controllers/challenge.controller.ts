@@ -6,7 +6,6 @@ import Challenge from "../models/challenge.model";
 
 
 class ChallengeController {
-
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
     try {
       const { title, description, type } = req.body;
@@ -21,13 +20,47 @@ class ChallengeController {
 
       return res.status(200).json({
         status: true,
-        id: challenge._id
+        id: challenge._id,
       });
     } catch (ex) {
       next(ex);
     }
   }
 
+  static async GetChallengesByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.user;
+
+      const challenges = await Challenge.find({
+        $or: [{ admins: user._id }, { participants: user._id }],
+      }).exec();
+
+      console.log(challenges);
+      return res.status(200).json({
+        status: true,
+        challenges: challenges,
+      });
+    } catch (error) {
+      throw new Error("Error fetching challenges: " + error);
+    }
+  }
+
+  static async GetSingleChallenge(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.user;
+      const id = req.params.id;
+
+      const challenge = await Challenge.findOne({ _id: id });
+
+      console.log(challenge);
+      return res.status(200).json({
+        status: true,
+        challenge: challenge,
+      });
+    } catch (error) {
+      throw new Error("Error fetching challenges: " + error);
+    }
+  }
 }
 
 export default ChallengeController;
