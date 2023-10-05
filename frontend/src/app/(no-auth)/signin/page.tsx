@@ -27,8 +27,7 @@ export default function SignIn(){
   const { sessionLogin } = useSession();
   const router = useRouter();
 
-  const onSubmitHandler = useCallback(async (data: LoginData) =>
-  {
+  const onSubmitHandler = useCallback(async (data: LoginData) => {
     try
     {
       const response = await login(data);

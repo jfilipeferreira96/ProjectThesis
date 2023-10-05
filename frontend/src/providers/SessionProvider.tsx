@@ -39,17 +39,19 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
-    
+
     if (redirect) {
       router.push(routes.home.url);
     }
   };
 
-  const logout = () => {
+  const logout = (redirect = true) => {
     setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    router.push(routes.landingpage.url);
+    if (redirect) {
+      router.push(routes.landingpage.url);
+    }
   };
 
   const getSession = () => {
@@ -78,7 +80,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
           sessionLogin(userData, accessToken, refreshToken, false);
         }
       } else {
-        logout();
+        logout(false);
       }
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
