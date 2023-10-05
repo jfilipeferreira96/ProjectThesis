@@ -16,7 +16,6 @@ export const createChallenge = async (data: CreateChallengeData) => {
   try
   {
     const response = await api.post(endpoints.createChallengeRoute, data);
-    console.log(response);
     return response.data;
   }
   catch (error)

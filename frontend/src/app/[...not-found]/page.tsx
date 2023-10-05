@@ -7,7 +7,7 @@ import { useSession } from '@/providers/SessionProvider';
 
 export default function NotFound(){
   const { user } = useSession();
-  console.log(user)
+  
   return (
       <div className={classes.root}>
         <Container my={100}>
