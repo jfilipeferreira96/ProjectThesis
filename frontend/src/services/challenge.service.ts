@@ -23,3 +23,23 @@ export const createChallenge = async (data: CreateChallengeData) => {
     throw error;
   }
 };
+
+export const getChallenges = async () => {
+  try {
+    console.log(endpoints.getChallengesByUserId)
+    const response = await api.get(endpoints.getChallengesByUserId);
+    
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getSingleChallenge = async (id:string) => {
+  try {
+    const response = await api.get(endpoints.getSingleChallenge + id);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

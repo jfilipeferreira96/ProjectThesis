@@ -9,6 +9,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import classes from './home.module.css';
 import { IconGasStation, IconGauge, IconManualGearbox, IconUsers } from '@tabler/icons-react';
+import { getChallenges } from "@/services/challenge.service";
 
 const mockdata = [
   { label: '4 passengers', icon: IconUsers },
@@ -24,17 +25,36 @@ const features = mockdata.map((feature) => (
   </Center>
 ));
 
-type LeagueProps = {
+type ChallengeProps = {
   _id: string;
   name: string,
 }[]
 
-export default function Home()
-{
+export default function Home(){
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
-  const [leagues, setLeagues] = useState<LeagueProps>([])
+  const [challenges, setChallenges] = useState<ChallengeProps>([]);
 
+  const GetUserChallenges = async () => {
+     try {
+       const response = await getChallenges();
+       if (response) {
+         console.log(response);
+         setChallenges([])
+       }
+     } catch (error) {
+       notifications.show({
+         title: "Error",
+         message: "Something went wrong",
+         color: "red",
+       });
+     }
+  }
+ /*  useEffect(() => {
+    //GetUserChallenges();
+    console.log('wtf ')
+  }, []) */
+    console.log("wtf ");
   /* TODO */
   //  useEffect com async function getLeagues/getChallenges
   // async function join league

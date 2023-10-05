@@ -28,13 +28,14 @@ class ChallengeController {
   }
 
   static async GetChallengesByUserId(req: Request, res: Response, next: NextFunction) {
+    console.log('entrei aqui fdgps')
     try {
       const user = req.user;
-
+      console.log('entrei')
       const challenges = await Challenge.find({
         $or: [{ admins: user._id }, { participants: user._id }],
       }).exec();
-
+      console.log('ok')
       console.log(challenges);
       return res.status(200).json({
         status: true,
