@@ -6,9 +6,10 @@ enum ChallengeType {
 }
 
 enum ChallengeStatus{
-    Active = 0,
-    InProgress = 1,
-    Completed = 2
+    Deleted = 0,
+    Active = 1,
+    InProgress = 2,
+    Completed = 3
 }
 
 interface IChallenge extends Document{
