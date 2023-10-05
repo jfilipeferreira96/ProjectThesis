@@ -54,6 +54,7 @@ export default function Register() {
       const response = await register(data);
       if (response.status) {
         notifications.show({
+          
           title: "Success",
           message: "",
           color: "green",
