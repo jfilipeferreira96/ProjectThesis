@@ -10,24 +10,18 @@ class ChallengeController {
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
     try {
       const { title, description, type } = req.body;
-      console.log(req);
+      const user = req.user;
 
-      /* const emailCheck = await User.findOne({ email });
-      
-      if (emailCheck) {
-         return res.json({ error: "Bad Request", message: "Email already used" });
-      } */
-       
       const challenge = await Challenge.create({
         title,
         description,
         type,
-        admins: []
+        admins: [user._id],
       });
-      console.log(challenge)
+
       return res.status(200).json({
         status: true,
-        
+        id: challenge._id
       });
     } catch (ex) {
       next(ex);
