@@ -1,7 +1,7 @@
 import { Router } from "express";
 import path from "path";
 import authRoutes from "./user.routes";
-import challengeRoutes from "./challenge.routes.";
+import challengeRoutes from "./challenge.routes";
 const routes = Router();
 
 

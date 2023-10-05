@@ -3,10 +3,12 @@ import jwt, { VerifyErrors } from "jsonwebtoken";
 import UserController, { User } from "../controllers/user.controller";
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.header("Authorization");
+  const authHeader = req.header("Authorization");
 
-  if (!token) return res.sendStatus(401); // Unauthorized
+  if (!authHeader) return res.sendStatus(401); // Unauthorized
 
+  const token = authHeader.split(" ")[1]; // Remover "Bearer " do token
+  
   const secret = process.env.JWT_SECRET;
 
   if (!secret) {

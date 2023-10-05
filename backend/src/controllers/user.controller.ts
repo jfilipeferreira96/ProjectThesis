@@ -9,7 +9,7 @@ export interface User {
   fullname: string;
   studentId: string | number | undefined;
   email: string;
-  avatar: string;
+  avatar?: string;
 }
 
 interface RefreshToken {
@@ -58,7 +58,6 @@ class UserController {
         fullname: user.fullname,
         studentId: user.studentId,
         email: user.email,
-        avatar: user.avatar,
       });
 
       const refreshToken = UserController.generateRefreshToken({

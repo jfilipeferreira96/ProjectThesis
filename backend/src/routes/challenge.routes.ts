@@ -6,7 +6,7 @@ import ChallengeController from "../controllers/challenge.controller";
 const challengeRoutes: Router = express.Router();
 
 // Rota responsável por Criar um novo 'User': (POST): localhost:5000/api/challenge/create
-challengeRoutes.post("/create", ChallengeController.CreateChallenge);
+challengeRoutes.post("/create", authenticateToken, ChallengeController.CreateChallenge);
 
 
 

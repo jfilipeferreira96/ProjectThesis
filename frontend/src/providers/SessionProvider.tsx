@@ -43,8 +43,8 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken");
     router.push(routes.landingpage.url);
   };
 
