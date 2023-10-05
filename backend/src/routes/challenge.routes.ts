@@ -5,11 +5,11 @@ import ChallengeController from "../controllers/challenge.controller";
 
 const challengeRoutes: Router = express.Router();
 
-challengeRoutes.post("/create", authenticateToken, ChallengeController.CreateChallenge);
+challengeRoutes.post("/challenges/create", authenticateToken, ChallengeController.CreateChallenge);
 
 challengeRoutes.get("/challenges", authenticateToken, ChallengeController.GetChallengesByUserId);
 
-challengeRoutes.get("/challenge/:id", authenticateToken, ChallengeController.GetSingleChallenge);
+challengeRoutes.get("/challenges/:id", authenticateToken, ChallengeController.GetSingleChallenge);
 
 
 export default challengeRoutes;

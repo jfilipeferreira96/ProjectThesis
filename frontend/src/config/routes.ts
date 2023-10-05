@@ -5,9 +5,9 @@ export const endpoints = {
   loginRoute: `${host}/api/auth/login`,
   registerRoute: `${host}/api/auth/register`,
   logoutRoute: `${host}/api/auth/logout`,
-  createChallengeRoute: `${host}/api/challenge/create`,
+  createChallengeRoute: `${host}/api/challenges/create`,
   getChallengesByUserId: `${host}/api/challenges`,
-  getSingleChallenge: `${host}/api/challenge/`,
+  getSingleChallenge: `${host}/api/challenges/`,
 };
 
 export const routes = {

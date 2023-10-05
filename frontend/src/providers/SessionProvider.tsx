@@ -23,6 +23,7 @@ interface SessionContextProps {
   user: User | null;
   sessionLogin: sessionProps;
   logout: () => void;
+  isReady: boolean;
 }
 
 const SessionContext = createContext<SessionContextProps | undefined>(undefined);
@@ -34,6 +35,7 @@ interface SessionProviderProps {
 export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   const sessionLogin: sessionProps = (userData, accessToken, refreshToken, redirect = true) => {
     setUser(userData);
@@ -82,6 +84,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
       } else {
         logout(false);
       }
+      setIsReady(true);
     } catch (error) {
       console.error("Erro ao decodificar o token:", error);
       return null;
@@ -92,7 +95,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     getSession();
   }, []);
 
-  return <SessionContext.Provider value={{ user, sessionLogin, logout }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ isReady, user, sessionLogin, logout }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = (): SessionContextProps => {

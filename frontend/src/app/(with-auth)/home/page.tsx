@@ -1,66 +1,57 @@
 "use client";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput } from '@mantine/core';
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import classes from './home.module.css';
-import { IconGasStation, IconGauge, IconManualGearbox, IconUsers } from '@tabler/icons-react';
-import { getChallenges } from "@/services/challenge.service";
-
-const mockdata = [
-  { label: '4 passengers', icon: IconUsers },
-  { label: '100 km/h in 4 seconds', icon: IconGauge },
-  { label: 'Automatic gearbox', icon: IconManualGearbox },
-  { label: 'Electric', icon: IconGasStation },
-];
-
-const features = mockdata.map((feature) => (
-  <Center key={feature.label}>
-    <feature.icon size="1.05rem" className={classes.icon} stroke={1.5} />
-    <Text size="xs">{feature.label}</Text>
-  </Center>
-));
+import classes from "./home.module.css";
+import { IconFlag, IconGasStation, IconGauge, IconManualGearbox, IconUserCheck, IconUsers } from "@tabler/icons-react";
+import { ChallengeStatus, ChallengeType, getChallenges, getStatusInfo } from "@/services/challenge.service";
 
 type ChallengeProps = {
   _id: string;
-  name: string,
-}[]
+  title: string;
+  description: string;
+  type: ChallengeType;
+  admins: string[];
+  participants: string[];
+  status: ChallengeStatus;
+}[];
 
-export default function Home(){
+export default function Home() {
   const router = useRouter();
   const [opened, { open, close }] = useDisclosure(false);
   const [challenges, setChallenges] = useState<ChallengeProps>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const GetUserChallenges = async () => {
-     try {
-       const response = await getChallenges();
-       if (response) {
-         console.log(response);
-         setChallenges([])
-       }
-     } catch (error) {
-       notifications.show({
-         title: "Error",
-         message: "Something went wrong",
-         color: "red",
-       });
-     }
-  }
- /*  useEffect(() => {
-    //GetUserChallenges();
-    console.log('wtf ')
-  }, []) */
-    console.log("wtf ");
+    setIsLoading(true);
+    try {
+      const response = await getChallenges();
+      if (response) {
+        console.log(response);
+        setChallenges(response.challenges);
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    GetUserChallenges();
+  }, []);
+
   /* TODO */
-  //  useEffect com async function getLeagues/getChallenges
   // async function join league
   // join -> refresh leagues
-  // card join league/create league
-  // leagues.map
 
   const form = useForm({
     initialValues: {
@@ -72,9 +63,7 @@ export default function Home(){
   });
 
   const onSubmitHandler = useCallback(async (data: { token: string }) => {
-    try
-    {
-
+    try {
       notifications.show({
         title: "Success",
         message: "Leave the building immediately",
@@ -82,9 +71,7 @@ export default function Home(){
       });
 
       // chamada da funçao fetchLeagues
-    }
-    catch (error)
-    {
+    } catch (error) {
       notifications.show({
         title: "Error",
         message: "Something went wrong",
@@ -93,10 +80,17 @@ export default function Home(){
     }
   }, []);
 
+  if (isLoading) {
+    return (
+      <Center mt={100} mih={"50vh"}>
+        <Loader color="blue" />
+      </Center>
+    );
+  }
+
   return (
     <Grid justify="center" align="stretch" mt={10}>
       <Modal opened={opened} onClose={close} title="" size="md">
-
         <Title ta="center">JOIN A LEAGUE</Title>
 
         <Text c="dimmed" size="md" ta="center" mt={5}>
@@ -105,23 +99,21 @@ export default function Home(){
           Great! Paste it here.
         </Text>
         <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-
           <TextInput mt={10} placeholder="League token" required {...form.getInputProps("token")} />
           <Center>
-            <Button mt={10} type="submit">Submit</Button>
+            <Button mt={10} type="submit">
+              Submit
+            </Button>
           </Center>
         </form>
       </Modal>
       <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
-        <Card withBorder radius="md" className={classes.card}>
+        <Card withBorder radius="md">
           <Text fz="sm" c="dimmed" className={classes.label}>
             Join a league
           </Text>
           <div className={classes.imageSection}>
-            <Image
-              className={classes.image}
-              src="./18354571.jpg"
-              alt="Join image" />
+            <Image className={classes.image} src="./18354571.jpg" alt="Join image" />
           </div>
           <Button radius="xl" onClick={open} fullWidth>
             Join now
@@ -135,7 +127,8 @@ export default function Home(){
               <Image
                 className={classes.image}
                 src="https://learnenglishkids.britishcouncil.org/sites/kids/files/styles/top_level_landing/public/field/section/image/fun_games_tongue.png?itok=pBtq9jrX"
-                alt="Create image" />
+                alt="Create image"
+              />
             </div>
             <Button radius="xl" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
               Create
@@ -144,51 +137,54 @@ export default function Home(){
         </Card>
       </Grid.Col>
 
-      <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
-        <Card withBorder radius="md" className={classes.card}>
-          <Card.Section className={classes.imageSection}>
-            <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
-          </Card.Section>
+      {challenges.map((challenge, index) => (
+        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }} key={challenge._id} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
+          <Card withBorder radius="md" className={classes.card}>
+            <Flex justify={"flex-end"}>
+              <Badge variant="filled" size="md" color={getStatusInfo(challenge.status).color}>
+                {getStatusInfo(challenge.status).name}
+              </Badge>
+            </Flex>
 
-          <Group justify="space-between" mt="md">
-            <div>
-              <Text fw={500}>Tesla Model S</Text>
-              <Text fz="xs" c="dimmed">
-                Free recharge at any station
-              </Text>
-            </div>
-            <Badge variant="outline">25% off</Badge>
-          </Group>
+            <Card.Section className={classes.imageSection}>
+              <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
+            </Card.Section>
 
-          <Card.Section className={classes.section} mt="md">
-            <Text fz="sm" c="dimmed" className={classes.label}>
-              Basic configuration
-            </Text>
-
-            <Group gap={8} mb={-8}>
-              {features}
-            </Group>
-          </Card.Section>
-
-          <Card.Section className={classes.section}>
-            <Group gap={30}>
-              <div>
+            <Group justify="center" mt="md" align="center">
+              <div style={{ textAlign: "center" }}>
                 <Text fz="xl" fw={700} style={{ lineHeight: 1 }}>
-                  $168.00
+                  {challenge.title}
                 </Text>
-                <Text fz="sm" c="dimmed" fw={500} style={{ lineHeight: 1 }} mt={3}>
-                  per day
+                <Text fz="xs" c="dimmed">
+                  {challenge.description}
                 </Text>
               </div>
-
-              <Button radius="xl" style={{ flex: 1 }}>
-                Rent now
-              </Button>
             </Group>
-          </Card.Section>
-        </Card>
-      </Grid.Col>
+            <Card.Section className={classes.section} mt="md">
+              <Text fz="sm" c="dimmed" className={classes.label}>
+                Informations
+              </Text>
 
+              <Group gap={8} mb={-8}>
+                <Center>
+                  <IconUsers size="1.05rem" className={classes.icon} stroke={1.5} />
+                  <Text size="xs">{challenge.participants.length} Participants</Text>
+                </Center>
+                <Center>
+                  <IconUserCheck size="1.05rem" className={classes.icon} stroke={1.5} />
+                  <Text size="xs">{challenge.admins.length} Admins</Text>
+                </Center>
+                <Center>
+                  <IconFlag size="1.05rem" className={classes.icon} stroke={1.5} />
+                  <Text size="xs">
+                    {challenge.participants.length}/{challenge.participants.length} Place
+                  </Text>
+                </Center>
+              </Group>
+            </Card.Section>
+          </Card>
+        </Grid.Col>
+      ))}
     </Grid>
   );
 }

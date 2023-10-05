@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-enum ChallengeType {
+export enum ChallengeType {
     TYPE_A = 'Type A',
     TYPE_B = 'Type B',
 }
 
-enum ChallengeStatus{
+export enum ChallengeStatus{
     Deleted = 0,
     Active = 1,
     InProgress = 2,

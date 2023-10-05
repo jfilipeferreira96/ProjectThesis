@@ -13,7 +13,7 @@ routes.get("/api", (req, res) => {
 
 /***************** AUTH ROUTES *****************/
 routes.use("/api/auth", authRoutes); 
-routes.use("/api/challenge", challengeRoutes); 
+routes.use("/api", challengeRoutes); 
 
 
 export default routes;

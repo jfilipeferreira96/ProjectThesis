@@ -6,6 +6,28 @@ export enum ChallengeType {
   TYPE_B = "Type B",
 }
 
+export enum ChallengeStatus {
+  Deleted = 0,
+  Active = 1,
+  InProgress = 2,
+  Completed = 3,
+}
+
+export function getStatusInfo(status: ChallengeStatus) {
+  switch (status) {
+    case ChallengeStatus.Deleted:
+      return { name: "Deleted", color: "red" };
+    case ChallengeStatus.Active:
+      return { name: "Active", color: "blue" };
+    case ChallengeStatus.InProgress:
+      return { name: "In Progress", color: "green" };
+    case ChallengeStatus.Completed:
+      return { name: "Completed", color: "orange" };
+    default:
+      return { name: "Unknown", color: "black" };
+  }
+}
+
 export interface CreateChallengeData {
   title: string;
   description: string;
