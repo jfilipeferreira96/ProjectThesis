@@ -1,15 +1,15 @@
 "use client";
-import React from 'react'
+import React from "react";
 import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center, Textarea, Radio, CheckIcon, List, ThemeIcon } from "@mantine/core";
 import { useForm, zodResolver, UseFormReturnType } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { z } from 'zod';
-import { routes } from '@/config/routes';
-import classes from './create.module.css';
-import { ChallengeType, CreateChallengeData, createChallenge } from '@/services/challenge.service';
+import { z } from "zod";
+import { routes } from "@/config/routes";
+import classes from "./create.module.css";
+import { ChallengeType, CreateChallengeData, createChallenge } from "@/services/challenge.service";
 
 const StyledPaper = styled(Paper)`
   width: 800px;
@@ -19,108 +19,81 @@ const StyledPaper = styled(Paper)`
 `;
 
 const StyledList = styled(List)`
-    color: var(--mantine-color-dimmed);
+  color: var(--mantine-color-dimmed);
 `;
 
 const schema = z.object({
-    title: z.string().min(4, { message: 'Title should have at least 4 letters' }),
-    description: z.string(),
-    type: z.string(),
+  title: z.string().min(4, { message: "Title should have at least 4 letters" }),
+  description: z.string(),
+  type: z.string(),
 });
 
+function CreateChallengePage() {
+  const router = useRouter();
 
-function CreateChallengePage()
-{
-    const router = useRouter();
+  const form = useForm({
+    initialValues: {
+      title: "",
+      description: "",
+      type: ChallengeType.TYPE_A,
+    },
+    validate: zodResolver(schema),
+  });
 
-    const form = useForm({
-        initialValues: {
-            title: "",
-            description: "",
-            type: ChallengeType.TYPE_A,
-        },
-        validate: zodResolver(schema),
-    });
-
-    const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
-      try {
-        createChallenge(data);
-        console.log(data);
-      } catch (error) {
+  const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
+    try {
+      const response = await createChallenge(data);
+      if (response.status) {
         notifications.show({
-          title: "Error",
-          message: "Something went wrong",
-          color: "red",
+          title: "Success",
+          message: "",
+          color: "green",
         });
+          
+          //redirect
+        router.push(routes.home.url);
       }
-    }, []);
+      
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  }, []);
 
-    return (
+  return (
+    <Center>
+      <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+        <Title ta="center" mt={100}>
+          Create a challenge
+        </Title>
 
-        <Center>
-            <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+        <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
 
-                <Title ta="center" mt={100}>Create a challenge</Title>
+          <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
-                <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-                    
-                    <TextInput
-                        label="Title"
-                        placeholder="Example: Java Loops"
-                        required {...form.getInputProps("title")} />
+          <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" defaultValue={ChallengeType.TYPE_A} {...form.getInputProps("type")}>
+            <StyledList spacing="xs" size="xs" center icon={<></>}>
+              <List.Item>Type A - Fast paced challenge and short duration, ideal for a single class;</List.Item>
+              <List.Item>Type B - Long challenge with multiple session, football matches idk;</List.Item>
+            </StyledList>
 
-                    <Textarea
-                        label="Description"
-                        placeholder="Enter a description for this challenge"
-                        mt="md"
-                        {...form.getInputProps("description")}
-                    />
+            <Group mt="xs" align="center" justify="center">
+              <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked icon={CheckIcon} mt="md" />
+              <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
+            </Group>
+          </Radio.Group>
 
-                    <Radio.Group
-                        name="type"
-                        label="Select the challenge type"
-                        withAsterisk
-                        mt="md"
-                        defaultValue={ChallengeType.TYPE_A}
-                        {...form.getInputProps("type")}
-                    >
-                        <StyledList
-                            spacing="xs"
-                            size="xs"
-                            center
-                            icon={
-                                <></>
-                            }
-                            
-                        >
-                            <List.Item>Type A - Fast paced challenge and short duration, ideal for a single class;</List.Item>
-                            <List.Item>Type B - Long challenge with multiple session, football matches idk;</List.Item>
-                        </StyledList>
-
-                        <Group mt="xs" align='center' justify='center'>
-                            <Radio
-                                value={ChallengeType.TYPE_A}
-                                label={ChallengeType.TYPE_A}
-                                checked
-                                icon={CheckIcon}
-                                mt="md"
-                            />
-                            <Radio
-                                value={ChallengeType.TYPE_B}
-                                label={ChallengeType.TYPE_B}
-                                icon={CheckIcon}
-                                mt="md"
-                            />
-                        </Group>
-                    </Radio.Group>
-
-                    <Button fullWidth mt="md" type="submit">
-                        Create
-                    </Button>
-                </StyledPaper>
-            </form>
-        </Center>
-    )
+          <Button fullWidth mt="md" type="submit">
+            Create
+          </Button>
+        </StyledPaper>
+      </form>
+    </Center>
+  );
 }
 
-export default CreateChallengePage
+export default CreateChallengePage;
