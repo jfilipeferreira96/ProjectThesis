@@ -1,18 +1,19 @@
 "use client";
-import { HoverCard, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, rem, useMantineTheme, Container, Image, Title, Flex } from "@mantine/core";
+import { Avatar, Group, Button, Box, Burger, useMantineTheme, Image, Title, Flex, rem, ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./header.module.css";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/providers/SessionProvider";
+import { IconLogout, IconLogout2 } from "@tabler/icons-react";
 
 export const HeaderMenu = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const theme = useMantineTheme();
   const router = useRouter();
   const { user, logout } = useSession();
-  
+
   return (
     <Box>
       <header className={classes.header}>
@@ -25,8 +26,15 @@ export const HeaderMenu = () => {
           </Flex>
 
           <Group visibleFrom="sm">
-            {user?._id ? <Button variant="default" onClick={() => logout()}>Log out</Button>
-              :
+            {user?._id ? (
+              <>
+                {/* <Avatar src={user?.avatar} alt="it's me" /> */}
+                <>{user?.fullname}</>
+                <Button variant="default" onClick={() => logout()}>
+                  Log out
+                </Button>
+              </>
+            ) : (
               <>
                 <Link href={routes.signin.url}>
                   <Button variant="default">Log in</Button>
@@ -35,10 +43,15 @@ export const HeaderMenu = () => {
                   <Button>Sign up</Button>
                 </Link>
               </>
-            }
+            )}
           </Group>
 
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+          {/* DESCOMENTAR SE ALGUMA VEZ QUISER TER UM HAMBURGUER MENU */}
+          {/* <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" /> */}
+
+          {user?._id && <ActionIcon size={42} variant="default" onClick={() => logout()} hiddenFrom="sm">
+            <IconLogout style={{ width: rem(24), height: rem(24) }} />
+          </ActionIcon>}
         </Group>
       </header>
     </Box>

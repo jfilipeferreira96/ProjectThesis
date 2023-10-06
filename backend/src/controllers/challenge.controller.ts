@@ -38,7 +38,7 @@ class ChallengeController {
       const sendObj = challenges.map((challenge) => {
         return {
           ...challenge.toObject(),
-          user_type: challenge.admins.includes(user._id) ? "Admin" : "Participant",
+          user_type: challenge.admins.includes(user._id) ? "Admin" : "User",
         };
       });
 

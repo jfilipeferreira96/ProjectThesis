@@ -19,6 +19,7 @@ type ChallengeProps = {
   admins: string[];
   participants: string[];
   status: ChallengeStatus;
+  user_type?: "Admin" | "User";
 }[];
 
 export default function Home() {
@@ -101,7 +102,7 @@ export default function Home() {
   }
 
   return (
-    <Grid justify="center" align="stretch" mt={10}>
+    <Grid justify="center" align="stretch" mt={10} mb={10}>
       <Modal
         opened={opened}
         onClose={close}
@@ -186,12 +187,14 @@ export default function Home() {
                   <IconUserCheck size="1.05rem" className={classes.icon} stroke={1.5} />
                   <Text size="xs">{challenge.admins.length} Admins</Text>
                 </Center>
-                <Center>
-                  <IconFlag size="1.05rem" className={classes.icon} stroke={1.5} />
-                  <Text size="xs">
-                    {challenge.participants.length}/{challenge.participants.length} Place
-                  </Text>
-                </Center>
+                {challenge.user_type !== "Admin" && (
+                  <Center>
+                    <IconFlag size="1.05rem" className={classes.icon} stroke={1.5} />
+                    <Text size="xs">
+                      {challenge.participants.length}/{challenge.participants.length} Place
+                    </Text>
+                  </Center>
+                )}
               </Group>
             </Card.Section>
           </Card>
