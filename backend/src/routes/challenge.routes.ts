@@ -11,5 +11,7 @@ challengeRoutes.get("/challenges", authenticateToken, ChallengeController.GetCha
 
 challengeRoutes.get("/challenges/:id", authenticateToken, ChallengeController.GetSingleChallenge);
 
+challengeRoutes.post("/challenges/join", authenticateToken, ChallengeController.JoinChallenge);
+
 
 export default challengeRoutes;

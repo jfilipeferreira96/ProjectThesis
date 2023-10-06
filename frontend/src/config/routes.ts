@@ -8,6 +8,7 @@ export const endpoints = {
   createChallengeRoute: `${host}/api/challenges/create`,
   getChallengesByUserId: `${host}/api/challenges`,
   getSingleChallenge: `${host}/api/challenges/`,
+  joinChallenge: `${host}/api/challenges/join`,
 };
 
 export const routes = {

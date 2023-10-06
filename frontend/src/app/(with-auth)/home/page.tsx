@@ -9,7 +9,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import classes from "./home.module.css";
 import { IconFlag, IconGasStation, IconGauge, IconManualGearbox, IconUserCheck, IconUsers } from "@tabler/icons-react";
-import { ChallengeStatus, ChallengeType, getChallenges, getStatusInfo } from "@/services/challenge.service";
+import { ChallengeStatus, ChallengeType, getChallenges, getStatusInfo, joinChallenge } from "@/services/challenge.service";
 
 type ChallengeProps = {
   _id: string;
@@ -58,19 +58,31 @@ export default function Home() {
       token: "",
     },
     validate: {
-      token: (value) => (value.length >= 4 ? null : "Password must be at least 4 characters long"),
+      token: (value) => (value.length >= 20 ? null : "Invalid token"),
     },
   });
 
   const onSubmitHandler = useCallback(async (data: { token: string }) => {
     try {
-      notifications.show({
-        title: "Success",
-        message: "Leave the building immediately",
-        color: "green",
-      });
+      const response = await joinChallenge(data.token);
+      if (response.status) {
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
 
-      // chamada da funçao fetchLeagues
+        //redirect to the leagues page
+        router.push(`${routes.challenge.url}/${response.challenge._id}`);
+      }
+      if (response.status === false) {
+        notifications.show({
+          title: "Oops",
+          message: response.message,
+          color: "red",
+        });
+      }
+      
     } catch (error) {
       notifications.show({
         title: "Error",
@@ -90,16 +102,24 @@ export default function Home() {
 
   return (
     <Grid justify="center" align="stretch" mt={10}>
-      <Modal opened={opened} onClose={close} title="" size="md">
-        <Title ta="center">JOIN A LEAGUE</Title>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title=""
+        size="md"
+        overlayProps={{
+          backgroundOpacity: 0.8,
+        }}
+      >
+        <Title ta="center">JOIN A CHALLENGE</Title>
 
         <Text c="dimmed" size="md" ta="center" mt={5}>
-          Do you hold the token for league access?
+          Do you hold the token for challenge access?
           <br />
           Great! Paste it here.
         </Text>
         <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-          <TextInput mt={10} placeholder="League token" required {...form.getInputProps("token")} />
+          <TextInput mt={10} placeholder="Challenge token" required {...form.getInputProps("token")} />
           <Center>
             <Button mt={10} type="submit">
               Submit
@@ -111,16 +131,12 @@ export default function Home() {
         <Card withBorder radius="md">
           <div onClick={open} className={classes.pointer}>
             <Text fz="sm" c="dimmed" className={classes.label}>
-              Join a league
+              Join a challenge
             </Text>
             <div className={classes.imageSection}>
               <Image className={classes.image} src="./37541671.png" alt="Join image" />
             </div>
           </div>
-
-          {/*     <Button radius="xl" size="sm" onClick={open} fullWidth>
-            Join now
-          </Button> */}
 
           <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
             <Text fz="sm" c="dimmed" className={classes.label}>
@@ -129,10 +145,6 @@ export default function Home() {
             <div className={classes.imageSection}>
               <Image className={classes.image} src="./5000_4_07.png" alt="Create image" />
             </div>
-
-            {/* <Button radius="xl" size="sm" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
-              Create
-            </Button> */}
           </Card.Section>
         </Card>
       </Grid.Col>

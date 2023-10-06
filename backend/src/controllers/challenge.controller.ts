@@ -77,10 +77,10 @@ class ChallengeController {
     try {
       let response = { status: false, message: "" };
       const userId: any = req.user._id;
-      const challengeId = req.params.id;
+      const token:string = req.body.token;
 
       const user = await User.findById(userId);
-      const challenge = await Challenge.findById(challengeId);
+      const challenge = await Challenge.findById(token);
 
       if (!user || !challenge) {
         Logger.error("User or challenge not found");

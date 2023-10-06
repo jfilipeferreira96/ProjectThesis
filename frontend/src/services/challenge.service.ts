@@ -65,3 +65,12 @@ export const getSingleChallenge = async (id:string) => {
     throw error;
   }
 };
+
+export const joinChallenge = async (token: string) => {
+  try {
+    const response = await api.post(endpoints.joinChallenge, { token: token });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
