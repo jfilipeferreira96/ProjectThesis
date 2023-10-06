@@ -22,7 +22,7 @@ class UserController {
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
-      throw new Error("JWT_SECRET não está definido no ambiente.");
+      throw new Error("JWT_SECRET is not defined in the environment.");
     }
 
     return jwt.sign(user, secret, { expiresIn: "1h" });
@@ -32,7 +32,7 @@ class UserController {
     const refreshSecret = process.env.JWT_REFRESH_SECRET;
 
     if (!refreshSecret) {
-      throw new Error("JWT_REFRESH_SECRET não está definido no ambiente.");
+      throw new Error("JWT_REFRESH_SECRET is not defined in the environment.");
     }
 
     return jwt.sign(user, refreshSecret, { expiresIn: "7d" });
@@ -78,20 +78,20 @@ class UserController {
         refreshToken,
       });
     } catch (ex) {
-      next(ex);
+      throw new Error("An error occurred during login.");
     }
   }
 
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullname, studentId, avatar, email, password } = req.body;
-      
+
       const emailCheck = await User.findOne({ email });
-      
+
       if (emailCheck) {
-         return res.json({ error: "Bad Request", message: "Email already used" });
+        return res.status(200).json({ error: "Bad Request", message: "Email already used" });
       }
-       
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         email,
@@ -113,7 +113,7 @@ class UserController {
         _id: user._id,
         email: user.email,
       });
-      
+
       return res.status(200).json({
         status: true,
         user: {
@@ -127,7 +127,7 @@ class UserController {
         refreshToken,
       });
     } catch (ex) {
-      next(ex);
+      throw new Error("An error occurred during registration.");
     }
   }
 
@@ -137,10 +137,9 @@ class UserController {
 
       return res.status(200).json(users);
     } catch (ex) {
-      next(ex);
+      throw new Error("An error occurred while fetching users.");
     }
   }
-
 }
 
 export default UserController;
