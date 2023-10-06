@@ -113,7 +113,7 @@ export default function Home() {
             Join a league
           </Text>
           <div className={classes.imageSection}>
-            <Image className={classes.image} src="./18354571.jpg" alt="Join image" />
+            <Image className={classes.image} src="./6000_2_05.png" alt="Join image" />
           </div>
           <Button radius="xl" onClick={open} fullWidth>
             Join now
@@ -124,12 +124,9 @@ export default function Home() {
               Create a challenge
             </Text>
             <div className={classes.imageSection}>
-              <Image
-                className={classes.image}
-                src="https://learnenglishkids.britishcouncil.org/sites/kids/files/styles/top_level_landing/public/field/section/image/fun_games_tongue.png?itok=pBtq9jrX"
-                alt="Create image"
-              />
+              <Image className={classes.image} src="./37541671.png" alt="Create image" />
             </div>
+
             <Button radius="xl" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
               Create
             </Button>
@@ -138,8 +135,8 @@ export default function Home() {
       </Grid.Col>
 
       {challenges.map((challenge, index) => (
-        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }} key={challenge._id} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
-          <Card withBorder radius="md" className={classes.card}>
+        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }} key={challenge._id}>
+          <Card withBorder radius="md" className={classes.card} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
             <Flex justify={"flex-end"}>
               <Badge variant="filled" size="md" color={getStatusInfo(challenge.status).color}>
                 {getStatusInfo(challenge.status).name}
@@ -147,7 +144,7 @@ export default function Home() {
             </Flex>
 
             <Card.Section className={classes.imageSection}>
-              <Image src="https://i.imgur.com/ZL52Q2D.png" alt="Tesla Model S" />
+              <Image className={classes.challengeImage} src={challenge.type === ChallengeType.TYPE_A ? "./type1.png" : "./type2.png"} alt="Challenge Type" />
             </Card.Section>
 
             <Group justify="center" mt="md" align="center">

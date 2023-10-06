@@ -10,12 +10,18 @@
   justify-content: center;
 }
 .image {
-  padding: var(--mantine-spacing-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 200px;
+  height: 200px;
 }
+.challengeImage{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
 .label {
   margin-bottom: var(--mantine-spacing-xs);
   line-height: 1;
