@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
 import Challenge from "../models/challenge.model";
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+import User from "../models/user.model";
+import { ObjectId } from "mongodb";
+import Logger from "../utils/logger";
 
 class ChallengeController {
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
@@ -29,18 +28,17 @@ class ChallengeController {
   }
 
   static async GetChallengesByUserId(req: Request, res: Response, next: NextFunction) {
-    
     try {
-      const user = req.user;
-      
+      const user: any = req.user;
+
       let challenges = await Challenge.find({
         $or: [{ admins: user._id }, { participants: user._id }],
       }).exec();
 
       const sendObj = challenges.map((challenge) => {
         return {
-          ...challenge.toObject(), 
-          user_type: challenge.admins.includes(mongoose.Types.ObjectId(user._id)) ? "Admin" : "Participant",
+          ...challenge.toObject(),
+          user_type: challenge.admins.includes(user._id) ? "Admin" : "Participant",
         };
       });
 
@@ -55,18 +53,55 @@ class ChallengeController {
 
   static async GetSingleChallenge(req: Request, res: Response, next: NextFunction) {
     try {
+      let response = { status: false, message: "" };
       const user = req.user;
       const id = req.params.id;
 
       const challenge = await Challenge.findOne({ _id: id });
-
-      console.log(challenge);
+      if (!challenge) {
+        Logger.error("Challenge not found");
+        response = { status: false, message: "Challenge not found" };
+        return res.status(200).json(response);
+      }
+      
       return res.status(200).json({
         status: true,
         challenge: challenge,
       });
+      
     } catch (error) {
       throw new Error("Error fetching challenges: " + error);
+    }
+  }
+
+  static async JoinChallenge(req: Request, res: Response, next: NextFunction) {
+    try {
+      let response = { status: false, message: "" };
+      const userId: any = req.user._id;
+      const challengeId = req.params.id;
+
+      const user = await User.findById(userId);
+      const challenge = await Challenge.findById(challengeId);
+
+      if (!user || !challenge) {
+        Logger.error("User or challenge not found");
+        response = { status: false, message: "User or challenge not found" };
+        return res.status(200).json(response);
+      }
+
+      if (challenge.participants.includes(user._id)) {
+        Logger.error("User is already on the challenge.");
+        response = { status: false, message: "User is already on the challenge." };
+        return res.status(200).json(response);
+      }
+
+      challenge.participants.push(userId);
+
+      const challengeUpdated = await challenge.save();
+
+      return res.status(200).json({ status: true, challenge: challengeUpdated });
+    } catch (error) {
+      throw new Error("Error adding user to challenge: " + error);
     }
   }
 }

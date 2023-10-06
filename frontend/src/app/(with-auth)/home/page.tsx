@@ -109,27 +109,30 @@ export default function Home() {
       </Modal>
       <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
         <Card withBorder radius="md">
-          <Text fz="sm" c="dimmed" className={classes.label}>
-            Join a league
-          </Text>
-          <div className={classes.imageSection}>
-            <Image className={classes.image} src="./6000_2_05.png" alt="Join image" />
+          <div onClick={open} className={classes.pointer}>
+            <Text fz="sm" c="dimmed" className={classes.label}>
+              Join a league
+            </Text>
+            <div className={classes.imageSection}>
+              <Image className={classes.image} src="./37541671.png" alt="Join image" />
+            </div>
           </div>
-          <Button radius="xl" onClick={open} fullWidth>
-            Join now
-          </Button>
 
-          <Card.Section className={classes.section} mt="md">
+          {/*     <Button radius="xl" size="sm" onClick={open} fullWidth>
+            Join now
+          </Button> */}
+
+          <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
             <Text fz="sm" c="dimmed" className={classes.label}>
               Create a challenge
             </Text>
             <div className={classes.imageSection}>
-              <Image className={classes.image} src="./37541671.png" alt="Create image" />
+              <Image className={classes.image} src="./5000_4_07.png" alt="Create image" />
             </div>
 
-            <Button radius="xl" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
+            {/* <Button radius="xl" size="sm" fullWidth onClick={() => router.push(routes.challenge.create.url)}>
               Create
-            </Button>
+            </Button> */}
           </Card.Section>
         </Card>
       </Grid.Col>
