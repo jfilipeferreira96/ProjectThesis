@@ -41,6 +41,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("avatar", userData.avatar);
 
     if (redirect) {
       router.push(routes.home.url);
@@ -77,7 +78,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             fullname: decodedToken.fullname,
             studentId: decodedToken.studentId,
             email: decodedToken.email,
-            avatar: decodedToken.avatar,
+            avatar: localStorage.getItem("avatar") ?? "",
           };
           sessionLogin(userData, accessToken, refreshToken, false);
         }

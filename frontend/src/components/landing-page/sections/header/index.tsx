@@ -28,7 +28,7 @@ export const HeaderMenu = () => {
           <Group visibleFrom="sm">
             {user?._id ? (
               <>
-                {/* <Avatar src={user?.avatar} alt="it's me" /> */}
+                <Avatar src={user?.avatar} alt="it's me" />
                 <>{user?.fullname}</>
                 <Button variant="default" onClick={() => logout()}>
                   Log out
