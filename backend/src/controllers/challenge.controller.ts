@@ -63,12 +63,11 @@ class ChallengeController {
         response = { status: false, message: "Challenge not found" };
         return res.status(200).json(response);
       }
-      
+
       return res.status(200).json({
         status: true,
         challenge: challenge,
       });
-      
     } catch (error) {
       throw new Error("Error fetching challenges: " + error);
     }
@@ -92,6 +91,12 @@ class ChallengeController {
       if (challenge.participants.includes(user._id)) {
         Logger.error("User is already on the challenge.");
         response = { status: false, message: "User is already on the challenge." };
+        return res.status(200).json(response);
+      }
+
+      if (challenge.admins.includes(user._id)) {
+        Logger.error("You are an admin of this challenge.");
+        response = { status: false, message: "You are an admin of this challenge." };
         return res.status(200).json(response);
       }
 
