@@ -57,7 +57,8 @@ class ChallengeController {
       const user = req.user;
       const id = req.params.id;
 
-      const challenge = await Challenge.findOne({ _id: id });
+      const challenge = await Challenge.findOne({ _id: id }).populate("participants", "fullname email avatar studentId");
+
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
@@ -77,7 +78,7 @@ class ChallengeController {
     try {
       let response = { status: false, message: "" };
       const userId: any = req.user._id;
-      const token:string = req.body.token;
+      const token: string = req.body.token;
 
       const user = await User.findById(userId);
       const challenge = await Challenge.findById(token);

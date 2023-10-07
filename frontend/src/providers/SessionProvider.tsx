@@ -52,7 +52,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    localStorage.clear();
+    localStorage.removeItem("avatar");
     if (redirect) {
       router.push(routes.landingpage.url);
     }
@@ -62,7 +62,9 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     try {
       const accessToken = localStorage.getItem("accessToken") ?? "";
       const refreshToken = localStorage.getItem("refreshToken") ?? "";
+      const avatar = localStorage.getItem("avatar") ?? "";
       const currentDate = new Date();
+      
       if (accessToken) {
         const decodedToken = jwt.decode(accessToken) as DecodedToken;
 
@@ -79,7 +81,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             fullname: decodedToken.fullname,
             studentId: decodedToken.studentId,
             email: decodedToken.email,
-            avatar: localStorage.getItem("avatar") ?? "",
+            avatar: avatar,
           };
           sessionLogin(userData, accessToken, refreshToken, false);
         }
