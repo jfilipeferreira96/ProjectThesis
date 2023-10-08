@@ -33,7 +33,6 @@ export default function Home() {
     try {
       const response = await getChallenges();
       if (response) {
-        console.log(response);
         setChallenges(response.challenges);
       }
     } catch (error) {
@@ -46,13 +45,10 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+  
   useEffect(() => {
     GetUserChallenges();
   }, []);
-
-  /* TODO */
-  // async function join league
-  // join -> refresh leagues
 
   const form = useForm({
     initialValues: {

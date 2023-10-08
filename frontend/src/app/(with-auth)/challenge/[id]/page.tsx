@@ -1,14 +1,15 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table,  ActionIcon, Anchor, rem } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { useRouter } from 'next/navigation';
-import { getSingleChallenge } from '@/services/challenge.service';
+import { useRouter } from "next/navigation";
+import { getSingleChallenge } from "@/services/challenge.service";
+import ThreeDButton from "@/components/3dbutton";
 
 const data = [
   {
@@ -61,14 +62,18 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const GetSingleChallenge = async (id:string) => {
+  const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
     try {
-      console.log('entrei')
       const response = await getSingleChallenge(id);
-      if (response) {
-        console.log(response);
-        //setChallenges(response.challenges);
+      if (response.status) {
+      }
+      if (response.status === false) {
+        notifications.show({
+          title: "Oops",
+          message: response.message,
+          color: "red",
+        });
       }
     } catch (error) {
       notifications.show({
@@ -76,7 +81,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
         message: "Something went wrong",
         color: "red",
       });
-      router.push(routes.home.url)
+      router.push(routes.home.url);
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +126,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
         <Text fz="sm">{item.phone}</Text>
       </Table.Td>
       <Table.Td>
-        <Group gap={0} justify="flex-end">
+        <Group gap={0} justify="flex-end" >
           <ActionIcon variant="subtle" color="gray">
             <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </ActionIcon>
@@ -136,6 +141,17 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <div>
       Challenge Page {id}
+      <Flex justify={"flex-end"}>
+        <ThreeDButton color="blue">Classifications</ThreeDButton>
+      </Flex>
+      <Paper shadow="xs" p="xl" withBorder>
+        <Stack align="center">
+          <ThreeDButton color="blue">Classifications</ThreeDButton>
+          <ThreeDButton color="blue">Classifications</ThreeDButton>
+          <ThreeDButton color="blue">Classifications</ThreeDButton>
+        </Stack>
+      </Paper>
+
       <Table.ScrollContainer minWidth={800}>
         <Table verticalSpacing="sm">
           <Table.Thead>
@@ -154,4 +170,4 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   );
 };
 
-export default ChallengeIdPage
+export default ChallengeIdPage;

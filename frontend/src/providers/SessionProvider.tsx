@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { notifications } from "@mantine/notifications";
@@ -36,6 +36,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
+  const pathname = usePathname();
 
   const sessionLogin: sessionProps = (userData, accessToken, refreshToken, redirect = true) => {
     setUser(userData);
@@ -64,16 +65,19 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
       const refreshToken = localStorage.getItem("refreshToken") ?? "";
       const avatar = localStorage.getItem("avatar") ?? "";
       const currentDate = new Date();
-      
+
       if (accessToken) {
         const decodedToken = jwt.decode(accessToken) as DecodedToken;
 
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
-          notifications.show({
-            title: "Error",
-            message: "Session expired",
-            color: "red",
-          });
+          if (pathname !== routes.home.url) {
+            notifications.show({
+              title: "Error",
+              message: "Session expired",
+              color: "red",
+            });
+          }
+
           logout();
         } else {
           const userData = {
