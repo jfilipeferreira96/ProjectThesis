@@ -54,7 +54,7 @@ class ChallengeController {
   static async GetSingleChallenge(req: Request, res: Response, next: NextFunction) {
     try {
       let response = { status: false, message: "" };
-      const user = req.user;
+      const user:any = req.user;
       const id = req.params.id;
 
       const challenge = await Challenge.findOne({ _id: id }).populate("participants", "fullname email avatar studentId");
@@ -62,6 +62,13 @@ class ChallengeController {
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
+        return res.status(200).json(response);
+      }
+      
+      const isUserInChallenge = challenge.participants.includes(user._id) || challenge.admins.includes(user._id);
+      if (!isUserInChallenge) {
+        Logger.error("You don't have access to this challenge.");
+        response = { status: false, message: "You don't have access to this challenge." };
         return res.status(200).json(response);
       }
 
