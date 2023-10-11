@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Title, TextInput, Loader } from "@mantine/core";
 import classes from "./random.module.scss";
 import { jsQuizz } from "./data";
-import Quizz, { Question } from "@/components/quiz";
+import Quizz, { Question } from "@/components/quizz";
 
 interface RandomProps {
   params: {

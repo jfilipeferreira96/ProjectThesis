@@ -97,16 +97,6 @@ const Quizz = (props: Props) => {
     setShowAnswerTimer(true);
   });
 
-  const onTryAgain = () => {
-    setResult({
-      score: 0,
-      correctAnswers: 0,
-      wrongAnswers: 0,
-      userAnswers: [],
-    });
-    setShowResult(false);
-  };
-
   const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = evt.target.value;
 
@@ -139,6 +129,7 @@ const Quizz = (props: Props) => {
       userAnswers: [],
     });
     setShowResult(false);
+    setCurrentQuestion(0);
   };
 
   const getAnswerUI = () => {
