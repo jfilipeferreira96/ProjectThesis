@@ -21,6 +21,7 @@ interface IChallenge extends Document{
     createdAt: Date;
     endDate?: Date;
     status: ChallengeStatus;
+    quizzes: Schema.Types.ObjectId[];
 }
 
 const challengeSchema: Schema<IChallenge> = new mongoose.Schema({
@@ -58,6 +59,10 @@ const challengeSchema: Schema<IChallenge> = new mongoose.Schema({
         enum: ChallengeStatus, 
         default: ChallengeStatus.Active, 
     },
+    quizzes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Quizz',
+    }],
 });
 
 const ChallengeModel: Model<IChallenge> = mongoose.model<IChallenge>("Challenge", challengeSchema);
