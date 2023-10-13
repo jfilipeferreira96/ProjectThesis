@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classes from "./random.module.scss";
 import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
 
 export interface Question {
   id: number;
@@ -32,6 +33,14 @@ const Quizz = (props: Props) => {
   });
   const [showResult, setShowResult] = useState(false);
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
+  const [seconds, setSeconds] = useState(0);
+
+  const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
+
+  useEffect(() => {
+    interval.start();
+    return interval.stop;
+  }, []);
 
   const { id: questionId, question, choices, correctAnswer, type } = questions[currentQuestion];
 
@@ -61,6 +70,8 @@ const Quizz = (props: Props) => {
     let score = 0;
     let correctAnswers = 0;
     let wrongAnswers = 0;
+
+    interval.stop();
 
     result.userAnswers.forEach((userAnswer) => {
       const question = questions.find((q) => q.id === userAnswer.id);
@@ -131,6 +142,9 @@ const Quizz = (props: Props) => {
     });
     setShowResult(false);
     setCurrentQuestion(0);
+
+    setSeconds(0);
+    interval.start();
   };
 
   const getAnswerUI = () => {
@@ -142,7 +156,9 @@ const Quizz = (props: Props) => {
       <ul>
         {choices?.map((answer, index) => (
           <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-            <Text size="md" span>{answer}</Text>
+            <Text size="md" span>
+              {answer}
+            </Text>
           </li>
         ))}
       </ul>
@@ -160,7 +176,7 @@ const Quizz = (props: Props) => {
             </Text>
             /{questions.length}
           </Title>
-
+          
           <Title order={2}>{question}</Title>
 
           {getAnswerUI()}
