@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { getSingleChallenge } from "@/services/challenge.service";
 import ThreeDButton from "@/components/3dbutton";
 
@@ -57,8 +57,6 @@ const jobColors: Record<string, string> = {
 
 const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
-  const pathname = usePathname();
-
   const [state, setState] = useState({
     id: id,
   });
@@ -143,30 +141,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <div>
       Challenge Page {id}
-      <Flex justify={"flex-end"}>
-        <ThreeDButton
-          color="blue"
-          onClick={() => {
-            router.push(`${pathname}/qualifications`);
-          }}
-        >
-          Qualifications
-        </ThreeDButton>
-      </Flex>
-      <Paper shadow="xs" p="xl" withBorder>
-        <Stack align="center">
-          <ThreeDButton
-            color="blue"
-            onClick={() => {
-              router.push(`${pathname}/qualifications`);
-            }}
-          >
-            Qualifications
-          </ThreeDButton>
-          <ThreeDButton color="blue">Settings</ThreeDButton>
-          <ThreeDButton color="blue">Qualifications</ThreeDButton>
-        </Stack>
-      </Paper>
+      
       <Table.ScrollContainer minWidth={800}>
         <Table verticalSpacing="sm">
           <Table.Thead>

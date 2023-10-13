@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./random.module.scss";
+import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack } from "@mantine/core";
 
 export interface Question {
   id: number;
@@ -141,7 +142,7 @@ const Quizz = (props: Props) => {
       <ul>
         {choices?.map((answer, index) => (
           <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-            {answer}
+            <Text size="md" span>{answer}</Text>
           </li>
         ))}
       </ul>
@@ -149,36 +150,49 @@ const Quizz = (props: Props) => {
   };
 
   return (
-    <div className={classes.quizContainer}>
+    <Card withBorder radius="md" className={classes.card}>
       {!showResult ? (
         <>
           {/* {showAnswerTimer && <AnswerTimer duration={10} onTimeUp={handleTimeUp} />} */}
+          <Title order={3} mb={20}>
+            <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
+              {currentQuestion + 1}
+            </Text>
+            /{questions.length}
+          </Title>
 
-          <span className={classes.activeQuestionNo}>{currentQuestion + 1}</span>
-          <span className={classes.totalQuestion}>/{questions.length}</span>
-          <h2 className={classes.question}>{question}</h2>
+          <Title order={2}>{question}</Title>
+
           {getAnswerUI()}
 
           <div className={classes.footer}>
-            {currentQuestion > 0 && (
-              <button onClick={() => onClickNext(currentQuestion - 1)} className={classes.button}>
-                Back
-              </button>
-            )}
-            {currentQuestion === questions.length - 1 ? (
-              <button onClick={() => endChallenge()} disabled={result.userAnswers[currentQuestion]?.answer ? false : true} className={classes.button}>
-                Finish
-              </button>
-            ) : (
-              <button onClick={() => onClickNext(currentQuestion + 1)} disabled={result.userAnswers[currentQuestion]?.answer ? false : true} className={classes.button}>
-                Next
-              </button>
-            )}
+            <Group justify="center">
+              {currentQuestion > 0 && (
+                <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={() => onClickNext(currentQuestion - 1)}>
+                  Back
+                </Button>
+              )}
+              {currentQuestion === questions.length - 1 ? (
+                <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={() => endChallenge()} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
+                  Finish
+                </Button>
+              ) : (
+                <Button
+                  mt={5}
+                  size="md"
+                  variant="gradient"
+                  gradient={{ from: "blue", to: "cyan", deg: 90 }}
+                  onClick={() => onClickNext(currentQuestion + 1)}
+                  disabled={result.userAnswers[currentQuestion]?.answer ? false : true}
+                >
+                  Next
+                </Button>
+              )}
+            </Group>
           </div>
         </>
       ) : (
-        <div className={classes.result}>
-          <h1 className={classes.gameOver}>game over</h1>
+        <Stack align={"center"} gap="0">
           <h3>Result</h3>
           <p>
             Total Questions: <span>{questions.length}</span>
@@ -192,10 +206,12 @@ const Quizz = (props: Props) => {
           <p>
             Wrong Answers: <span>{result.wrongAnswers}</span>
           </p>
-          <button onClick={handleTryAgain}>Try again</button>
-        </div>
+          <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
+            Try again
+          </Button>
+        </Stack>
       )}
-    </div>
+    </Card>
   );
 };
 

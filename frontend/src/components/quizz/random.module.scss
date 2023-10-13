@@ -1,29 +1,15 @@
-$primary: #150080;
-$accent: #d08642;
-$bg: #ffffff;
-$bg-accent: #e7e8e9;
 $disabled: #9c9c9c;
-$foreground: #2d264b;
 
-.quizContainer {
-  width: 500px;
-  background: $bg;
+.card {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   border-radius: 4px;
   margin-top: 100px;
   padding: 30px 60px;
   box-sizing: border-box;
   position: relative;
 
-  .activeQuestionNo {
+  .activeQuestion {
     font-size: 32px;
-    font-weight: 500;
-    color: $primary;
-  }
-
-  .totalQuestion {
-    font-size: 16px;
-    font-weight: 500;
-    color: $disabled;
   }
 
   h2 {
@@ -39,9 +25,9 @@ $foreground: #2d264b;
     li {
       text-decoration: none;
       list-style: none;
-      color: $foreground;
+      color: var(--mantine-color-body);
       font-size: 16px;
-      background: $bg;
+      background: var(--mantine-color-bright);
       border: 1px solid $disabled;
       border-radius: 16px;
       padding: 11px;
@@ -50,9 +36,9 @@ $foreground: #2d264b;
     }
 
     .selectedAnswer {
-      background: $primary;
-      border: 1px solid $accent;
-      color: $bg;
+      background: var(--mantine-color-anchor);
+      border: 1px solid var(--mantine-color-anchor);
+      color: var(--mantine-color-bright);
     }
   }
 
@@ -61,54 +47,6 @@ $foreground: #2d264b;
     justify-content: flex-end;
   }
 
-  .result {
-    text-align: center;
-
-    h3 {
-      font-size: 24px;
-      letter-spacing: 1.4px;
-      text-align: center;
-    }
-
-    p {
-      font-size: 16px;
-      font-weight: 500;
-
-      span {
-        color: $primary;
-        font-size: 22px;
-      }
-    }
-
-    table {
-      width: 50%;
-      text-align: left;
-      margin: 50px auto 20px;
-      border-collapse: collapse;
-
-      tr {
-        border: 1px solid;
-      }
-    }
-  }
-
-  button {
-    background: linear-gradient(0deg, $primary 0.03%, $accent);
-    border-radius: 9px;
-    font-size: 18px;
-    color: $bg;
-    padding: 10px 42px;
-    outline: none;
-    border: none;
-    margin-top: 15px;
-    cursor: pointer;
-
-    &:disabled {
-      background: $bg-accent;
-      color: $disabled;
-      cursor: not-allowed;
-    }
-  }
 
   input {
     border: 1px solid $disabled;
@@ -117,5 +55,11 @@ $foreground: #2d264b;
     width: 100%;
     margin-top: 20px;
     box-sizing: border-box;
+  }
+
+  button{
+    &:disabled{
+      border: 1px solid $disabled;
+    }
   }
 }
