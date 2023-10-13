@@ -70,8 +70,8 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
         const decodedToken = jwt.decode(accessToken) as DecodedToken;
 
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
-          console.log(pathname, routes.home.url)
-          if (pathname !== routes.home.url ) {
+          
+          if (pathname !== routes.landingpage.url ) {
             notifications.show({
               title: "Error",
               message: "Session expired",

@@ -55,10 +55,26 @@ const jobColors: Record<string, string> = {
   designer: "pink",
 };
 
+const buttons = (pathname: string, isAdmin:boolean) => {
+  if (isAdmin) {
+      return [
+        { name: "Play", path: `${pathname}/random`, color: "blue" },
+        { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
+        { name: "Settings", path: `${pathname}/settings`, color: "blue" },
+      ];
+  } else {
+      return [
+        { name: "Play", path: `${pathname}/random`, color: "blue" }, //agapar
+        { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
+        { name: "Settings", path: `${pathname}/settings`, color: "blue" },
+      ];
+  }
+
+};
+
 const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
   const pathname = usePathname();
-
   const [state, setState] = useState({
     id: id,
   });
@@ -69,6 +85,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
+        console.log(response)
       }
       if (response.status === false) {
         notifications.show({
@@ -142,8 +159,15 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <div>
-      Challenge Page {id}
-      <Flex justify={"flex-end"}>
+      {/*   <Flex justify={"space-between"} mt={20}>
+        <ThreeDButton
+          color="blue"
+          onClick={() => {
+            router.push(`${pathname}/qualifications`);
+          }}
+        >
+          Settings
+        </ThreeDButton>
         <ThreeDButton
           color="blue"
           onClick={() => {
@@ -152,35 +176,24 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
         >
           Qualifications
         </ThreeDButton>
-      </Flex>
-      <Paper shadow="xs" p="xl" withBorder>
-        <Stack align="center">
-          <ThreeDButton
-            color="blue"
-            onClick={() => {
-              router.push(`${pathname}/qualifications`);
-            }}
-          >
-            Qualifications
-          </ThreeDButton>
-          <ThreeDButton color="blue">Settings</ThreeDButton>
-          <ThreeDButton color="blue">Qualifications</ThreeDButton>
+      </Flex> */}
+      <Center mt={200}>
+        <Stack align="center" p={10}>
+          {buttons(pathname, true).map((button, index) => {
+            return (
+              <ThreeDButton
+                key={index}
+                color={button.color}
+                onClick={() => {
+                  router.push(button.path);
+                }}
+              >
+                {button.name}
+              </ThreeDButton>
+            );
+          })}
         </Stack>
-      </Paper>
-      <Table.ScrollContainer minWidth={800}>
-        <Table verticalSpacing="sm">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Employee</Table.Th>
-              <Table.Th>Job title</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Phone</Table.Th>
-              <Table.Th />
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
+      </Center>
     </div>
   );
 };
