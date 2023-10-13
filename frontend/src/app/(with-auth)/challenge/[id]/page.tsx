@@ -1,11 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper } from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
-import styled from "styled-components";
-import { useDisclosure } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { Card, Image, Text, Badge, Group, Center, Title, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Input, CloseButton, CopyButton, Tooltip, Grid } from "@mantine/core";
+import { IconPencil, IconTrash, IconCopy, IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { usePathname, useRouter } from "next/navigation";
 import { getSingleChallenge } from "@/services/challenge.service";
@@ -55,21 +52,20 @@ const jobColors: Record<string, string> = {
   designer: "pink",
 };
 
-const buttons = (pathname: string, isAdmin:boolean) => {
+const buttons = (pathname: string, isAdmin: boolean) => {
   if (isAdmin) {
-      return [
-        { name: "Play", path: `${pathname}/random`, color: "blue" },
-        { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
-        { name: "Settings", path: `${pathname}/settings`, color: "blue" },
-      ];
+    return [
+      { name: "Play", path: `${pathname}/random`, color: "blue" },
+      { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
+      { name: "Settings", path: `${pathname}/settings`, color: "blue" },
+    ];
   } else {
-      return [
-        { name: "Play", path: `${pathname}/random`, color: "blue" }, //agapar
-        { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
-        { name: "Settings", path: `${pathname}/settings`, color: "blue" },
-      ];
+    return [
+      { name: "Play", path: `${pathname}/random`, color: "blue" }, //agapar
+      { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
+      { name: "Settings", path: `${pathname}/settings`, color: "blue" },
+    ];
   }
-
 };
 
 const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
@@ -85,7 +81,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
-        console.log(response)
+        console.log(response);
       }
       if (response.status === false) {
         notifications.show({
@@ -145,7 +141,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
         <Text fz="sm">{item.phone}</Text>
       </Table.Td>
       <Table.Td>
-        <Group gap={0} justify="flex-end" >
+        <Group gap={0} justify="flex-end">
           <ActionIcon variant="subtle" color="gray">
             <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </ActionIcon>
@@ -177,6 +173,37 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           Qualifications
         </ThreeDButton>
       </Flex> */}
+      <Grid justify="center" align="stretch" mt={10} mb={10}>
+        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
+          <Card withBorder radius="md">
+            <Title ta="center" size={"h3"}>
+              Unleash the Power!
+            </Title>
+
+            <Text c="dimmed" size="md" ta="center" mt={5}>
+              Share this enchanted token with fellow players.
+            </Text>
+
+            <Input
+              placeholder="Clearable input"
+              value={id}
+              rightSectionPointerEvents="all"
+              mt="md"
+              rightSection={
+                <CopyButton value={id} timeout={2000}>
+                  {({ copied, copy }) => (
+                    <Tooltip label={copied ? "Copied" : "Copy"} withArrow position="right">
+                      <ActionIcon color={copied ? "teal" : "gray"} variant="subtle" onClick={copy}>
+                        {copied ? <IconCheck style={{ width: rem(16) }} /> : <IconCopy style={{ width: rem(16) }} />}
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </CopyButton>
+              }
+            />
+          </Card>
+        </Grid.Col>
+      </Grid>
       <Center mt={200}>
         <Stack align="center" p={10}>
           {buttons(pathname, true).map((button, index) => {
