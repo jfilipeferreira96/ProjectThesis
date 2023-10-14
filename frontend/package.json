@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
     "@mantine/code-highlight": "^7.0.2",
     "@mantine/core": "^7.0.2",
     "@mantine/dates": "^7.0.0",

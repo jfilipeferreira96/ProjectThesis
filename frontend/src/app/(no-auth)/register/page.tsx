@@ -22,6 +22,7 @@ const schema = z.object({
   fullname: z.string().min(2, { message: 'Full name should have at least 2 letters' }),
   email: z.string().email({ message: 'Invalid email address' }),
   password: z.string().min(4, { message: 'Password must be at least 4 characters long' }),
+  avatar: z.string().min(4, { message: 'Please select an avatar' })
 });
 
 export default function Register() {

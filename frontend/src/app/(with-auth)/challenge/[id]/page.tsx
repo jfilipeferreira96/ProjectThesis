@@ -186,7 +186,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
             <Input
               placeholder="Clearable input"
-              value={id}
+              defaultValue={id}
               rightSectionPointerEvents="all"
               mt="md"
               rightSection={
