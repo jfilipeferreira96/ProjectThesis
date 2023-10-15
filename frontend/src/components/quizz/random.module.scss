@@ -24,8 +24,8 @@ $disabled: #9c9c9c;
     li {
       text-decoration: none;
       list-style: none;
-      color: var(--mantine-color-body);
-      background: var(--mantine-color-bright);
+      color: var(--_input-color);
+      background: #25262B;
       border: 1px solid $disabled;
       border-radius: 16px;
       padding: 11px;

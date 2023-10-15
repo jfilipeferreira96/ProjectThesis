@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./random.module.scss";
-import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid } from "@mantine/core";
+import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input } from "@mantine/core";
 import { useInterval } from "@mantine/hooks";
 
 export interface Question {
@@ -150,7 +150,11 @@ const Quizz = (props: Props) => {
 
   const getAnswerUI = () => {
     if (type === "FillInBlank") {
-      return <input value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} />;
+      return (
+        <>
+          <Input size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
+        </>
+      );
     }
 
     return (
@@ -172,7 +176,7 @@ const Quizz = (props: Props) => {
 
   return (
     <Grid align="center" justify="center">
-      <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 8 }}>
+      <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }}>
         <Paper withBorder shadow="md" p={30} mt={10} radius="md" className={classes.card}>
           <>
             {!showResult ? (
