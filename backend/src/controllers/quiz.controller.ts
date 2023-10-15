@@ -4,6 +4,7 @@ import Quizz from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 
 class QuizzController {
+  
   static async fetchQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.params.id;
