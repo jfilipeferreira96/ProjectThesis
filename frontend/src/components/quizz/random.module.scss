@@ -36,8 +36,8 @@ $disabled: #9c9c9c;
     }
 
     .selectedAnswer {
-      background: var(--mantine-color-anchor);
-      border: 1px solid var(--mantine-color-anchor);
+      background: linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%);
+      border: 1px solid linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%);
       color: var(--mantine-color-bright);
     }
   }

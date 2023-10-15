@@ -4,7 +4,7 @@ import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Fl
 import { useInterval } from "@mantine/hooks";
 
 export interface Question {
-  id: number;
+  id: number | string;
   question: string;
   choices?: string[];
   correctAnswer: string;
@@ -15,11 +15,12 @@ interface Result {
   score: number;
   correctAnswers: number;
   wrongAnswers: number;
-  userAnswers: { id: number; answer: string }[];
+  userAnswers: { id: number | string; answer: string }[];
 }
 
 interface Props {
   questions: Question[];
+  preview?: boolean
 }
 
 const Quizz = (props: Props) => {
@@ -148,19 +149,23 @@ const Quizz = (props: Props) => {
   };
 
   const getAnswerUI = () => {
-    if (type === "FIB") {
+    if (type === "FillInBlank") {
       return <input value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} />;
     }
 
     return (
       <ul>
-        {choices?.map((answer, index) => (
-          <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-            <Text size="md" span>
-              {answer}
-            </Text>
-          </li>
-        ))}
+        {choices?.map((answer, index) => {
+          if (!answer) return <></>;
+
+          return (
+            <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+              <Text size="md" span>
+                {answer}
+              </Text>
+            </li>
+          );
+        })}
       </ul>
     );
   };
@@ -176,7 +181,7 @@ const Quizz = (props: Props) => {
             </Text>
             /{questions.length}
           </Title>
-          
+
           <Title order={2}>{question}</Title>
 
           {getAnswerUI()}
