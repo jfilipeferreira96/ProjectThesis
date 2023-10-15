@@ -21,7 +21,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
   const form = useForm({
     initialValues: {
-      quizz: [
+      questions: [
         {
           question: "",
           id: randomId(),
@@ -34,7 +34,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     validate: (values) => {
       const errors: FormErrors = {};
 
-      values.quizz.forEach((item, index) => {
+      values.questions.forEach((item, index) => {
         if (!item.question) {
           errors.question = `Please fill in the question in question ${index + 1}.`;
         }
@@ -62,7 +62,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
   const nextStep = (addFormEntry: boolean) => {
     if (addFormEntry) {
-      form.insertListItem("quizz", {
+      form.insertListItem("questions", {
         question: "",
         key: randomId(),
         type: QuestionType.MultipleQuestions,
@@ -78,32 +78,32 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const handleCorrectAnswerClick = (index: number, choice: string) => {
-    form.setFieldValue(`quizz.${index}.correctAnswer`, choice);
+    form.setFieldValue(`questions.${index}.correctAnswer`, choice);
   };
 
   const handleChoiceInputChange = (index: number, choiceIndex: number, newValue: string) => {
     // Verifica se o input atual é a "correct answer"
-    const isCorrectAnswer = form.values.quizz[index].correctAnswer === form.values.quizz[index].choices[choiceIndex];
+    const isCorrectAnswer = form.values.questions[index].correctAnswer === form.values.questions[index].choices[choiceIndex];
 
     // Atualiza o choices array quando o valor do input é alterado
-    form.setFieldValue(`quizz.${index}.choices.${choiceIndex}`, newValue);
+    form.setFieldValue(`questions.${index}.choices.${choiceIndex}`, newValue);
 
     // Se o input atual é a "correct answer" e o valor é alterado, reseta o campo correctAnswer
-    if (isCorrectAnswer && newValue !== form.values.quizz[index].choices[choiceIndex]) {
-      form.setFieldValue(`quizz.${index}.correctAnswer`, "");
+    if (isCorrectAnswer && newValue !== form.values.questions[index].choices[choiceIndex]) {
+      form.setFieldValue(`questions.${index}.correctAnswer`, "");
     }
   };
 
   const handleRadioChange = (index: number, type: QuestionType) => {
-    form.setFieldValue(`quizz.${index}.type`, type);
-    form.setFieldValue(`quizz.${index}.question`, "");
+    form.setFieldValue(`questions.${index}.type`, type);
+    form.setFieldValue(`questions.${index}.question`, "");
 
     if (type === QuestionType.MultipleQuestions) {
-      form.setFieldValue(`quizz.${index}.choices`, ["", "", "", ""]);
-      form.setFieldValue(`quizz.${index}.correctAnswer`, "");
+      form.setFieldValue(`questions.${index}.choices`, ["", "", "", ""]);
+      form.setFieldValue(`questions.${index}.correctAnswer`, "");
     } else {
-      form.setFieldValue(`quizz.${index}.choices`, undefined);
-      form.setFieldValue(`quizz.${index}.correctAnswer`, "");
+      form.setFieldValue(`questions.${index}.choices`, undefined);
+      form.setFieldValue(`questions.${index}.correctAnswer`, "");
     }
   };
 
@@ -117,7 +117,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
-        <Quizz questions={form.values.quizz} />
+        <Quizz questions={form.values.questions} />
       </Modal>
       <Flex justify={"space-between"} mt={20}>
         <Title>Create Quizz</Title>
@@ -135,7 +135,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       <Grid align="center" justify="center">
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 8 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
-            {form.values.quizz.map((item, index) => {
+            {form.values.questions.map((item, index) => {
               if (index !== active) {
                 return;
               }
@@ -150,7 +150,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                           <ActionIcon
                             color="red"
                             onClick={() => {
-                              form.removeListItem("quizz", index), setActive((prev) => prev - 1);
+                              form.removeListItem("questions", index), setActive((prev) => prev - 1);
                             }}
                             mr={5}
                           >
@@ -159,7 +159,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                         </Tooltip>
                       )}
 
-                      {active === form.values.quizz.length - 1 && (
+                      {active === form.values.questions.length - 1 && (
                         <Tooltip label={"Add question"} withArrow position="right">
                           <ActionIcon
                             color="green"
@@ -179,7 +179,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     label="Select the question type"
                     withAsterisk
                     defaultValue={item.type}
-                    {...form.getInputProps(`quizz.${index}.type`)}
+                    {...form.getInputProps(`questions.${index}.type`)}
                     onChange={(type) => handleRadioChange(index, type as QuestionType)}
                   >
                     <Group align="center" justify="center">
@@ -192,7 +192,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
                     withAsterisk
                     style={{ flex: 1 }}
-                    {...form.getInputProps(`quizz.${index}.question`)}
+                    {...form.getInputProps(`questions.${index}.question`)}
                     mt={10}
                   />
 
@@ -217,7 +217,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       );
                     })}
 
-                  {item.type === QuestionType.FillInBlank && <TextInput placeholder={"Correct answer"} withAsterisk style={{ flex: 1 }} {...form.getInputProps(`quizz.${index}.correctAnswer`)} mt={10} />}
+                  {item.type === QuestionType.FillInBlank && <TextInput placeholder={"Correct answer"} withAsterisk style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />}
 
                   <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 
@@ -233,7 +233,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       </Button>
                     )}
 
-                    {active < form.values.quizz.length - 1 && (
+                    {active < form.values.questions.length - 1 && (
                       <Button
                         onClick={() => {
                           nextStep(false);
