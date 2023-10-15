@@ -5,22 +5,30 @@ enum QuestionType {
   MultipleQuestions = "MultipleQuestions",
 }
 
-interface IQuizz extends Document {
-  id: number;
+interface IQuiz extends Document {
+  name: string;
+  questions: IQuestion[];
+}
+
+interface IQuestion {
   question: string;
   type: QuestionType;
   choices?: string[];
   correctAnswer: string;
 }
 
-const QuizzSchema: Schema<IQuizz> = new mongoose.Schema({
-  id: Number,
-  question: String,
-  type: QuestionType,
-  choices: [String],
-  correctAnswer: String,
+const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
+  name: String,
+  questions: [
+    {
+      question: String,
+      type: QuestionType,
+      choices: [String],
+      correctAnswer: String,
+    },
+  ],
 });
 
-const Quizz: Model<IQuizz> = mongoose.model<IQuizz>("Quizz", QuizzSchema);
+const Quiz: Model<IQuiz> = mongoose.model<IQuiz>("Quiz", QuizSchema);
 
-export default Quizz;
+export default Quiz;
