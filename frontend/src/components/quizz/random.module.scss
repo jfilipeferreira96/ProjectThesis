@@ -1,9 +1,8 @@
 $disabled: #9c9c9c;
 
 .card {
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   border-radius: 4px;
-  margin-top: 100px;
+  margin-top: 20px;
   padding: 30px 60px;
   box-sizing: border-box;
   position: relative;
@@ -26,13 +25,16 @@ $disabled: #9c9c9c;
       text-decoration: none;
       list-style: none;
       color: var(--mantine-color-body);
-      font-size: 16px;
       background: var(--mantine-color-bright);
       border: 1px solid $disabled;
       border-radius: 16px;
       padding: 11px;
       margin-top: 15px;
       cursor: pointer;
+      span{
+        font-size: 16px;
+        font-weight: 400;
+      }
     }
 
     .selectedAnswer {

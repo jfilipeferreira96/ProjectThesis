@@ -5,7 +5,7 @@ import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper } from "@mantine/core";
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
-import { randomId } from "@mantine/hooks";
+import { randomId, useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
 import Quizz from "@/components/quizz";
@@ -17,6 +17,7 @@ export enum QuestionType {
 
 const Add = ({ params: { id } }: { params: { id: string } }) => {
   const [active, setActive] = useState(0);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const form = useForm({
     initialValues: {
@@ -114,21 +115,38 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-      <Grid>
-        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 6 }}>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <>
-              {form.values.quizz.map((item, index) => {
-                if (index !== active) {
-                  return;
-                }
+      <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
+        <Title>Quizz Preview</Title>
+        <Quizz questions={form.values.quizz} />
+      </Modal>
+      <Flex justify={"space-between"} mt={20}>
+        <Title>Create Quizz</Title>
+        <div>
+          <Button size="lg" variant="filled" mr={5} color={"gray"} onClick={open}>
+            Preview
+          </Button>
+          <Button type="submit" size="lg" variant="filled">
+            Save Quizz
+          </Button>
+        </div>
+      </Flex>
+      <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-                return (
-                  <div key={item.id}>
-                    <Group mt="xs" justify="space-between" align="center" mb={10}>
-                      <Title>Question {index + 1}</Title>
-                      <div>
-                        {index !== 0 && (
+      <Grid align="center" justify="center">
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 8 }}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md">
+            {form.values.quizz.map((item, index) => {
+              if (index !== active) {
+                return;
+              }
+
+              return (
+                <div key={item.id}>
+                  <Group mt="xs" justify="space-between" align="center" mb={10}>
+                    <Title order={3}>Question {index + 1}</Title>
+                    <div>
+                      {index !== 0 && (
+                        <Tooltip label={"Delete question"} withArrow position="right">
                           <ActionIcon
                             color="red"
                             onClick={() => {
@@ -138,9 +156,11 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                           >
                             <IconTrash size="1rem" />
                           </ActionIcon>
-                        )}
+                        </Tooltip>
+                      )}
 
-                        {active === form.values.quizz.length - 1 && (
+                      {active === form.values.quizz.length - 1 && (
+                        <Tooltip label={"Add question"} withArrow position="right">
                           <ActionIcon
                             color="green"
                             onClick={() => {
@@ -149,98 +169,83 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                           >
                             <IconPlus size="1rem" />
                           </ActionIcon>
-                        )}
-                      </div>
-                    </Group>
-
-                    <Radio.Group
-                      name="type"
-                      label="Select the question type"
-                      withAsterisk
-                      mt="md"
-                      defaultValue={item.type}
-                      {...form.getInputProps(`quizz.${index}.type`)}
-                      onChange={(type) => handleRadioChange(index, type as QuestionType)}
-                    >
-                      <Group align="center" justify="center">
-                        <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
-                        <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
-                      </Group>
-                    </Radio.Group>
-
-                    <TextInput
-                      placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
-                      withAsterisk
-                      style={{ flex: 1 }}
-                      {...form.getInputProps(`quizz.${index}.question`)}
-                      mt={10}
-                    />
-
-                    {item.type === QuestionType.MultipleQuestions &&
-                      item.choices.map((choice, choiceIndex) => {
-                        return (
-                          <Input
-                            key={choiceIndex}
-                            placeholder={`Awnser nº ${choiceIndex + 1}`}
-                            defaultValue={choice}
-                            rightSectionPointerEvents="all"
-                            mt="md"
-                            onChange={(e) => handleChoiceInputChange(index, choiceIndex, e.currentTarget.value)}
-                            rightSection={
-                              <Tooltip label={item.correctAnswer === choice && choice !== "" ? "Correct choice" : "Choose the correct choice"} withArrow position="right">
-                                <ActionIcon color={item.correctAnswer === choice && choice !== "" ? "teal" : "gray"} variant="subtle" onClick={() => handleCorrectAnswerClick(index, choice)}>
-                                  <IconCheck style={{ width: rem(16) }} />
-                                </ActionIcon>
-                              </Tooltip>
-                            }
-                          />
-                        );
-                      })}
-
-                    {item.type === QuestionType.FillInBlank && <TextInput placeholder={"Correct answer"} withAsterisk style={{ flex: 1 }} {...form.getInputProps(`quizz.${index}.correctAnswer`)} mt={10} />}
-
-                    <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
-
-                    <Group justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
-                      {active !== 0 && (
-                        <Button
-                          color="gray"
-                          onClick={() => {
-                            prevStep();
-                          }}
-                        >
-                          Previous Question
-                        </Button>
+                        </Tooltip>
                       )}
+                    </div>
+                  </Group>
 
-                      {active < form.values.quizz.length - 1 && (
-                        <Button
-                          onClick={() => {
-                            nextStep(false);
-                          }}
-                        >
-                          Next Question
-                        </Button>
-                      )}
+                  <Radio.Group
+                    name="type"
+                    label="Select the question type"
+                    withAsterisk
+                    defaultValue={item.type}
+                    {...form.getInputProps(`quizz.${index}.type`)}
+                    onChange={(type) => handleRadioChange(index, type as QuestionType)}
+                  >
+                    <Group align="center" justify="center">
+                      <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
+                      <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
                     </Group>
-                  </div>
-                );
-              })}
+                  </Radio.Group>
 
-              <Center mt={10}>
-                <Button type="submit">Save Quizz</Button>
-              </Center>
-              {/* CODE: */}
-              <Text size="sm" fw={500} mt="md">
-                Form values:
-              </Text>
-              <Code block>{JSON.stringify(form.values, null, 2)}</Code>
-            </>
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 6 }}>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <Quizz preview questions={form.values.quizz} />
+                  <TextInput
+                    placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
+                    withAsterisk
+                    style={{ flex: 1 }}
+                    {...form.getInputProps(`quizz.${index}.question`)}
+                    mt={10}
+                  />
+
+                  {item.type === QuestionType.MultipleQuestions &&
+                    item.choices.map((choice, choiceIndex) => {
+                      return (
+                        <Input
+                          key={choiceIndex}
+                          placeholder={`Awnser nº ${choiceIndex + 1}`}
+                          defaultValue={choice}
+                          rightSectionPointerEvents="all"
+                          mt="md"
+                          onChange={(e) => handleChoiceInputChange(index, choiceIndex, e.currentTarget.value)}
+                          rightSection={
+                            <Tooltip label={item.correctAnswer === choice && choice !== "" ? "Correct choice" : "Choose the correct choice"} withArrow position="right">
+                              <ActionIcon color={item.correctAnswer === choice && choice !== "" ? "teal" : "gray"} variant="subtle" onClick={() => handleCorrectAnswerClick(index, choice)}>
+                                <IconCheck style={{ width: rem(16) }} />
+                              </ActionIcon>
+                            </Tooltip>
+                          }
+                        />
+                      );
+                    })}
+
+                  {item.type === QuestionType.FillInBlank && <TextInput placeholder={"Correct answer"} withAsterisk style={{ flex: 1 }} {...form.getInputProps(`quizz.${index}.correctAnswer`)} mt={10} />}
+
+                  <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
+
+                  <Group justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
+                    {active !== 0 && (
+                      <Button
+                        color="gray"
+                        onClick={() => {
+                          prevStep();
+                        }}
+                      >
+                        Previous Question
+                      </Button>
+                    )}
+
+                    {active < form.values.quizz.length - 1 && (
+                      <Button
+                        onClick={() => {
+                          nextStep(false);
+                        }}
+                      >
+                        Next Question
+                      </Button>
+                    )}
+                  </Group>
+                </div>
+              );
+            })}
           </Paper>
         </Grid.Col>
       </Grid>
