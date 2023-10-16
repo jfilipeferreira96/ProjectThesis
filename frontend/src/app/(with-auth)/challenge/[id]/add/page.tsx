@@ -147,7 +147,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
       <Grid align="center" justify="center">
-        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 8 }}>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
               if (index !== active) {
