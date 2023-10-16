@@ -8,7 +8,6 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { z } from "zod";
 import { routes } from "@/config/routes";
-import classes from "./create.module.css";
 import { ChallengeType, CreateChallengeData, createChallenge } from "@/services/challenge.service";
 
 const StyledPaper = styled(Paper)`

@@ -9,7 +9,7 @@ quizzRoutes.post("/quizz/create", authenticateToken, QuizzController.AddQuizz);
 
 quizzRoutes.get("/quizz/:id", authenticateToken, QuizzController.GetSingleQuizz);
 
-quizzRoutes.delete("/quizz/:id", authenticateToken, QuizzController.DeleteQuizz);
+quizzRoutes.post("/quizz/delete", authenticateToken, QuizzController.DeleteQuizz);
 
 quizzRoutes.post("/quizzs/edit", authenticateToken, QuizzController.EditQuizz);
 

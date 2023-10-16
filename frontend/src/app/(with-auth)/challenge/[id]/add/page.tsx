@@ -1,5 +1,4 @@
 "use client";
-import { getSingleChallenge } from "@/services/challenge.service";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper } from "@mantine/core";
@@ -7,15 +6,13 @@ import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
 import { randomId, useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
-import styled from "styled-components";
 import Quizz from "@/components/quizz";
-
-export enum QuestionType {
-  FillInBlank = "FillInBlank",
-  MultipleQuestions = "MultipleQuestions",
-}
+import { notifications } from "@mantine/notifications";
+import { QuestionType, QuizzData, createQuizz } from "@/services/quizz.service";
+import { useRouter } from "next/navigation";
 
 const Add = ({ params: { id } }: { params: { id: string } }) => {
+  const router = useRouter();
   const [active, setActive] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -107,10 +104,27 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     }
   };
 
-  const onSubmitHandler = useCallback(async (data: any) => {
+  const onSubmitHandler = useCallback(async (data: QuizzData) => {
     console.log(data);
     try {
-    } catch (error) {}
+      const response = await createQuizz(data);
+      if (response.status) {
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+
+        //redirect
+        router.push(`${routes.challenge.url}/${id}`);
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
   }, []);
 
   return (
@@ -189,6 +203,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                   </Radio.Group>
 
                   <TextInput
+                    label={"Question"}
                     placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
                     withAsterisk
                     style={{ flex: 1 }}
@@ -199,12 +214,14 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                   {item.type === QuestionType.MultipleQuestions &&
                     item.choices.map((choice, choiceIndex) => {
                       return (
-                        <Input
+                        <TextInput
                           key={choiceIndex}
                           placeholder={`Awnser nº ${choiceIndex + 1}`}
                           defaultValue={choice}
                           rightSectionPointerEvents="all"
                           mt="md"
+                          label={choiceIndex === 0 ? "Answers" : ""}
+                          withAsterisk={choiceIndex === 0 ? true : false}
                           onChange={(e) => handleChoiceInputChange(index, choiceIndex, e.currentTarget.value)}
                           rightSection={
                             <Tooltip label={item.correctAnswer === choice && choice !== "" ? "Correct choice" : "Choose the correct choice"} withArrow position="right">
@@ -217,7 +234,9 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       );
                     })}
 
-                  {item.type === QuestionType.FillInBlank && <TextInput placeholder={"Correct answer"} withAsterisk style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />}
+                  {item.type === QuestionType.FillInBlank && (
+                    <TextInput label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                  )}
 
                   <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 

@@ -73,7 +73,7 @@ class QuizzController {
 
   static async DeleteQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const quizId = req.params.id;
+      const quizId = req.body;
       const quiz = await Quizz.findByIdAndDelete(quizId);
 
       if (!quiz) {
