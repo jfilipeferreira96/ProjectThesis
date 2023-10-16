@@ -8,9 +8,8 @@ enum QuestionType {
 interface IQuiz extends Document {
   user: Schema.Types.ObjectId;
   createdAt: Date;
-  endDate: Date;
-  startDate: Date;
-  name: string;
+  endDate?: Date;
+  startDate?: Date;
   questions: IQuestion[];
 }
 
@@ -23,7 +22,7 @@ interface IQuestion {
 
 const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   user: {
-    type: Schema.Types.ObjectId, 
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
@@ -33,11 +32,14 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   endDate: Date,
   startDate: Date,
-  name: String,
   questions: [
     {
       question: String,
-      type: QuestionType,
+      type: {
+        type: String,
+        enum: QuestionType,
+        required: true
+      },
       choices: [String],
       correctAnswer: String,
     },

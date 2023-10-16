@@ -28,14 +28,13 @@ class QuizzController {
 
   static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { user, createdAt, endDate, startDate, name, questions } = req.body;
+      console.log(req.body);     
+      console.log(req.user)
+      const { questions } = req.body;
+      const user = req.user;
 
       const quiz = await Quizz.create({
         user,
-        createdAt,
-        endDate,
-        startDate,
-        name,
         questions,
       });
 

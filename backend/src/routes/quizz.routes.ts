@@ -11,7 +11,7 @@ quizzRoutes.get("/quizz/:id", authenticateToken, QuizzController.GetSingleQuizz)
 
 quizzRoutes.post("/quizz/delete", authenticateToken, QuizzController.DeleteQuizz);
 
-quizzRoutes.post("/quizzs/edit", authenticateToken, QuizzController.EditQuizz);
+quizzRoutes.post("/quizz/edit", authenticateToken, QuizzController.EditQuizz);
 
 
 export default quizzRoutes;
