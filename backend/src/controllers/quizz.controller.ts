@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 class QuizzController {
   
-  static async fetchQuizz(req: Request, res: Response, next: NextFunction) {
+  static async GetSingleQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.params.id;
       const quiz = await Quizz.findById(quizId);
@@ -26,7 +26,7 @@ class QuizzController {
     }
   }
 
-  static async addQuizz(req: Request, res: Response, next: NextFunction) {
+  static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const { user, createdAt, endDate, startDate, name, questions } = req.body;
 
@@ -48,7 +48,7 @@ class QuizzController {
     }
   }
 
-  static async editQuizz(req: Request, res: Response, next: NextFunction) {
+  static async EditQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.params.id;
       const updateData = req.body;
@@ -71,7 +71,7 @@ class QuizzController {
     }
   }
 
-  static async deleteQuizz(req: Request, res: Response, next: NextFunction) {
+  static async DeleteQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.params.id;
       const quiz = await Quizz.findByIdAndDelete(quizId);
