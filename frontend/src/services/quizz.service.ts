@@ -7,6 +7,7 @@ export enum QuestionType {
 }
 
 export interface QuizzData {
+  quizzId?: string;
   questions: {
     question: string;
     id: string;
@@ -26,7 +27,6 @@ export const createQuizz = async (data: QuizzData) => {
 
 export const getChallenges = async () => {
   try {
-    console.log(endpoints.getChallengesByUserId);
     const response = await api.get(endpoints.getChallengesByUserId);
 
     return response.data;
@@ -44,9 +44,10 @@ export const getSingleQuizz = async (id: string) => {
   }
 };
 
-export const editQuizz = async (id: string) => {
+export const editQuizz = async (data: QuizzData) => {
   try {
-    const response = await api.post(endpoints.editQuizzRoute, { id: id });
+    console.log(data)
+    const response = await api.post(endpoints.editQuizzRoute, data);
     return response.data;
   } catch (error) {
     throw error;

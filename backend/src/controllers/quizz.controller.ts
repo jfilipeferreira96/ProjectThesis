@@ -49,10 +49,10 @@ class QuizzController {
 
   static async EditQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const quizId = req.params.id;
-      const updateData = req.body;
+      const { quizzId, questions } = req.body;
+      console.log(quizzId, questions);
+      const quiz = await Quizz.findByIdAndUpdate(quizzId, { questions }, { new: true });
 
-      const quiz = await Quizz.findByIdAndUpdate(quizId, updateData, { new: true });
 
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
