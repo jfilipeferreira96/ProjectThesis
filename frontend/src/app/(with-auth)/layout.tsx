@@ -5,6 +5,7 @@ import { Container } from "@mantine/core";
 import { useSession } from "@/providers/SessionProvider";
 import { useEffect } from "react";
 import { routes } from "@/config/routes";
+import { Sidebar } from "@/components/sidebar";
 
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -25,6 +26,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <HeaderMenu />
+      <Sidebar />
       <Container size="responsive">{children}</Container>
     </>
   );
