@@ -46,7 +46,7 @@ export const getSingleQuizz = async (id: string) => {
 
 export const editQuizz = async (data: QuizzData) => {
   try {
-    console.log(data)
+
     const response = await api.post(endpoints.editQuizzRoute, data);
     return response.data;
   } catch (error) {

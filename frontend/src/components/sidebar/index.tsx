@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
 import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconFingerprint, IconCalendarStats, IconUser, IconSettings, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 import classes from "./sidebar.module.css";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
+import { getId } from "@/utils/getID";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -22,24 +23,35 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: "Home" },
-  { icon: IconDeviceDesktopAnalytics, label: "Qualifications" },
-  { icon: IconSettings, label: "Settings" },
+const data = [
+  { icon: IconHome2, label: "Home", url: "", route: routes.challenge.url },
+  { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications", route: routes.challenge.url },
+  { icon: IconSettings, label: "Settings", url: "settings", route: routes.challenge.url },
 ];
-
-const regex = /^\/challenge\/[0-9a-f]{24}$/; //regex do challenge/:id
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [active, setActive] = useState(0);
+  const router = useRouter();
+  const [active, setActive] = useState<number>(0);
 
-  const links = mockdata.map((link, index) =>
+    useEffect(() => {
+      const activeIndex = data.findIndex((item) => item.url === getId(pathname));
+      if (activeIndex !== -1) {
+        setActive(activeIndex);
+      }
+    }, [pathname]);
+  
+  const handleNavClick = (index:number) => {
+    setActive(index);
+    router.push(`${routes.challenge.url}/${getId(pathname)}/${data[index].url}`);
+  }
+
+  const links = data.map((link, index) =>
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)} />
+      onClick={() => handleNavClick(index)} />
   );
 
   return (

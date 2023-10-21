@@ -21,7 +21,6 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
     const fetchQuizz = async () => {
       try {
         const response = await getSingleQuizz(quizzId);
-        console.log(response)
         if (response.status) {
           setQuizzData(response.quiz.questions);
           // Assuming response.quiz.questions is an array of questions

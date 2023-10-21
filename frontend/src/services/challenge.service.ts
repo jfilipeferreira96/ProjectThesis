@@ -48,7 +48,6 @@ export const createChallenge = async (data: CreateChallengeData) => {
 
 export const getChallenges = async () => {
   try {
-    console.log(endpoints.getChallengesByUserId)
     const response = await api.get(endpoints.getChallengesByUserId);
     
     return response.data;

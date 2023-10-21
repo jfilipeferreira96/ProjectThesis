@@ -11,24 +11,16 @@ import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
 
 const regex = /^\/challenge\/[0-9a-f]{24}$/; //regex do challenge/:id
-
-const StyledContainer = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--mantine-spacing-md);
-  padding-right: var(--mantine-spacing-md);
-  width: 100%;
-  height: 100%;
-`;
+const regexQualifications = /^\/challenge\/[0-9a-f]{24}\/qualifications$/;
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   //checking session
   const { user, isReady } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const isChallengePage = regex.test(pathname);
-    const [opened, { toggle }] = useDisclosure();
-
+  const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname);
+  const [opened, { toggle }] = useDisclosure();
+  
   useEffect(() => {
     if (!user?._id && isReady) {
       router.push(routes.landingpage.url)

@@ -164,7 +164,6 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <div>
-      
       <Grid justify="center" align="stretch" mt={10} mb={10}>
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <Card withBorder radius="md">

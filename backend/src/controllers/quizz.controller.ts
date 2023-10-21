@@ -28,8 +28,6 @@ class QuizzController {
 
   static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.body);     
-      console.log(req.user)
       const { questions } = req.body;
       const user = req.user;
 
