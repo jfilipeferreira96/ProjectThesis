@@ -165,51 +165,6 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <div>
       
-      <StyledTab defaultValue="first" mt={20}>
-        <Tabs.List>
-          <Tabs.Tab value="first">First tab</Tabs.Tab>
-          <Tabs.Tab value="second">Second tab</Tabs.Tab>
-          <Tabs.Tab value="third">Third tab</Tabs.Tab>
-        </Tabs.List>
-      </StyledTab>
-
-      <Tabs variant="pills" defaultValue="gallery" mt={20}>
-        <Tabs.List>
-          <Tabs.Tab value="gallery" leftSection={<IconPhoto style={iconStyle} />}>
-            Gallery
-          </Tabs.Tab>
-          <Tabs.Tab value="messages" leftSection={<IconMessageCircle style={iconStyle} />}>
-            Messages
-          </Tabs.Tab>
-          <Tabs.Tab value="settings" leftSection={<IconSettings style={iconStyle} />}>
-            Settings
-          </Tabs.Tab>
-        </Tabs.List>
-
-        <Tabs.Panel value="gallery">Gallery tab content</Tabs.Panel>
-
-        <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
-
-        <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
-      </Tabs>
-      <Flex justify={"space-between"} mt={20}>
-        <ThreeDButton
-          color="blue"
-          onClick={() => {
-            router.push(`${pathname}/qualifications`);
-          }}
-        >
-          Settings
-        </ThreeDButton>
-        <ThreeDButton
-          color="blue"
-          onClick={() => {
-            router.push(`${pathname}/qualifications`);
-          }}
-        >
-          Qualifications
-        </ThreeDButton>
-      </Flex>
       <Grid justify="center" align="stretch" mt={10} mb={10}>
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <Card withBorder radius="md">

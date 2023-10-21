@@ -1,14 +1,12 @@
 "use client";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { HeaderMenu } from "@/components/landing-page/sections/header";
-import { Container, rem } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { useSession } from "@/providers/SessionProvider";
 import { useEffect } from "react";
 import { routes } from "@/config/routes";
 import { Sidebar } from "@/components/sidebar";
 import styled from "styled-components";
-import { useDisclosure } from "@mantine/hooks";
-import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
 
 const regex = /^\/challenge\/[0-9a-f]{24}$/; //regex do challenge/:id
 
@@ -27,7 +25,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const isChallengePage = regex.test(pathname);
-    const [opened, { toggle }] = useDisclosure();
 
   useEffect(() => {
     if (!user?._id && isReady) {
@@ -40,18 +37,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AppShell header={{ height: 60 }} navbar={{ width: "auto", breakpoint: "sm", collapsed: { mobile: !opened } }}>
-      <AppShell.Header>
-        <HeaderMenu />
-      </AppShell.Header>
+    <div>
+      <HeaderMenu />
+
+      {!isChallengePage && <Container size="responsive">{children}</Container>}
       {isChallengePage && (
-        <AppShell.Navbar>
+        <div style={{ display: "flex" }}>
           <Sidebar />
-        </AppShell.Navbar>
+          <StyledContainer>{children}</StyledContainer>
+        </div>
       )}
-      <AppShell.Main pt={`calc(${rem(60)} + var(--mantine-spacing-md))`}>
-        <Container size="responsive">{children}</Container>
-      </AppShell.Main>
-    </AppShell>
+    </div>
   );
 }

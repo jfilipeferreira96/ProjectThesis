@@ -16,7 +16,7 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
-        <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+        <Icon style={{ width: rem(25), height: rem(25) }} stroke={1.5} />
       </UnstyledButton>
     </Tooltip>
   );
@@ -27,6 +27,8 @@ const mockdata = [
   { icon: IconDeviceDesktopAnalytics, label: "Qualifications" },
   { icon: IconSettings, label: "Settings" },
 ];
+
+const regex = /^\/challenge\/[0-9a-f]{24}$/; //regex do challenge/:id
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -39,11 +41,7 @@ export function Sidebar() {
       active={index === active}
       onClick={() => setActive(index)} />
   );
-  console.log(pathname, routes.challenge.url);
-  if (!pathname.includes(routes.challenge.url)) {
-    return;
-  }
-  
+
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
