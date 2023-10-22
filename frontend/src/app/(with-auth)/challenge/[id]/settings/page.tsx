@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, RingProgress } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper } from "@mantine/core";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
-
+import { useDisclosure } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { getSingleChallenge } from "@/services/challenge.service";
-import { IconPentagonNumber1, IconPentagonNumber2, IconPentagonNumber3 } from "@tabler/icons-react";
+import { getAllChallengeQuizzes } from "@/services/challenge.service";
 
 const data = [
   {
@@ -44,7 +44,7 @@ const data = [
     name: "Jeremy Footviewer",
     job: "Manager",
     email: "jeremy@foot.dev",
-    phone: "+44 (881) 245 100 65",
+    phone: "+44 (881) 245 65 65",
   },
 ];
 
@@ -54,17 +54,18 @@ const jobColors: Record<string, string> = {
   designer: "pink",
 };
 
-const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
+const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
   const [state, setState] = useState({
     id: id,
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const GetSingleChallenge = async (id: string) => {
+  const GetAllChallengeQuizzes = async (id: string) => {
     setIsLoading(true);
     try {
-      const response = await getSingleChallenge(id);
+      const response = await getAllChallengeQuizzes(id);
+      console.log(response)
       if (response.status) {
       }
       if (response.status === false) {
@@ -88,20 +89,9 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (id) {
-      GetSingleChallenge(id);
+      GetAllChallengeQuizzes(id);
     }
   }, []);
-
-  const dataTop = [
-    { label: "First place", stats: "456,578", color: "teal", icon: <IconPentagonNumber1 style={{ width: rem(30), height: rem(30) }} stroke={1.5} /> },
-    { label: "Second place", stats: "2,550", color: "blue", icon: <IconPentagonNumber2 style={{ width: rem(30), height: rem(30) }} stroke={1.5} /> },
-    {
-      label: "Third place",
-      stats: "4,735",
-      color: "red",
-      icon: <IconPentagonNumber3 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
-    },
-  ];
 
   if (isLoading) {
     return (
@@ -136,7 +126,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
         <Text fz="sm">{item.phone}</Text>
       </Table.Td>
       <Table.Td>
-        <Group gap={0} justify="flex-end">
+        <Group gap={0} justify="flex-end" >
           <ActionIcon variant="subtle" color="gray">
             <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </ActionIcon>
@@ -148,38 +138,11 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
     </Table.Tr>
   ));
 
-  const stats = dataTop.map((stat) => {
-   
-    return (
-      <Paper withBorder radius="md" p="xs" key={stat.label}>
-        <Group>
-          <RingProgress size={80} roundCaps thickness={8} sections={[{ value: 100, color: stat.color }]} label={<Center>{stat.icon}</Center>} />
-
-          <div>
-            <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
-              {stat.label}
-            </Text>
-            <Text fw={700} size="xl">
-              {stat.stats}
-            </Text>
-          </div>
-        </Group>
-      </Paper>
-    );
-  });
-
   return (
     <Grid justify="center" align="stretch" mt={10} mb={10}>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
-        <Title order={1}>Qualifications</Title>
-      </Grid.Col>
-      
-      {stats.map((stat, index) => (
-        <Grid.Col span={{ md: 3, sm: 10, xs: 12, lg: 3 }} key={index} ml={{ md: 0, lg: 0, sm: 100 }}>
-          {stat}
-        </Grid.Col>
-      ))}
-      <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
+        <Title order={1}>Settings</Title>
+
         <Table.ScrollContainer minWidth={800}>
           <Table verticalSpacing="sm">
             <Table.Thead>
@@ -199,4 +162,4 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
   );
 };
 
-export default Qualifications;
+export default Settings;

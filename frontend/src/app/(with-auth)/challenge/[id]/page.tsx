@@ -5,7 +5,7 @@ import { Card, Image, Text, Badge, Group, Center, Title, Loader, Container, Avat
 import { IconPencil, IconTrash, IconCopy, IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { usePathname, useRouter } from "next/navigation";
-import { getSingleChallenge } from "@/services/challenge.service";
+import { getSingleChallenge, getStatusInfo } from "@/services/challenge.service";
 import ThreeDButton from "@/components/3dbutton";
 import { IconPhoto, IconMessageCircle, IconSettings } from "@tabler/icons-react";
 import classes from "./Demo.module.css";
@@ -81,9 +81,14 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const pathname = usePathname();
   const [state, setState] = useState({
     id: id,
+    title: "",
+    description: "",
+    type: "",
+    admins: [],
+    participants: [],
+    status: 0
   });
   const [isLoading, setIsLoading] = useState(false);
-    const iconStyle = { width: rem(12), height: rem(12) };
 
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
@@ -91,6 +96,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
       const response = await getSingleChallenge(id);
       if (response.status) {
         console.log(response);
+        setState(response.challenge);
       }
       if (response.status === false) {
         notifications.show({
@@ -125,46 +131,14 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     );
   }
 
-  const rows = data.map((item) => (
-    <Table.Tr key={item.name}>
-      <Table.Td>
-        <Group gap="sm">
-          <Avatar size={30} src={item.avatar} radius={30} />
-          <Text fz="sm" fw={500}>
-            {item.name}
-          </Text>
-        </Group>
-      </Table.Td>
-
-      <Table.Td>
-        <Badge color={jobColors[item.job.toLowerCase()]} variant="light">
-          {item.job}
-        </Badge>
-      </Table.Td>
-      <Table.Td>
-        <Anchor component="button" size="sm">
-          {item.email}
-        </Anchor>
-      </Table.Td>
-      <Table.Td>
-        <Text fz="sm">{item.phone}</Text>
-      </Table.Td>
-      <Table.Td>
-        <Group gap={0} justify="flex-end">
-          <ActionIcon variant="subtle" color="gray">
-            <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" color="red">
-            <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-        </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
-
   return (
-    <div>
+    <>
       <Grid justify="center" align="stretch" mt={10} mb={10}>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
+          <Title order={1}>{state.title} </Title>
+
+          {state.description && <Text c="dimmed">{state.description}</Text>}
+        </Grid.Col>
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <Card withBorder radius="md">
             <Title ta="center" size={"h3"}>
@@ -195,7 +169,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           </Card>
         </Grid.Col>
       </Grid>
-      <Center mt={200}>
+      <Center>
         <Stack align="center" p={10}>
           {buttons(pathname, true).map((button, index) => {
             return (
@@ -212,7 +186,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           })}
         </Stack>
       </Center>
-    </div>
+    </>
   );
 };
 

@@ -24,9 +24,9 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const data = [
-  { icon: IconHome2, label: "Home", url: "", route: routes.challenge.url },
-  { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications", route: routes.challenge.url },
-  { icon: IconSettings, label: "Settings", url: "settings", route: routes.challenge.url },
+  { icon: IconHome2, label: "Home", url: "" },
+  { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications" },
+  { icon: IconSettings, label: "Settings", url: "settings" },
 ];
 
 export function Sidebar() {
@@ -34,25 +34,25 @@ export function Sidebar() {
   const router = useRouter();
   const [active, setActive] = useState<number>(0);
 
-    useEffect(() => {
-      const activeIndex = data.findIndex((item) => item.url === getId(pathname));
-      if (activeIndex !== -1) {
-        setActive(activeIndex);
+  useEffect(() => {
+    const activeIndex = data.findIndex((item) => {
+      if (item.url) {
+        return pathname.includes(item.url); 
       }
-    }, [pathname]);
-  
-  const handleNavClick = (index:number) => {
+      return false; 
+    });
+    
+    if (activeIndex !== -1) {
+      setActive(activeIndex);
+    }
+  }, [pathname]);
+
+  const handleNavClick = (index: number) => {
     setActive(index);
     router.push(`${routes.challenge.url}/${getId(pathname)}/${data[index].url}`);
-  }
+  };
 
-  const links = data.map((link, index) =>
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => handleNavClick(index)} />
-  );
+  const links = data.map((link, index) => <NavbarLink {...link} key={link.label} active={index === active} onClick={() => handleNavClick(index)} />);
 
   return (
     <nav className={classes.navbar}>

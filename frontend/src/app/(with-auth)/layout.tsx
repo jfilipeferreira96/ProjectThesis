@@ -10,15 +10,16 @@ import styled from "styled-components";
 import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
 
-const regex = /^\/challenge\/[0-9a-f]{24}$/; //regex do challenge/:id
+const regex = /^\/challenge\/[0-9a-f]{24}$/;
 const regexQualifications = /^\/challenge\/[0-9a-f]{24}\/qualifications$/;
+const regexSettings = /^\/challenge\/[0-9a-f]{24}\/settings$/;
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   //checking session
   const { user, isReady } = useSession();
   const router = useRouter();
   const pathname = usePathname();
-  const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname);
+  const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname) || regexSettings.test(pathname);
   const [opened, { toggle }] = useDisclosure();
   
   useEffect(() => {
