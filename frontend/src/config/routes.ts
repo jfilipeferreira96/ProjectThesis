@@ -9,6 +9,7 @@ export const endpoints = {
   getChallengesByUserId: `${host}/api/challenges`,
   getSingleChallenge: `${host}/api/challenges/`,
   joinChallenge: `${host}/api/challenges/join`,
+  getAllChallengeQuizzes: `${host}/api/challenges/quizzes/`,
   createQuizzRoute: `${host}/api/quizz/create`,
   editQuizzRoute: `${host}/api/quizz/edit`,
   deleteQuizzRoute: `${host}/api/quizz/delete`,

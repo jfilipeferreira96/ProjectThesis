@@ -65,6 +65,15 @@ export const getSingleChallenge = async (id:string) => {
   }
 };
 
+export const getAllChallengeQuizzes = async (id: string) => {
+  try {
+    const response = await api.get(endpoints.getAllChallengeQuizzes + id);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const joinChallenge = async (token: string) => {
   try {
     const response = await api.post(endpoints.joinChallenge, { token: token });
