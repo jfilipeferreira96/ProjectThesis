@@ -1,11 +1,9 @@
 import chalk from "chalk";
 
-class Logger
-{
+class Logger {
   static dateFormat: string;
 
-  static getCurrentTime(): string
-  {
+  static getCurrentTime(): string {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
@@ -13,16 +11,24 @@ class Logger
     return `${hours}:${minutes}:${seconds}`;
   }
 
-  static info(message: string)
-  {
+  static info(message: string) {
     const currentTime = this.getCurrentTime();
     console.log(`${chalk.bold.yellow("[INFO]")} ${chalk.bold(`${currentTime}:`)} ${message}`);
   }
 
-  static error(message: string)
-  {
+  static error(message: string) {
     const currentTime = this.getCurrentTime();
     console.log(`${chalk.bold.red("[ERROR]")} ${chalk.bold(`${currentTime}:`)}: ${message}`);
+  }
+
+  static request(message: string) {
+    const currentTime = this.getCurrentTime();
+    console.log(`${chalk.bold.blue("[REQUEST]")} ${chalk.bold(`${currentTime}:`)} ${message}`);
+  }
+
+  static response(message: string) {
+    const currentTime = this.getCurrentTime();
+    console.log(`${chalk.bold.blueBright("[RESPONSE]")} ${chalk.bold(`${currentTime}:`)} ${message}`);
   }
 }
 
