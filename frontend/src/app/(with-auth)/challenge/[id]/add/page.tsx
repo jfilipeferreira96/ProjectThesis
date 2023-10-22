@@ -107,7 +107,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
   const onSubmitHandler = useCallback(async (data: QuizzData) => {
   
     try {
-      const response = await createQuizz(data);
+      const sendObject = { ...data, challengeId: id};
+      const response = await createQuizz(sendObject);
       if (response.status) {
         notifications.show({
           title: "Success",

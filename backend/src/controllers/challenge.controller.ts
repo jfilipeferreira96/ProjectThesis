@@ -123,10 +123,10 @@ class ChallengeController {
     let response = { status: false, message: "" };
     const challengeId  = req.params.id;
     const userId: any = req.user._id;
-    console.log(challengeId, req.params);
+    
     try {
       const challenge = await Challenge.findById(challengeId);
-      console.log(challenge);
+      
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
@@ -140,9 +140,8 @@ class ChallengeController {
       }
 
       const quizzIds = challenge.quizzes;
-      console.log(quizzIds);
       const quizzes = await Quizz.find({ _id: { $in: quizzIds } });
-      console.log(quizzes);
+      
       return res.status(200).json({ status: true, quizzes });
     } catch (error) {
       throw new Error("Error fecthing all quizzes from challenge: " + error);

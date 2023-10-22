@@ -10,6 +10,7 @@ interface IQuiz extends Document {
   createdAt: Date;
   endDate?: Date;
   startDate?: Date;
+  challenge: Schema.Types.ObjectId;
   questions: IQuestion[];
 }
 
@@ -32,13 +33,18 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   endDate: Date,
   startDate: Date,
+  challenge: {
+    type: Schema.Types.ObjectId,
+    ref: "Challenge",
+    required: true,
+  },
   questions: [
     {
       question: String,
       type: {
         type: String,
         enum: QuestionType,
-        required: true
+        required: true,
       },
       choices: [String],
       correctAnswer: String,

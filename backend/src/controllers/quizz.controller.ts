@@ -29,10 +29,11 @@ class QuizzController {
     try {
       const { questions, challengeId } = req.body;
       const user = req.user;
-
+      
       const quiz = await Quizz.create({
         user,
         questions,
+        challenge: challengeId
       });
 
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });

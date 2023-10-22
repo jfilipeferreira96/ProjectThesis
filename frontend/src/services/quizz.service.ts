@@ -8,6 +8,7 @@ export enum QuestionType {
 
 export interface QuizzData {
   quizzId?: string;
+  challengeId?: string;
   questions: {
     question: string;
     id: string;
