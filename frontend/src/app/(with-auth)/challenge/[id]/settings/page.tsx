@@ -139,8 +139,14 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   ));
 
   return (
-    <Grid justify="center" align="stretch" mt={10} mb={10}>
+    <Grid justify="center" align="stretch" mb={10}>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
+        <Flex justify={"flex-end"} mr={{ xl: 110, md: 110,  sm: 110 }}>
+          <Button size="lg" variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+            Add Quizz
+          </Button>
+        </Flex>
+      
         <Title order={1}>Settings</Title>
 
         <Table.ScrollContainer minWidth={800}>

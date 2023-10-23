@@ -4,7 +4,7 @@ import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper } from "@mantine/core";
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
-import { randomId, useDisclosure } from "@mantine/hooks";
+import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
 import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
@@ -16,6 +16,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
   const [active, setActive] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
   const [quizzData, setQuizzData] = useState<QuizzData | null>(null);
+  const isMdScreen = useMediaQuery('(max-width: 768px)'); 
   
   useEffect(() => {
     const fetchQuizz = async () => {
@@ -177,17 +178,38 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         <Title>Quizz Preview</Title>
         <Quizz questions={form.values.questions} />
       </Modal>
-      <Flex justify={"space-between"} mt={20}>
-        <Title>Edit Quizz</Title>
+      <Flex justify="space-between">
+        <Button
+          size={isMdScreen ? "md" : "lg"}
+          variant={isMdScreen ? "transparent" : "filled"}
+          p={isMdScreen ? 0 : undefined}
+          color="gray"
+          onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}
+        >
+          Back
+        </Button>
         <div>
-          <Button size="lg" variant="filled" mr={5} color={"gray"} onClick={open}>
+          <Button
+            size={isMdScreen ? "md" : "lg"}
+            variant={isMdScreen ? "transparent" : "filled"}
+            p={isMdScreen ? 0 : undefined}
+            mr={5}
+            color="gray"
+            onClick={open}
+          >
             Preview
           </Button>
-          <Button type="submit" size="lg" variant="filled">
+          <Button
+            type="submit"
+            size={isMdScreen ? "md" : "lg"}
+            variant={isMdScreen ? "transparent" : "filled"}
+            p={isMdScreen ? 0 : undefined}
+          >
             Save Quizz
           </Button>
         </div>
       </Flex>
+        <Title>Edit Quizz</Title>
       <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
       <Grid align="center" justify="center">

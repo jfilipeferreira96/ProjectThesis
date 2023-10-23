@@ -46,8 +46,7 @@ interface NavbarLinkProps {
   onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps)
-{
+function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <Link onClick={onClick} data-active={active || undefined}>
