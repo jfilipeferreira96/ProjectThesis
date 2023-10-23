@@ -8,7 +8,7 @@ enum QuestionType {
 export enum Status{
   PendingStart = 0,
   InProgress = 1,
-  Completed = 3
+  Completed = 2
 }
 
 interface IQuiz extends Document {
