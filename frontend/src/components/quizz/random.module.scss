@@ -7,6 +7,10 @@ $disabled: #9c9c9c;
   box-sizing: border-box;
   position: relative;
 
+  @media (min-width: 1200px) {
+    min-height: 600px;
+  }
+
   .activeQuestion {
     font-size: 32px;
   }
@@ -44,11 +48,21 @@ $disabled: #9c9c9c;
     }
   }
 
+  .answerDiv {
+    margin-top: 50px;
+  }
+
   .footer {
     display: flex;
     justify-content: flex-end;
+    
+    @media (min-width: 1200px) {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
   }
-
 
   input {
     border: 1px solid $disabled;

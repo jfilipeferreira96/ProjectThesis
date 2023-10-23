@@ -151,26 +151,28 @@ const Quizz = (props: Props) => {
   const getAnswerUI = () => {
     if (type === "FillInBlank") {
       return (
-        <>
+        <div className={classes.answerDiv}>
           <Input size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
-        </>
+        </div>
       );
     }
 
     return (
-      <ul>
-        {choices?.map((answer, index) => {
-          if (!answer) return <></>;
+      <div className={classes.answerDiv}>
+        <ul>
+          {choices?.map((answer, index) => {
+            if (!answer) return <></>;
 
-          return (
-            <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-              <Text size="md" span>
-                {answer}
-              </Text>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+                <Text size="md" span>
+                  {answer}
+                </Text>
+              </li>
+            );
+          })}
+        </ul>
+      </div >
     );
   };
 
