@@ -150,6 +150,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         <Title order={1}>Settings</Title>
 
         <Table.ScrollContainer minWidth={800} /* style={{width:"93%"}} */>
+         {/*  <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed"> */}
+
           <Table verticalSpacing="sm">
             <Table.Thead>
               <Table.Tr>
