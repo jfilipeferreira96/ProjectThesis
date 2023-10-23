@@ -5,6 +5,12 @@ enum QuestionType {
   MultipleQuestions = "MultipleQuestions",
 }
 
+export enum Status{
+  PendingStart = 0,
+  InProgress = 1,
+  Completed = 3
+}
+
 interface IQuiz extends Document {
   user: Schema.Types.ObjectId;
   createdAt: Date;
@@ -12,6 +18,7 @@ interface IQuiz extends Document {
   startDate?: Date;
   challenge: Schema.Types.ObjectId;
   questions: IQuestion[];
+  status: Status;
 }
 
 interface IQuestion {
@@ -33,6 +40,11 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   endDate: Date,
   startDate: Date,
+  status: {
+    type: Number,
+    enum: Status,
+    default: Status.PendingStart,
+  },
   challenge: {
     type: Schema.Types.ObjectId,
     ref: "Challenge",
