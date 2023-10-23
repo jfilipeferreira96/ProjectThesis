@@ -1,10 +1,43 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
 import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconFingerprint, IconCalendarStats, IconUser, IconSettings, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
-import classes from "./sidebar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { getId } from "@/utils/getID";
+import styled from 'styled-components';
+
+const NavbarContainer = styled.nav`
+  width: ${rem(80)};
+  height: ${rem(750)};
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Link = styled(UnstyledButton)`
+  width: ${rem(50)};
+  height: ${rem(50)};
+  border-radius: var(--mantine-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+
+  &:hover {
+    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
+  }
+
+  &[data-active] {
+    &,
+    &:hover {
+      background-color: var(--mantine-color-blue-light);
+      color: var(--mantine-color-blue-light-color);
+    }
+  }
+`;
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -13,12 +46,13 @@ interface NavbarLinkProps {
   onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps)
+{
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
+      <Link onClick={onClick} data-active={active || undefined}>
         <Icon style={{ width: rem(25), height: rem(25) }} stroke={1.5} />
-      </UnstyledButton>
+      </Link>
     </Tooltip>
   );
 }
@@ -29,20 +63,21 @@ const data = [
   { icon: IconSettings, label: "Settings", url: "settings" },
 ];
 
-export function Sidebar() {
+export function Sidebar(){
   const pathname = usePathname();
   const router = useRouter();
   const [active, setActive] = useState<number>(0);
 
   useEffect(() => {
     const activeIndex = data.findIndex((item) => {
-      if (item.url) {
-        return pathname.includes(item.url); 
+      if (item.url)
+      {
+        return pathname.includes(item.url);
       }
-      return false; 
+      return false;
     });
-    
-    if (activeIndex !== -1) {
+
+    if (activeIndex !== -1){
       setActive(activeIndex);
     }
   }, [pathname]);
@@ -55,12 +90,12 @@ export function Sidebar() {
   const links = data.map((link, index) => <NavbarLink {...link} key={link.label} active={index === active} onClick={() => handleNavClick(index)} />);
 
   return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
+    <NavbarContainer>
+      <div>
         <Stack justify="center" gap={0}>
           {links}
         </Stack>
       </div>
-    </nav>
+    </NavbarContainer>
   );
 }
