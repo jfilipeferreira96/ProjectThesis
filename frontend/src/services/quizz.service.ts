@@ -6,6 +6,25 @@ export enum QuestionType {
   MultipleQuestions = "MultipleQuestions",
 }
 
+export enum QuizzStatus {
+  PendingStart = 0,
+  InProgress = 1,
+  Completed = 2,
+}
+
+export function getQuizzStatusInfo(status: QuizzStatus) {
+  switch (status) {
+    case QuizzStatus.PendingStart:
+      return { name: "Pending Start", color: "blue" };
+    case QuizzStatus.InProgress:
+      return { name: "In Progress", color: "green" };
+    case QuizzStatus.Completed:
+      return { name: "Completed", color: "orange" };
+    default:
+      return { name: "Unknown", color: "black" };
+  }
+}
+
 export interface QuizzData {
   quizzId?: string;
   challengeId?: string;
