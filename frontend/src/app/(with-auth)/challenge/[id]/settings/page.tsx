@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper } from "@mantine/core";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStop, IconPlayerStopFilled } from "@tabler/icons-react";
 import styled from "styled-components";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
@@ -126,14 +126,20 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       </Table.Td>
 
       <Table.Td>
-        <Badge variant="filled" size="md" color={getQuizzStatusInfo(item.status).color}>
+        <Badge variant="filled" size="md" color={getQuizzStatusInfo(item.status).color} style={{ minWidth: "110px" }}>
           {getQuizzStatusInfo(item.status).name}
         </Badge>
       </Table.Td>
 
       <Table.Td>
         <Group gap={0} justify="center">
-          <ActionIcon variant="subtle" color="gray">
+          <ActionIcon variant="subtle" color="green">
+            <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          </ActionIcon>
+          <ActionIcon variant="subtle" color="orange">
+            <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+          </ActionIcon>
+          <ActionIcon variant="subtle" color="blue">
             <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </ActionIcon>
           <ActionIcon variant="subtle" color="red">
@@ -141,7 +147,6 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
           </ActionIcon>
         </Group>
       </Table.Td>
-      
     </Table.Tr>
   ));
 
