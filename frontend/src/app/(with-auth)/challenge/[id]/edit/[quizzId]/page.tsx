@@ -306,7 +306,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
 
                   <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 
-                  <Group justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
+                  <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
                     {active !== 0 && (
                       <Button
                         color="gray"
@@ -327,7 +327,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                         Next Question
                       </Button>
                     )}
-                  </Group>
+                  </Flex>
                 </div>
               );
             })}

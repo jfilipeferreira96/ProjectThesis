@@ -1,7 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select } from "@mantine/core";
+import { DateInput, DateTimePicker } from '@mantine/dates';
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
 import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -10,6 +11,7 @@ import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { QuestionType, QuizzData, createQuizz } from "@/services/quizz.service";
 import { useRouter } from "next/navigation";
+import '@mantine/dates/styles.css';
 
 const Add = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
@@ -19,6 +21,9 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
   const form = useForm({
     initialValues: {
+      name: "",
+      startdate: "",
+      enddate: "",
       questions: [
         {
           question: "",
@@ -31,6 +36,12 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     },
     validate: (values) => {
       const errors: FormErrors = {};
+
+      if (values.startdate && values.enddate && new Date(values.startdate) >= new Date(values.enddate))
+      {
+        errors.startdate = "Start date must be before end date.";
+        errors.enddate = "End date must be after start date.";
+      }
 
       values.questions.forEach((item, index) => {
         if (!item.question) {
@@ -172,6 +183,31 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       <Grid align="center" justify="center">
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
+
+            <Title order={3}>Configurations</Title>
+
+            <TextInput
+              label="Quizz name"
+              placeholder="Quizz xpto"
+              required {...form.getInputProps("name")}
+            />
+
+            <DateTimePicker
+              label="Pick start date"
+              placeholder="Pick start date"
+              minDate={new Date()}
+              {...form.getInputProps("startdate")}
+              error={form.errors.startdate}
+            />
+
+            <DateTimePicker
+              label="Pick end date"
+              placeholder="Pick end date"
+              {...form.getInputProps("enddate")}
+              error={form.errors.enddate}
+            />
+
+            <div style={{ borderTop: "1px solid red" }}></div>
             {form.values.questions.map((item, index) => {
               if (index !== active) {
                 return;
@@ -179,8 +215,13 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
               return (
                 <div key={item.id}>
-                  <Group mt="xs" justify="space-between" align="center" mb={10}>
-                    <Title order={3}>Question {index + 1}</Title>
+
+                  <Title order={3} mt={20}>Questions</Title>
+
+                  <Group justify="space-between" align="center" mb={10}>
+
+                    <Title order={4}>Question {index + 1}</Title>
+                  
                     <div>
                       {index !== 0 && (
                         <Tooltip label={"Delete question"} withArrow position="right">
@@ -263,7 +304,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
                   <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 
-                  <Group justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
+                  <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
                     {active !== 0 && (
                       <Button
                         color="gray"
@@ -284,7 +325,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                         Next Question
                       </Button>
                     )}
-                  </Group>
+                  </Flex>
                 </div>
               );
             })}
