@@ -49,6 +49,14 @@ const data = [
   },
 ];
 
+type DataItem = {
+  name: string;
+  number: number;
+  status: number;
+  startdate: string;
+  enddate: string;
+};
+
 const StyledTableContainer = styled(Table.ScrollContainer)`
   @media (min-width: 1200px) {
    width: 92%;
@@ -64,6 +72,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
   const [state, setState] = useState({
     id: id,
+    rows: [],
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -73,6 +82,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       const response = await getAllChallengeQuizzes(id);
       console.log(response)
       if (response.status) {
+        //setState((prevState) => ({ ...prevState, rows: response.data }));
       }
       if (response.status === false) {
         notifications.show({
@@ -107,49 +117,53 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     );
   }
 
-  const rows = data.map((item) => (
-    <Table.Tr key={item.name}>
-      <Table.Td>
-        <Text fz="sm" fw={500}>
-          {item.name}
-        </Text>
-      </Table.Td>
+  const createRows = (data: DataItem[]) => {
+    return data.map((item: DataItem) => (
+      <Table.Tr key={item.name}>
+        <Table.Td>
+          <Text fz="sm" fw={500}>
+            {item.name}
+          </Text>
+        </Table.Td>
 
-      <Table.Td>{item.number}</Table.Td>
+        <Table.Td>{item.number}</Table.Td>
 
-      <Table.Td>
-        <Text fz="sm">{item.startdate}</Text>
-      </Table.Td>
+        <Table.Td>
+          <Text fz="sm">{item.startdate}</Text>
+        </Table.Td>
 
-      <Table.Td>
-        <Text fz="sm">{item.enddate}</Text>
-      </Table.Td>
+        <Table.Td>
+          <Text fz="sm">{item.enddate}</Text>
+        </Table.Td>
 
-      <Table.Td>
-        <Badge variant="filled" size="md" color={getQuizzStatusInfo(item.status).color} style={{ minWidth: "110px" }}>
-          {getQuizzStatusInfo(item.status).name}
-        </Badge>
-      </Table.Td>
+        <Table.Td>
+          <Badge variant="filled" size="md" color={getQuizzStatusInfo(item.status).color} style={{ minWidth: "110px" }}>
+            {getQuizzStatusInfo(item.status).name}
+          </Badge>
+        </Table.Td>
 
-      <Table.Td>
-        <Group gap={0} justify="center">
-          <ActionIcon variant="subtle" color="green">
-            <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" color="orange">
-            <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" color="blue">
-            <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="subtle" color="red">
-            <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </ActionIcon>
-        </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
+        <Table.Td>
+          <Group gap={0} justify="center">
+            <ActionIcon variant="subtle" color="green">
+              <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon variant="subtle" color="orange">
+              <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon variant="subtle" color="blue">
+              <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon variant="subtle" color="red">
+              <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </Table.Td>
+      </Table.Tr>
+    ));
+  };
 
+  const rows = createRows(state.rows);
+  
   return (
     <Grid justify="center" align="stretch" mb={10}>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>

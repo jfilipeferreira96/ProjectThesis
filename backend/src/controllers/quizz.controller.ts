@@ -27,13 +27,16 @@ class QuizzController {
   }
   static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { questions, challengeId } = req.body;
+      const { questions, challengeId, name, startdate, enddate } = req.body;
       const user = req.user;
       
       const quiz = await Quizz.create({
         user,
+        name,
+        startDate: startdate,
+        endDate: enddate,
         questions,
-        challenge: challengeId
+        challenge: challengeId,
       });
 
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });

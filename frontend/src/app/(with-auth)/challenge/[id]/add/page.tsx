@@ -117,7 +117,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
   };
 
   const onSubmitHandler = useCallback(async (data: QuizzData) => {
-  
+
     try {
       const sendObject = { ...data, challengeId: id};
       const response = await createQuizz(sendObject);
@@ -146,68 +146,39 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
         <Title>Quizz Preview</Title>
         <Quizz questions={form.values.questions} />
       </Modal>
+
       <Flex justify="space-between">
-        <Button
-          size={isMdScreen ? "md" : "lg"}
-          variant={isMdScreen ? "transparent" : "filled"}
-          p={isMdScreen ? 0 : undefined}
-          color="gray"
-          onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}
-        >
+        <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} color="gray" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
           Back
         </Button>
         <div>
-          <Button
-            size={isMdScreen ? "md" : "lg"}
-            variant={isMdScreen ? "transparent" : "filled"}
-            p={isMdScreen ? 0 : undefined}
-            mr={5}
-            color="gray"
-            onClick={open}
-          >
+          <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} mr={5} color="gray" onClick={open}>
             Preview
           </Button>
-          <Button
-            type="submit"
-            size={isMdScreen ? "md" : "lg"}
-            p={isMdScreen ? 0 : undefined}
-            variant={isMdScreen ? "transparent" : "filled"}
-          >
+          <Button type="submit" size={isMdScreen ? "md" : "lg"} p={isMdScreen ? 0 : undefined} variant={isMdScreen ? "transparent" : "filled"}>
             Save Quizz
           </Button>
         </div>
       </Flex>
+
       <Title>Create Quizz</Title>
       <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-      <Grid align="center" justify="center">
-        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md">
-
+      <Grid>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
-            <TextInput
-              label="Quizz name"
-              placeholder="Quizz xpto"
-              required {...form.getInputProps("name")}
-            />
+            <TextInput label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
+            <Group grow>
+              <DateTimePicker label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
-            <DateTimePicker
-              label="Pick start date"
-              placeholder="Pick start date"
-              minDate={new Date()}
-              {...form.getInputProps("startdate")}
-              error={form.errors.startdate}
-            />
-
-            <DateTimePicker
-              label="Pick end date"
-              placeholder="Pick end date"
-              {...form.getInputProps("enddate")}
-              error={form.errors.enddate}
-            />
-
-            <div style={{ borderTop: "1px solid red" }}></div>
+              <DateTimePicker label="Pick end date" placeholder="Pick end date" {...form.getInputProps("enddate")} error={form.errors.enddate} />
+            </Group>
+          </Paper>
+        </Grid.Col>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
               if (index !== active) {
                 return;
@@ -215,13 +186,9 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
               return (
                 <div key={item.id}>
-
-                  <Title order={3} mt={20}>Questions</Title>
-
                   <Group justify="space-between" align="center" mb={10}>
+                    <Title order={3}>Question {index + 1}</Title>
 
-                    <Title order={4}>Question {index + 1}</Title>
-                  
                     <div>
                       {index !== 0 && (
                         <Tooltip label={"Delete question"} withArrow position="right">

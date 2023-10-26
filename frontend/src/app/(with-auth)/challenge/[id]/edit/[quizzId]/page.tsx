@@ -10,14 +10,16 @@ import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { QuestionType, QuizzData, getSingleQuizz, editQuizz } from "@/services/quizz.service";
+import { DateInput, DateTimePicker } from "@mantine/dates";
+import "@mantine/dates/styles.css";
 
 const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: string } }) => {
   const router = useRouter();
   const [active, setActive] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
   const [quizzData, setQuizzData] = useState<QuizzData | null>(null);
-  const isMdScreen = useMediaQuery('(max-width: 768px)'); 
-  
+  const isMdScreen = useMediaQuery("(max-width: 768px)");
+
   useEffect(() => {
     const fetchQuizz = async () => {
       try {
@@ -26,8 +28,11 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
           setQuizzData(response.quiz.questions);
           // Assuming response.quiz.questions is an array of questions
           const initialQuestions = response.quiz.questions || [];
-
+          
           form.setValues({
+            name: response.quiz.name,
+            startdate: response.quiz.startDate,
+            enddate: response.quiz.endDate,
             questions: initialQuestions.map((question: QuizzData) => ({
               ...question,
               id: randomId(),
@@ -55,7 +60,9 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
 
   const form = useForm({
     initialValues: {
-      quizzId: quizzId,
+      name: "",
+      startdate: "",
+      enddate: "",
       questions: [
         {
           question: "",
@@ -68,6 +75,11 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
     },
     validate: (values) => {
       const errors: FormErrors = {};
+
+      if (values.startdate && values.enddate && new Date(values.startdate) >= new Date(values.enddate)) {
+        errors.startdate = "Start date must be before end date.";
+        errors.enddate = "End date must be after start date.";
+      }
 
       values.questions.forEach((item, index) => {
         if (!item.question) {
@@ -142,35 +154,32 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
     }
   };
 
-  const onSubmitHandler = useCallback(
-    async (data: QuizzData) => {
-    
-      const sendData: QuizzData = {
+  const onSubmitHandler = useCallback(async (data: QuizzData) => {
+    /* const sendData: QuizzData = {
         quizzId: quizzId,
         questions: data.questions,
-      };
-      try {
-        const response = await editQuizz(sendData);
-        if (response.status) {
-          notifications.show({
-            title: "Success",
-            message: "",
-            color: "green",
-          });
-
-          //redirect
-          router.push(`${routes.challenge.url}/${id}`);
-        }
-      } catch (error) {
+      }; */
+    const sendObject = { ...data, quizzId: quizzId };
+    try {
+      const response = await editQuizz(sendObject);
+      if (response.status) {
         notifications.show({
-          title: "Error",
-          message: "Something went wrong",
-          color: "red",
+          title: "Success",
+          message: "",
+          color: "green",
         });
+
+        //redirect
+        router.push(`${routes.challenge.url}/${id}`);
       }
-    },
-    []
-  );
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  }, []);
 
   return (
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
@@ -178,41 +187,38 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         <Title>Quizz Preview</Title>
         <Quizz questions={form.values.questions} />
       </Modal>
+
       <Flex justify="space-between">
-        <Button
-          size={isMdScreen ? "md" : "lg"}
-          variant={isMdScreen ? "transparent" : "filled"}
-          p={isMdScreen ? 0 : undefined}
-          color="gray"
-          onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}
-        >
+        <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} color="gray" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
           Back
         </Button>
         <div>
-          <Button
-            size={isMdScreen ? "md" : "lg"}
-            variant={isMdScreen ? "transparent" : "filled"}
-            p={isMdScreen ? 0 : undefined}
-            mr={5}
-            color="gray"
-            onClick={open}
-          >
+          <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} mr={5} color="gray" onClick={open}>
             Preview
           </Button>
-          <Button
-            type="submit"
-            size={isMdScreen ? "md" : "lg"}
-            variant={isMdScreen ? "transparent" : "filled"}
-            p={isMdScreen ? 0 : undefined}
-          >
+          <Button type="submit" size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined}>
             Save Quizz
           </Button>
         </div>
       </Flex>
-        <Title>Edit Quizz</Title>
+
+      <Title>Edit Quizz</Title>
       <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-      <Grid align="center" justify="center">
+      <Grid>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+            <Title order={3}>Configurations</Title>
+
+            <TextInput label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
+            <Group grow>
+              <DateTimePicker label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
+
+              <DateTimePicker label="Pick end date" placeholder="Pick end date" {...form.getInputProps("enddate")} error={form.errors.enddate} />
+            </Group>
+          </Paper>
+        </Grid.Col>
+
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
