@@ -1,5 +1,5 @@
 import { Badge, Group, Title, Text, Card, SimpleGrid, Container, rem, useMantineTheme } from "@mantine/core";
-import { IconGauge, IconUser, IconCookie } from "@tabler/icons-react";
+import { IconGauge, IconUser, IconCookie, IconChartPie, IconBook, IconRocket } from "@tabler/icons-react";
 import classes from "./featurescards.module.css";
 
 const mockdata = [
@@ -9,7 +9,7 @@ const mockdata = [
     icon: IconGauge,
   },
   {
-    title: "Real-time Analytics",
+    title: "Track Your Progress",
     description: "Monitor your progress and see how you stack up against your peers.",
     icon: IconUser,
   },
@@ -21,14 +21,20 @@ const mockdata = [
   {
     title: "Customizable Challenges",
     description: "Tailor the game to your preferences, focusing on specific subjects or topics.",
-    icon: IconGauge,
+    icon: IconChartPie,
   },
   {
     title: "Compete with Peers",
     description: "Challenge friends or classmates to friendly competitions and see who comes out on top.",
-    icon: IconUser,
-  }
+    icon: IconBook,
+  },
+  {
+    title: "Fun and Educational",
+    description: " Enjoy a fun, gamified approach to learning that transforms your study sessions into an exciting adventure.",
+    icon: IconRocket,
+  },
 ];
+
 
 export function FeaturesCards() {
   const theme = useMantineTheme();

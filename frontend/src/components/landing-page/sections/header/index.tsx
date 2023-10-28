@@ -20,12 +20,12 @@ export const HeaderMenu = () => {
         <Group justify="space-between" h="100%" ml={10} mr={10}>
           <Flex align={"center"} onClick={() => router.push(user?._id ? routes.home.url : routes.landingpage.url)} style={{ cursor: "pointer" }}>
             <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
-            <Title size="h2" ml={10}>
+            <Title size="h2" ml={10} visibleFrom="xs">
               Score
             </Title>
           </Flex>
 
-          <Group visibleFrom="sm">
+          <Group visibleFrom={user?._id ? "sm" : ""}>
             {user?._id ? (
               <>
                 <Avatar src={user?.avatar} alt="it's me" />
