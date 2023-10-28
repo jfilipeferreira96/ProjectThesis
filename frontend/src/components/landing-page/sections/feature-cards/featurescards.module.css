@@ -7,6 +7,10 @@
   }
 }
 
+.background{
+  background-color: var(--mantine-color-dark-8);
+}
+
 .description {
   max-width: rem(600px);
   margin: auto;
@@ -36,4 +40,22 @@
     height: rem(2px);
     margin-top: var(--mantine-spacing-sm);
   }
+}
+
+.SvgWavesUp{
+  width: 100%;
+  height: calc(3rem);
+  filter: drop-shadow(calc(0.625rem) calc(0.3125rem) calc(0.3125rem) rgba(0,0,0,.03));
+  display: block;
+  background-color: var(--mantine-color-dark-8);
+  fill: var(--mantine-color-dark-7);
+}
+
+.SvgWavesDown{
+  width: 100%;
+  height: calc(3rem);
+  filter: drop-shadow(calc(0.625rem) calc(0.3125rem) calc(0.3125rem) rgba(0,0,0,.03));
+  display: block;
+  background-color: var(--mantine-color-dark-7);
+  fill: var(--mantine-color-dark-8);
 }

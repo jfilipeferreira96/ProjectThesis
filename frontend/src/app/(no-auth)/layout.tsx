@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <HeaderMenu />
-      <Container size="responsive">{children}</Container>
+      {children}
     </>
   );
 }

@@ -1,3 +1,7 @@
+.background{
+ /*  background-color: var(--mantine-color-dark-8); */
+}
+
 .inner {
   display: flex;
   justify-content: space-between;
@@ -11,7 +15,6 @@
   display: flex;
   -webkit-box-align: center;
   align-items: center;
-
 }
 
 .content {
