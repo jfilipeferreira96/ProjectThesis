@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Group, Anchor, Text, ActionIcon, rem, Image, Title, Flex } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
 import classes from "./footer.module.css";
+import Link from "next/link";
 
 const links = [
   { label: "Docs", link: "/docs/" },
@@ -20,18 +21,17 @@ const Footer = () => {
       <Container className={classes.inner}>
         <Flex align={"center"}>
           <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
-          <Title size="h2" ml={10}>
-            Score
-          </Title>
         </Flex>
         <Text size="sm" color="dimmed">
           © 2023 Score Project
         </Text>
         {/* <Group className={classes.links}>{items}</Group> */}
         <Group gap="xs" justify="flex-end" wrap="nowrap">
-          <ActionIcon size="lg" variant="default" radius="xl">
-            <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-          </ActionIcon>
+          <Link href={"https://github.com/jfilipeferreira96/ProjectThesis"} target="_blank">
+            <ActionIcon size="lg" variant="default" radius="xl">
+              <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
+            </ActionIcon>
+          </Link>
         </Group>
       </Container>
     </div>
