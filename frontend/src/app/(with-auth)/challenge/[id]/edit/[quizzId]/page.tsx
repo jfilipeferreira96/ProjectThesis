@@ -31,8 +31,8 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
           
           form.setValues({
             name: response.quiz.name,
-            startdate: response.quiz.startDate,
-            enddate: response.quiz.endDate,
+            startdate: new Date(response.quiz.startDate) as unknown as string,
+            enddate: new Date(response.quiz.endDate) as unknown as string,
             questions: initialQuestions.map((question: QuizzData) => ({
               ...question,
               id: randomId(),

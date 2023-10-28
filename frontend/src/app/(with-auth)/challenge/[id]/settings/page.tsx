@@ -10,6 +10,7 @@ import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getAllChallengeQuizzes } from "@/services/challenge.service";
 import { QuizzStatus, getQuizzStatusInfo, deleteQuizz } from "@/services/quizz.service";
+import dayjs from "dayjs";
 
 type DataItem = {
   _id: string;
@@ -120,11 +121,11 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         <Table.Td>{item.questions.length}</Table.Td>
 
         <Table.Td>
-          <Text fz="sm">{item.startDate ? item.startDate : "-"}</Text>
+          <Text fz="sm">{item.startDate ? dayjs(item.startDate).format("YYYY-MM-DD HH:mm:ss") : "-"}</Text>
         </Table.Td>
 
         <Table.Td>
-          <Text fz="sm">{item.endDate ? item.endDate : "-"}</Text>
+          <Text fz="sm">{item.endDate ? dayjs(item.endDate).format("YYYY-MM-DD HH:mm:ss") : "-"}</Text>
         </Table.Td>
 
         <Table.Td>
