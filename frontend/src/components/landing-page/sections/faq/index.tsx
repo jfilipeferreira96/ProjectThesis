@@ -13,28 +13,28 @@ export function FaqSimple() {
 
       <Accordion variant="separated">
         <Accordion.Item className={classes.item} value="reset-password">
-          <Accordion.Control>How can I reset my password?</Accordion.Control>
-          <Accordion.Panel>{placeholder}</Accordion.Panel>
+          <Accordion.Control>Who Can Participate?</Accordion.Control>
+          <Accordion.Panel>Our platform is designed for university students from all courses.</Accordion.Panel>
         </Accordion.Item>
 
         <Accordion.Item className={classes.item} value="another-account">
-          <Accordion.Control>Can I create more that one account?</Accordion.Control>
-          <Accordion.Panel>{placeholder}</Accordion.Panel>
+          <Accordion.Control>Can I compete with friends or classmates?</Accordion.Control>
+          <Accordion.Panel>Absolutely! You can challenge your friends or classmates and see who can earn the most points.</Accordion.Panel>
         </Accordion.Item>
 
         <Accordion.Item className={classes.item} value="newsletter">
-          <Accordion.Control>How can I subscribe to monthly newsletter?</Accordion.Control>
-          <Accordion.Panel>{placeholder}</Accordion.Panel>
+          <Accordion.Control>How are points and achievements tracked on the platform?</Accordion.Control>
+          <Accordion.Panel>Points and achievements are automatically tracked and updated on your profile as you complete challenges.</Accordion.Panel>
         </Accordion.Item>
 
         <Accordion.Item className={classes.item} value="credit-card">
-          <Accordion.Control>Do you store credit card information securely?</Accordion.Control>
-          <Accordion.Panel>{placeholder}</Accordion.Panel>
+          <Accordion.Control>How often are new challenges added to the platform?</Accordion.Control>
+          <Accordion.Panel>It depends on your challenge admin, please ask him to update the platform with fresh challenges to keep the learning experience dynamic and engaging.</Accordion.Panel>
         </Accordion.Item>
 
         <Accordion.Item className={classes.item} value="payment">
-          <Accordion.Control>What payment systems to you work with?</Accordion.Control>
-          <Accordion.Panel>{placeholder}</Accordion.Panel>
+          <Accordion.Control>Is the Higher Education Challenge Hub accessible on mobile devices?</Accordion.Control>
+          <Accordion.Panel>Yes, our platform is fully responsive and can be accessed on both desktop and mobile devices for your convenience.</Accordion.Panel>
         </Accordion.Item>
       </Accordion>
     </Container>

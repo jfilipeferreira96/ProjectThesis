@@ -9,14 +9,14 @@ export function Hero() {
       <div className={classes.inner}>
         <div className={classes.content}>
           <h1 className={classes.title}>
-            A{" "}
+            Level Up {""}
             <Text component="span" variant="gradient" gradient={{ from: "blue", to: "cyan" }} inherit>
-              fully featured
+              Learning Experience
             </Text>{" "}
-            React components and hooks library
+            with Engaging Challenges
           </h1>
           <Text c="dimmed" mt="md">
-            Build fully functional accessible web applications faster than ever – Mantine includes more than 120 customizable components and hooks to cover you in any situation
+            Enhance your students educational journey by crafting interactive quizzes and offering special prizes. Foster friendly competition among peers to inspire excellence in higher education.
           </Text>
 
           <List
@@ -30,13 +30,10 @@ export function Hero() {
             }
           >
             <List.Item>
-              <b>TypeScript based</b> – build type safe applications, all components and hooks export types
+              <b>Competition</b> – Compete with your peers and see who's the top performer.
             </List.Item>
             <List.Item>
-              <b>Free and open source</b> – all packages have MIT license, you can use Mantine in any project
-            </List.Item>
-            <List.Item>
-              <b>No annoying focus ring</b> – focus ring will appear only when user navigates with keyboard
+              <b>Motivation</b> – Stay engaged and motivated to excel in your higher education journey.
             </List.Item>
           </List>
 
