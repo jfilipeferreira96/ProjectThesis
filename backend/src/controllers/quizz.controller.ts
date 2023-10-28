@@ -31,7 +31,7 @@ class QuizzController {
     try {
       const { questions, challengeId, name, startdate, enddate } = req.body;
       const user = req.user;
-      
+
       const quiz = await Quizz.create({
         user,
         name,
@@ -45,7 +45,7 @@ class QuizzController {
 
       return res.status(StatusCodes.OK).json({
         status: true,
-        id: quiz._id
+        id: quiz._id,
       });
     } catch (error) {
       next(error);
@@ -55,16 +55,9 @@ class QuizzController {
   static async EditQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const { quizzId, questions, challengeId, name, startdate, enddate } = req.body;
+      const user: any = req.user;
 
-      const quiz = await Quizz.findByIdAndUpdate(quizzId,
-        {
-          name,
-          startDate: startdate,
-          endDate: enddate,
-          questions
-        },
-        { new: true }
-      );
+      const quiz = await Quizz.findById(quizzId);
 
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -73,10 +66,85 @@ class QuizzController {
         });
       }
 
-      return res.status(StatusCodes.OK).json({
-        status: true,
-        quiz,
-      });
+      const challenge = await Challenge.findOne({ quizzes: quiz._id });
+
+      if (!challenge) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Challenge not found",
+        });
+      }
+
+      const isAdmin = challenge.admins.includes(user._id);
+
+      if (isAdmin) {
+        const updatedQuiz = await Quizz.findByIdAndUpdate(
+          quizzId,
+          {
+            name,
+            startDate: startdate,
+            endDate: enddate,
+            questions,
+          },
+          { new: true }
+        );
+
+        return res.status(StatusCodes.OK).json({
+          status: true,
+          quiz: updatedQuiz,
+        });
+      } else {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          status: false,
+          message: "Permission denied. User is not an admin of the challenge.",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async EditQuizState(req: Request, res: Response, next: NextFunction) {
+    try {
+      const quizId = req.body.quizId;
+      const newState = req.body.state;
+      const user: any = req.user;
+
+      const quiz = await Quizz.findById(quizId);
+
+      if (!quiz) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quiz not found",
+        });
+      }
+
+      const challenge = await Challenge.findOne({ quizzes: quiz._id });
+
+      if (!challenge) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Challenge not found",
+        });
+      }
+
+      const isAdmin = challenge.admins.includes(user._id);
+
+      if (isAdmin) {
+        quiz.status = newState;
+        const updatedQuiz = await quiz.save(); 
+
+        return res.status(StatusCodes.OK).json({
+          status: true,
+          message: "Quiz updated successfully",
+          updatedQuiz,
+        });
+      } else {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          status: false,
+          message: "Permission denied. User is not an admin of the challenge.",
+        });
+      }
     } catch (error) {
       next(error);
     }
@@ -86,7 +154,7 @@ class QuizzController {
     try {
       const quizId = req.body.quizId;
       const user: any = req.user;
-      
+
       const quiz = await Quizz.findByIdAndDelete(quizId);
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -97,14 +165,14 @@ class QuizzController {
 
       const challenge = await Challenge.findOne({ quizzes: quiz._id });
       if (!challenge) {
-          Logger.error("Challenge not found");
+        Logger.error("Challenge not found");
 
-          return res.status(StatusCodes.NOT_FOUND).json({
-            status: false,
-            message: "Challenge not found",
-          });
-        }
-  
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Challenge not found",
+        });
+      }
+
       const isAdmin = challenge.admins.includes(user._id);
       if (isAdmin) {
         const deletedQuiz = await Quizz.findByIdAndDelete(quizId);
@@ -121,7 +189,6 @@ class QuizzController {
           message: "Permission denied. User is not an admin of the challenge.",
         });
       }
-
     } catch (error) {
       next(error);
     }

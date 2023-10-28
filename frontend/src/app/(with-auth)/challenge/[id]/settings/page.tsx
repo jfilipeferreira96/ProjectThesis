@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, Tooltip } from "@mantine/core";
 import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStop, IconPlayerStopFilled } from "@tabler/icons-react";
 import styled from "styled-components";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,7 +9,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getAllChallengeQuizzes } from "@/services/challenge.service";
-import { QuizzStatus, getQuizzStatusInfo, deleteQuizz } from "@/services/quizz.service";
+import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzState } from "@/services/quizz.service";
 import dayjs from "dayjs";
 
 type DataItem = {
@@ -95,6 +95,33 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     }
   }
 
+  const EditQuizzState = async (quizId: string, state:QuizzStatus) => {
+    try {
+      const response = await editQuizzState(quizId, state);
+      if (response.status) {
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+        GetAllChallengeQuizzes(id);
+      }
+      if (response.status === false) {
+        notifications.show({
+          title: "Oops",
+          message: response.message,
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  };
+
   useEffect(() => {
     if (id) {
       GetAllChallengeQuizzes(id);
@@ -137,21 +164,31 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         <Table.Td>
           <Group gap={0} justify="center">
             {item.status === QuizzStatus.PendingStart && (
-              <ActionIcon variant="subtle" color="green" onClick={() => console.log(item._id)}>
-                <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-              </ActionIcon>
+              <Tooltip label={"Start quizz"} withArrow position="top">
+                <ActionIcon variant="subtle" color="green" onClick={() => EditQuizzState(item._id, QuizzStatus.InProgress)}>
+                  <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Tooltip>
             )}
             {item.status === QuizzStatus.InProgress && (
-              <ActionIcon variant="subtle" color="orange" onClick={() => console.log(item._id)}>
-                <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-              </ActionIcon>
+              <Tooltip label={"Close quizz"} withArrow position="top">
+                <ActionIcon variant="subtle" color="orange" onClick={() => EditQuizzState(item._id, QuizzStatus.Completed)}>
+                  <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Tooltip>
             )}
-            <ActionIcon variant="subtle" color="blue" onClick={() => router.push(`${routes.challenge.url}/${id}/edit/${item._id}`)}>
-              <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" color="red" onClick={() => DeleteQuizz(item._id)}>
-              <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-            </ActionIcon>
+            {item.status !== QuizzStatus.Completed && (
+              <Tooltip label={"Edit quizz"} withArrow position="top">
+                <ActionIcon variant="subtle" color="blue" onClick={() => router.push(`${routes.challenge.url}/${id}/edit/${item._id}`)}>
+                  <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Tooltip>
+            )}
+            <Tooltip label={"Delete quizz"} withArrow position="top">
+              <ActionIcon variant="subtle" color="red" onClick={() => DeleteQuizz(item._id)}>
+                <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
           </Group>
         </Table.Td>
       </Table.Tr>
