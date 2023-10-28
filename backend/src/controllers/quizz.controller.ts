@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import Quizz from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
+import Logger from "../utils/logger";
 
 class QuizzController {
   static async GetSingleQuizz(req: Request, res: Response, next: NextFunction) {
@@ -73,21 +74,12 @@ class QuizzController {
   }
 
   static async DeleteQuizz(req: Request, res: Response, next: NextFunction) {
+    console.log("ENTREI")
     try {
       const quizId = req.body.quizId;
-
-      // Find the corresponding challenge and remove the quiz's _id
-      const challenge = await Challenge.findOneAndUpdate({ quizzes: quizId }, { $pull: { quizzes: quizId } }, { new: true });
-
-      if (!challenge) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          status: false,
-          message: "Challenge not found for the given quiz",
-        });
-      }
-
+      const user: any = req.user;
+      
       const quiz = await Quizz.findByIdAndDelete(quizId);
-
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
@@ -95,11 +87,33 @@ class QuizzController {
         });
       }
 
-      return res.status(StatusCodes.OK).json({
-        status: true,
-        message: "Quizz deleted successfully",
-        challenge,
-      });
+      const challenge = await Challenge.findOne({ quizzes: quiz._id });
+      if (!challenge) {
+          Logger.error("Challenge not found");
+
+          return res.status(StatusCodes.NOT_FOUND).json({
+            status: false,
+            message: "Challenge not found",
+          });
+        }
+  
+      const isAdmin = challenge.admins.includes(user._id);
+      if (isAdmin) {
+        const deletedQuiz = await Quizz.findByIdAndDelete(quizId);
+
+        return res.status(StatusCodes.OK).json({
+          status: true,
+          message: "Quizz deleted successfully",
+          deletedQuiz,
+        });
+      } else {
+        Logger.error("Permission denied. User is not an admin of the challenge.");
+        return res.status(StatusCodes.FORBIDDEN).json({
+          status: false,
+          message: "Permission denied. User is not an admin of the challenge.",
+        });
+      }
+
     } catch (error) {
       next(error);
     }

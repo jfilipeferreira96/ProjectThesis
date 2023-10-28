@@ -66,8 +66,17 @@ export const getSingleQuizz = async (id: string) => {
 
 export const editQuizz = async (data: QuizzData) => {
   try {
-
     const response = await api.post(endpoints.editQuizzRoute, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteQuizz = async (id: string) => {
+  
+  try {
+    const response = await api.post(endpoints.deleteQuizzRoute, { quizId: id });
     return response.data;
   } catch (error) {
     throw error;

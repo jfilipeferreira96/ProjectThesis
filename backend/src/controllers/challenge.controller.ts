@@ -35,7 +35,7 @@ class ChallengeController {
       let challenges = await Challenge.find({
         $or: [{ admins: user._id }, { participants: user._id }],
       }).exec();
-        console.log(challenges)
+    
       const sendObj = challenges.map((challenge) => {
         return {
           ...challenge.toObject(),
@@ -55,6 +55,7 @@ class ChallengeController {
   static async GetSingleChallenge(req: Request, res: Response, next: NextFunction) {
     try {
       let response = { status: false, message: "" };
+      
       const user: any = req.user;
       const id = req.params.id;
 

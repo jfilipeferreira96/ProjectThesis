@@ -9,52 +9,15 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getAllChallengeQuizzes } from "@/services/challenge.service";
-import { getQuizzStatusInfo } from "@/services/quizz.service";
-
-const data = [
-  {
-    name: "Robert Wolfkisser",
-    number: 4,
-    status: 0,
-    startdate: "--",
-    enddate: "--",
-  },
-  {
-    name: "Jill Jailbreaker",
-    number: 5,
-    status: 1,
-    startdate: "--",
-    enddate: "--",
-  },
-  {
-    name: "Henry Silkeater",
-    number: 3,
-    status: 2,
-    startdate: "--",
-    enddate: "--",
-  },
-  {
-    name: "Bill Horsefighter",
-    number: 0,
-    status: 0,
-    startdate: "--",
-    enddate: "--",
-  },
-  {
-    name: "Jeremy Footviewer",
-    number: 1,
-    status: 1,
-    startdate: "--",
-    enddate: "--",
-  },
-];
+import { QuizzStatus, getQuizzStatusInfo, deleteQuizz } from "@/services/quizz.service";
 
 type DataItem = {
+  _id: string;
   name: string;
-  number: number;
+  questions: string[];
   status: number;
-  startdate: string;
-  enddate: string;
+  startDate: string;
+  endDate: string;
 };
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
@@ -80,9 +43,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     setIsLoading(true);
     try {
       const response = await getAllChallengeQuizzes(id);
-      console.log(response)
       if (response.status) {
-        //setState((prevState) => ({ ...prevState, rows: response.data }));
+        setState((prevState) => ({ ...prevState, rows: response.quizzes }));
       }
       if (response.status === false) {
         notifications.show({
@@ -102,6 +64,35 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       setIsLoading(false);
     }
   };
+
+  const DeleteQuizz = async (quizId: string) => {
+    
+    try {
+      const response = await deleteQuizz(quizId);
+      if (response.status) {
+         notifications.show({
+           title: "Quizz was sucessfully deleted",
+           message: "",
+           color: "green",
+         });
+          GetAllChallengeQuizzes(id);
+       }
+       if (response.status === false) {
+         notifications.show({
+           title: "Oops",
+           message: response.message,
+           color: "red",
+         });
+       }
+      
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  }
 
   useEffect(() => {
     if (id) {
@@ -126,14 +117,14 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
           </Text>
         </Table.Td>
 
-        <Table.Td>{item.number}</Table.Td>
+        <Table.Td>{item.questions.length}</Table.Td>
 
         <Table.Td>
-          <Text fz="sm">{item.startdate}</Text>
+          <Text fz="sm">{item.startDate ? item.startDate : "-"}</Text>
         </Table.Td>
 
         <Table.Td>
-          <Text fz="sm">{item.enddate}</Text>
+          <Text fz="sm">{item.endDate ? item.endDate : "-"}</Text>
         </Table.Td>
 
         <Table.Td>
@@ -144,16 +135,20 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
         <Table.Td>
           <Group gap={0} justify="center">
-            <ActionIcon variant="subtle" color="green">
-              <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" color="orange">
-              <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon variant="subtle" color="blue">
+            {item.status === QuizzStatus.PendingStart && (
+              <ActionIcon variant="subtle" color="green" onClick={() => console.log(item._id)}>
+                <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            )}
+            {item.status === QuizzStatus.InProgress && (
+              <ActionIcon variant="subtle" color="orange" onClick={() => console.log(item._id)}>
+                <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              </ActionIcon>
+            )}
+            <ActionIcon variant="subtle" color="blue" onClick={() => router.push(`${routes.challenge.url}/${id}/edit/${item._id}`)}>
               <IconPencil style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
             </ActionIcon>
-            <ActionIcon variant="subtle" color="red">
+            <ActionIcon variant="subtle" color="red" onClick={() => DeleteQuizz(item._id)}>
               <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
             </ActionIcon>
           </Group>
