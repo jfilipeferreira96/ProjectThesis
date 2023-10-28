@@ -19,7 +19,7 @@ const Footer = () => {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <Flex align={"center"}>
-          <Image src={"./logo.png"} alt="My image" radius="md" h={40} w="auto" />
+          <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
           <Title size="h2" ml={10}>
             Score
           </Title>

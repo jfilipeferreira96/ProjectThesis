@@ -19,7 +19,7 @@ export const HeaderMenu = () => {
       <header className={classes.header}>
         <Group justify="space-between" h="100%" ml={10} mr={10}>
           <Flex align={"center"} onClick={() => router.push(user?._id ? routes.home.url : routes.landingpage.url)} style={{ cursor: "pointer" }}>
-            <Image src={"./logo.png"} alt="My image" radius="md" h={40} w="auto" />
+            <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
             <Title size="h2" ml={10}>
               Score
             </Title>
@@ -49,9 +49,11 @@ export const HeaderMenu = () => {
           {/* DESCOMENTAR SE ALGUMA VEZ QUISER TER UM HAMBURGUER MENU */}
           {/* <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" /> */}
 
-          {user?._id && <ActionIcon size={42} variant="default" onClick={() => logout()} hiddenFrom="sm">
-            <IconLogout style={{ width: rem(24), height: rem(24) }} />
-          </ActionIcon>}
+          {user?._id && (
+            <ActionIcon size={42} variant="default" onClick={() => logout()} hiddenFrom="sm">
+              <IconLogout style={{ width: rem(24), height: rem(24) }} />
+            </ActionIcon>
+          )}
         </Group>
       </header>
     </Box>
