@@ -2,6 +2,8 @@ import { Image, Container, Title, Button, Group, Text, List, ThemeIcon, rem } fr
 import { IconCheck } from "@tabler/icons-react";
 import image from "./image.svg";
 import classes from "./hero.module.css";
+import Link from "next/link";
+import { routes } from "@/config/routes";
 
 export function Hero() {
   return (
@@ -38,12 +40,16 @@ export function Hero() {
           </List>
 
           <Group mt={30}>
-            <Button radius="xl" size="md" className={classes.control}>
-              Get started
-            </Button>
-            <Button variant="default" radius="xl" size="md" className={classes.control}>
-              Source code
-            </Button>
+            <Link href={routes.signin.url}>
+              <Button radius="xl" size="md" className={classes.control}>
+                Get started
+              </Button>
+            </Link>
+            <Link href={"https://github.com/jfilipeferreira96/ProjectThesis"} target="_blank">
+              <Button variant="default" radius="xl" size="md" className={classes.control}>
+                Source code
+              </Button>
+            </Link>
           </Group>
         </div>
         {/* <Image src={"./happy1.png"} className={classes.image} alt="Image Hero" /> */}
