@@ -13,6 +13,6 @@ quizzRoutes.post("/quizz/delete", authenticateToken, QuizzController.DeleteQuizz
 
 quizzRoutes.post("/quizz/edit", authenticateToken, QuizzController.EditQuizz);
 
-quizzRoutes.post("/quizz/editState", authenticateToken, QuizzController.EditQuizState);
+quizzRoutes.post("/quizz/editStatus", authenticateToken, QuizzController.EditQuizStatus);
 
 export default quizzRoutes;

@@ -73,9 +73,9 @@ export const editQuizz = async (data: QuizzData) => {
   }
 };
 
-export const editQuizzState = async (id: string, state: QuizzStatus) => {
+export const editQuizzStatus = async (id: string, status: QuizzStatus) => {
   try {
-    const response = await api.post(endpoints.editQuizzStateRoute, { quizId: id, state: state });
+    const response = await api.post(endpoints.editQuizzStatusRoute, { quizId: id, status: status });
     return response.data;
   } catch (error) {
     throw error;

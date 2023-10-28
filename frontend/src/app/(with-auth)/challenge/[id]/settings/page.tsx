@@ -9,7 +9,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getAllChallengeQuizzes } from "@/services/challenge.service";
-import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzState } from "@/services/quizz.service";
+import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@/services/quizz.service";
 import dayjs from "dayjs";
 
 type DataItem = {
@@ -95,9 +95,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     }
   }
 
-  const EditQuizzState = async (quizId: string, state:QuizzStatus) => {
+  const EditQuizzStatus = async (quizId: string, state:QuizzStatus) => {
     try {
-      const response = await editQuizzState(quizId, state);
+      const response = await editQuizzStatus(quizId, state);
       if (response.status) {
         notifications.show({
           title: "Success",
@@ -165,14 +165,14 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
           <Group gap={0} justify="center">
             {item.status === QuizzStatus.PendingStart && (
               <Tooltip label={"Start quizz"} withArrow position="top">
-                <ActionIcon variant="subtle" color="green" onClick={() => EditQuizzState(item._id, QuizzStatus.InProgress)}>
+                <ActionIcon variant="subtle" color="green" onClick={() => EditQuizzStatus(item._id, QuizzStatus.InProgress)}>
                   <IconPlayerPlay style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 </ActionIcon>
               </Tooltip>
             )}
             {item.status === QuizzStatus.InProgress && (
               <Tooltip label={"Close quizz"} withArrow position="top">
-                <ActionIcon variant="subtle" color="orange" onClick={() => EditQuizzState(item._id, QuizzStatus.Completed)}>
+                <ActionIcon variant="subtle" color="orange" onClick={() => EditQuizzStatus(item._id, QuizzStatus.Completed)}>
                   <IconPlayerStopFilled style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 </ActionIcon>
               </Tooltip>

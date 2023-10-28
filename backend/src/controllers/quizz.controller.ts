@@ -104,10 +104,10 @@ class QuizzController {
     }
   }
 
-  static async EditQuizState(req: Request, res: Response, next: NextFunction) {
+  static async EditQuizStatus(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.body.quizId;
-      const newState = req.body.state;
+      const newStatus = req.body.status;
       const user: any = req.user;
 
       const quiz = await Quizz.findById(quizId);
@@ -131,7 +131,7 @@ class QuizzController {
       const isAdmin = challenge.admins.includes(user._id);
 
       if (isAdmin) {
-        quiz.status = newState;
+        quiz.status = newStatus;
         const updatedQuiz = await quiz.save(); 
 
         return res.status(StatusCodes.OK).json({

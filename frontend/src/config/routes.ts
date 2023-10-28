@@ -12,7 +12,7 @@ export const endpoints = {
   getAllChallengeQuizzes: `${host}/api/challenges/quizzes/`,
   createQuizzRoute: `${host}/api/quizz/create`,
   editQuizzRoute: `${host}/api/quizz/edit`,
-  editQuizzStateRoute: `${host}/api/quizz/editState`,
+  editQuizzStatusRoute: `${host}/api/quizz/editStatus`,
   deleteQuizzRoute: `${host}/api/quizz/delete`,
   getSingleQuizz: `${host}/api/quizz/`,
 };
