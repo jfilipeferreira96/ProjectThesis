@@ -49,7 +49,7 @@ export function Hero() {
             </Button>
           </Group>
         </div>
-        {/*  <Image src={image.src} className={classes.image} /> */}
+        {/* <Image src={"./happy1.png"} className={classes.image} alt="Image Hero" /> */}
       </div>
     </Container>
   );
