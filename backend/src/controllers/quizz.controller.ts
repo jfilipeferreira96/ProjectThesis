@@ -26,6 +26,7 @@ class QuizzController {
       next(error);
     }
   }
+
   static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const { questions, challengeId, name, startdate, enddate } = req.body;
@@ -53,9 +54,17 @@ class QuizzController {
 
   static async EditQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { quizzId, questions } = req.body;
+      const { quizzId, questions, challengeId, name, startdate, enddate } = req.body;
 
-      const quiz = await Quizz.findByIdAndUpdate(quizzId, { questions }, { new: true });
+      const quiz = await Quizz.findByIdAndUpdate(quizzId,
+        {
+          name,
+          startDate: startdate,
+          endDate: enddate,
+          questions
+        },
+        { new: true }
+      );
 
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -74,7 +83,6 @@ class QuizzController {
   }
 
   static async DeleteQuizz(req: Request, res: Response, next: NextFunction) {
-    console.log("ENTREI")
     try {
       const quizId = req.body.quizId;
       const user: any = req.user;

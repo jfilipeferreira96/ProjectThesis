@@ -214,7 +214,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
             <Group grow>
               <DateTimePicker label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
-              <DateTimePicker label="Pick end date" placeholder="Pick end date" {...form.getInputProps("enddate")} error={form.errors.enddate} />
+              <DateTimePicker label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
             </Group>
           </Paper>
         </Grid.Col>
