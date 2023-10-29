@@ -7,6 +7,10 @@ export interface IUser extends Document
   password: string;
   avatar: string;
   studentId?: number | string;
+  challengeScores: {
+    challenge: Schema.Types.ObjectId;
+    score: number;
+  }[];
   createdAt: Date;
 }
 
@@ -40,6 +44,19 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
+  challengeScores: [
+    {
+      challenge: {
+        type: Schema.Types.ObjectId,
+        ref: "Challenge",
+        required: true,
+      },
+      score: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
