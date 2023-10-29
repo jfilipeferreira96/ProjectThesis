@@ -1,37 +1,37 @@
-import { Badge, Group, Title, Text, Card, SimpleGrid, Container, rem, useMantineTheme } from "@mantine/core";
-import { IconGauge, IconUser, IconCookie, IconChartPie, IconBook, IconRocket } from "@tabler/icons-react";
+import { Title, Text, Card, SimpleGrid, Container, rem, useMantineTheme } from "@mantine/core";
+import { IconChartPie, IconSchool, IconUsers, IconDeviceMobile, IconSettings, IconZoomQuestion } from "@tabler/icons-react";
 import classes from "./featurescards.module.css";
 
 const mockdata = [
   {
     title: "Diverse Question Formats",
     description: "From multiple choice to essay-style questions, we've got it all.",
-    icon: IconGauge,
+    icon: IconZoomQuestion,
   },
   {
     title: "Track Your Progress",
     description: "Monitor your progress and see how you stack up against your peers.",
-    icon: IconUser,
+    icon: IconChartPie,
   },
   {
     title: "Mobile-Friendly",
     description: "Access quizzes on your preferred device, whether it's a laptop, tablet, or smartphone.",
-    icon: IconCookie,
+    icon: IconDeviceMobile,
   },
   {
     title: "Customizable Challenges",
     description: "Tailor the game to your preferences, focusing on specific subjects or topics.",
-    icon: IconChartPie,
+    icon: IconSettings,
   },
   {
     title: "Compete with Peers",
     description: "Challenge friends or classmates to friendly competitions and see who comes out on top.",
-    icon: IconBook,
+    icon: IconUsers,
   },
   {
     title: "Fun and Educational",
     description: " Enjoy a fun, gamified approach to learning that transforms your study sessions into an exciting adventure.",
-    icon: IconRocket,
+    icon: IconSchool,
   },
 ];
 
