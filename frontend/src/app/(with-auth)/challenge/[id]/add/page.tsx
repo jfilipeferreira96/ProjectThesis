@@ -177,6 +177,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
             </Group>
           </Paper>
         </Grid.Col>
+        
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
