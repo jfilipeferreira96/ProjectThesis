@@ -1,12 +1,13 @@
 "use client";
-import { Avatar, Group, Button, Box, Burger, useMantineTheme, Image, Title, Flex, rem, ActionIcon } from "@mantine/core";
+import { Avatar, Group, Button, Box, Burger, useMantineTheme, Title, Flex, rem, ActionIcon } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./header.module.css";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/providers/SessionProvider";
-import { IconLogout, IconLogout2 } from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
+import Image from "next/image"; 
 
 export const HeaderMenu = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -19,7 +20,7 @@ export const HeaderMenu = () => {
       <header className={classes.header}>
         <Group justify="space-between" h="100%" ml={10} mr={10}>
           <Flex align={"center"} onClick={() => router.push(user?._id ? routes.home.url : routes.landingpage.url)} style={{ cursor: "pointer" }}>
-            <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
+            <Image src="/20521.png" alt="Logo" width={85} height={45} /> 
             <Title size="h2" ml={10} visibleFrom="xs">
               Score
             </Title>

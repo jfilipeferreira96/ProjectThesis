@@ -1,8 +1,9 @@
 import React from "react";
-import { Container, Group, Anchor, Text, ActionIcon, rem, Image, Title, Flex } from "@mantine/core";
+import { Container, Group, Anchor, Text, ActionIcon, rem, Flex } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
 import classes from "./footer.module.css";
 import Link from "next/link";
+import Image from "next/image"; 
 
 const links = [
   { label: "Docs", link: "/docs/" },
@@ -20,7 +21,7 @@ const Footer = () => {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <Flex align={"center"}>
-          <Image src={"./20521.png"} alt="Logo" radius="md" h={45} w="auto" />
+          <Image src="/20521.png" alt="Logo" width={85} height={45} />
         </Flex>
         <Text size="sm" color="dimmed">
           © 2023 Score Project
