@@ -36,7 +36,7 @@ class QuizzController {
           quiz,
         });
       } else {
-        
+        console.log('entrei')
         if (quiz.status === Status.Completed)
         {
           return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is completed" });
@@ -54,17 +54,19 @@ class QuizzController {
         } */
 
         // Sends the user the quiz without the correct awnsers in the form
-        const quizWithoutCorrectAnswers = {
-          ...quiz,
-          questions: quiz.questions.map((question) => {
-            const { correctAnswer, ...questionWithoutCorrectAnswer } = question;
-            return questionWithoutCorrectAnswer;
-          }),
-        };
-
+        console.log(quiz.questions);
+        const questionsWithoutCorrectAnswer = quiz.questions.map(question => {
+          return {
+            _id: question._id,
+            question: question.question,
+            type: question.type,
+            choices: question.choices,
+          };
+        });
+        console.log(questionsWithoutCorrectAnswer);
         return res.status(StatusCodes.OK).json({
           status: true,
-          quiz: quizWithoutCorrectAnswers,
+          questions: questionsWithoutCorrectAnswer,
         });
       } 
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, Title, TextInput, Loader, Anchor, Group, Text } from "@mantine/core";
+import { Card, Title, TextInput, Loader, Anchor, Group, Text, Center } from "@mantine/core";
 import Quizz, { Question } from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -20,10 +20,11 @@ const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: st
 
   const getQuestions = async (id: string) => {
     try {
+      console.log(quizzId)
       const response = await getSingleQuizz(quizzId);
       console.log(response);
       if (response.status) {
-        setQuestions(response.quiz.questions);
+        setQuestions(response.questions);
         setLoading(false);
       }
       if (response.status === false) {
@@ -51,7 +52,11 @@ const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: st
   }, []);
 
   if (loading) {
-    return <Loader />;
+    return (
+      <Center mt={100} mih={"50vh"}>
+        <Loader color="blue" />
+      </Center>
+    );
   }
 
   return (

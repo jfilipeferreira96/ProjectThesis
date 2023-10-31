@@ -4,7 +4,7 @@ import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Fl
 import { useInterval } from "@mantine/hooks";
 
 export interface Question {
-  id: number | string;
+  _id: number | string;
   question: string;
   choices?: string[];
   correctAnswer: string;
@@ -35,15 +35,15 @@ const Quizz = (props: Props) => {
   const [showResult, setShowResult] = useState(false);
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
-
+  
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
   useEffect(() => {
     interval.start();
     return interval.stop;
   }, []);
-
-  const { id: questionId, question, choices, correctAnswer, type } = questions[currentQuestion];
+  
+  const { _id: questionId, question, choices, type } = questions[currentQuestion];
 
   const handleChoiceSelection = (chosenAnswer: string) => {
     setResult((prevResult) => {
@@ -75,7 +75,7 @@ const Quizz = (props: Props) => {
     interval.stop();
 
     result.userAnswers.forEach((userAnswer) => {
-      const question = questions.find((q) => q.id === userAnswer._id);
+      const question = questions.find((q) => q._id === userAnswer._id);
 
       if (question) {
         if (question.type === "FillInBlank") {
