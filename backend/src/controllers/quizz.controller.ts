@@ -1,15 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import Quizz from "../models/quizz.model";
+import Quizz, { Status } from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
+import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model"
 
 class QuizzController {
   static async GetSingleQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const quizId = req.params.id;
       const quiz = await Quizz.findById(quizId);
+      const user:any = req.user;
 
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -18,10 +20,53 @@ class QuizzController {
         });
       }
 
-      return res.status(StatusCodes.OK).json({
-        status: true,
-        quiz,
-      });
+      const challenge = await Challenge.findById(quiz.challenge);
+      if (!challenge){
+        return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Challenge not found" });
+      }
+
+      const userIsAdmin = challenge.admins.includes(user._id);
+
+      if (userIsAdmin)
+      {
+        //Sends the quiz to edit
+        return res.status(StatusCodes.OK).json({
+          status: true,
+          quiz,
+        });
+      } else {
+        
+        if (quiz.status === Status.Completed)
+        {
+          return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is completed" });
+        }
+
+        if (quiz.status === Status.PendingStart)
+        {
+          return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is yet to be started" });
+        }
+
+        //VERIFICAR SE O ALUNO JA RESPONDEU AO QUIZ
+        /* if (quiz.status === Status.PendingStart)
+        {
+          return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "You have already awnsered this quiz." });
+        } */
+
+        // Sends the user the quiz without the correct awnsers in the form
+        const quizWithoutCorrectAnswers = {
+          ...quiz,
+          questions: quiz.questions.map((question) => {
+            const { correctAnswer, ...questionWithoutCorrectAnswer } = question;
+            return questionWithoutCorrectAnswer;
+          }),
+        };
+
+        return res.status(StatusCodes.OK).json({
+          status: true,
+          quiz: quizWithoutCorrectAnswers,
+        });
+      } 
+
     } catch (error) {
       next(error);
     }
@@ -190,6 +235,101 @@ class QuizzController {
         });
       }
     } catch (error) {
+      next(error);
+    }
+  }
+
+  static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction)
+  {
+    try{
+      const { quizId, userAnswers } = req.body;
+      const user: any = req.user;
+
+      // Check if the quiz exists
+      const quiz = await Quizz.findById(quizId);
+      if (!quiz)
+      {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quiz not found",
+        });
+      }
+
+      // Check if the user is not an admin
+      const challenge = await Challenge.findOne({ quizzes: quiz._id });
+      if (!challenge){
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Challenge not found",
+        });
+      }
+
+      const isAdmin = challenge.admins.includes(user._id);
+      if (isAdmin){
+        return res.status(StatusCodes.FORBIDDEN).json({
+          status: false,
+          message: "Permission denied. Admins cannot answer quizzes.",
+        });
+      }
+
+      // Check if the quiz status is InProgress
+      if (quiz.status !== Status.InProgress){
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quiz is not in progress",
+        });
+      }
+
+      let score = 0;
+      let correctAnswers = 0;
+      let wrongAnswers = 0;
+
+      userAnswers.forEach((userAnswer: { id: number | string; answer: string}) => {
+        const question = quiz.questions.find((q) => q.id === userAnswer.id);
+        const answer = userAnswer.answer;
+
+        if (question){
+          if (question.type === "FillInBlank"){
+            if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase())
+            {
+              score += 5;
+              correctAnswers += 1;
+            } else
+            {
+              wrongAnswers += 1;
+            }
+          } else {
+            if (answer === question.correctAnswer)
+            {
+              score += 5;
+              correctAnswers += 1;
+            } else
+            {
+              wrongAnswers += 1;
+            }
+          }
+        }
+      });
+
+      console.log(score, correctAnswers, wrongAnswers);
+
+      // Create and save quiz response
+      const quizResponseData = {
+        quiz: quizId,
+        user: user._id,
+        answers: userAnswers,
+        score,
+      };
+
+      const quizResponse = await QuizResponse.create(quizResponseData);
+      return res.status(StatusCodes.OK).json({
+        status: true,
+        message: "Quiz response saved successfully",
+        quizResponse,
+      });
+
+    } catch (error)
+    {
       next(error);
     }
   }

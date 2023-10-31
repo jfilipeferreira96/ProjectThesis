@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, Title, TextInput, Loader, Anchor, Group, Text } from "@mantine/core";
-import classes from "./random.module.css";
-import { jsQuizz } from "./data";
 import Quizz, { Question } from "@/components/quizz";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
+import { routes } from "@/config/routes";
 
 interface RandomProps {
   params: {
@@ -12,23 +13,41 @@ interface RandomProps {
 }
 
 const Random: React.FC<RandomProps> = ({ params: { id } }: RandomProps) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
 
-  useEffect(() => {
-    const getQuestions = async () => {
-      try {
-        /* const response = await fetch(`https://644982a3e7eb3378ca4ba471.mockapi.io/questions`);
-        const questionsResponse = await response.json(); */
-
-        setQuestions(jsQuizz);
+  const getQuestions = async (id: string) => {
+    try {
+      //const response = await getJsonQuestions(`https://644982a3e7eb3378ca4ba471.mockapi.io/questions`);
+      const response = {status: false, message: "po crl"};
+      console.log(response);
+      if (response.status){
+        //setQuestions(response.quizz);
         setLoading(false);
-      } catch (error) {
-        console.log(error);
       }
-    };
+      if (response.status === false){
+        notifications.show({
+          title: "Oops",
+          message: response.message,
+          color: "red",
+        });
+        router.push(`${routes.challenge.url}/${id}`);
+      }
+    } catch (error){
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+      router.push(`${routes.challenge.url}/${id}`);
+    }
+  };
 
-    getQuestions();
+  useEffect(() => {
+    if (id){
+      getQuestions(id);
+    }
   }, []);
 
   if (loading) {

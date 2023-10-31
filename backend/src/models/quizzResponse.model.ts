@@ -1,11 +1,11 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
-interface IQuizResponse extends Document {
+export interface IQuizResponse extends Document {
   quiz: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
   answers: string[];
   score: number; 
-  lastUpdate: Date; 
+  lastUpdate?: Date; 
 }
 
 const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
