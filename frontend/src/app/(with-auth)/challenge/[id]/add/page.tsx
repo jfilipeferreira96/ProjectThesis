@@ -129,7 +129,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
         });
 
         //redirect
-        router.push(`${routes.challenge.url}/${id}`);
+        router.push(`${routes.challenge.url}/${id}/settings`);
       }
     } catch (error) {
       notifications.show({

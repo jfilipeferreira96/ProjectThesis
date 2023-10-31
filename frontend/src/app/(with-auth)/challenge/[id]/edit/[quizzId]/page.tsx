@@ -155,13 +155,12 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
   };
 
   const onSubmitHandler = useCallback(async (data: QuizzData) => {
-    /* const sendData: QuizzData = {
-        quizzId: quizzId,
-        questions: data.questions,
-      }; */
-    const sendObject = { ...data, quizzId: quizzId };
+    
     try {
+
+      const sendObject = { ...data, quizzId: quizzId };
       const response = await editQuizz(sendObject);
+      
       if (response.status) {
         notifications.show({
           title: "Success",
@@ -170,7 +169,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         });
 
         //redirect
-        router.push(`${routes.challenge.url}/${id}`);
+        router.push(`${routes.challenge.url}/${id}/settings`);
       }
     } catch (error) {
       notifications.show({

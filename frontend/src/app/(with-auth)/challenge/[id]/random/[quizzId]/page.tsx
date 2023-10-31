@@ -5,6 +5,7 @@ import Quizz, { Question } from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
+import { getSingleQuizz } from "@/services/quizz.service";
 
 interface RandomProps {
   params: {
@@ -12,21 +13,20 @@ interface RandomProps {
   };
 }
 
-const Random: React.FC<RandomProps> = ({ params: { id } }: RandomProps) => {
+const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: string } }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const getQuestions = async (id: string) => {
     try {
-      //const response = await getJsonQuestions(`https://644982a3e7eb3378ca4ba471.mockapi.io/questions`);
-      const response = {status: false, message: "po crl"};
+      const response = await getSingleQuizz(quizzId);
       console.log(response);
-      if (response.status){
-        //setQuestions(response.quizz);
+      if (response.status) {
+        setQuestions(response.quiz.questions);
         setLoading(false);
       }
-      if (response.status === false){
+      if (response.status === false) {
         notifications.show({
           title: "Oops",
           message: response.message,
@@ -34,7 +34,7 @@ const Random: React.FC<RandomProps> = ({ params: { id } }: RandomProps) => {
         });
         router.push(`${routes.challenge.url}/${id}`);
       }
-    } catch (error){
+    } catch (error) {
       notifications.show({
         title: "Error",
         message: "Something went wrong",
@@ -45,7 +45,7 @@ const Random: React.FC<RandomProps> = ({ params: { id } }: RandomProps) => {
   };
 
   useEffect(() => {
-    if (id){
+    if (id) {
       getQuestions(id);
     }
   }, []);
