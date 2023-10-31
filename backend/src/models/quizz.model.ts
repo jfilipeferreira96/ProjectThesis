@@ -23,6 +23,7 @@ interface IQuiz extends Document {
 }
 
 interface IQuestion {
+  _id?: string;
   question: string;
   type: QuestionType;
   choices?: string[];

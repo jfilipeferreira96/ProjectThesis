@@ -15,7 +15,7 @@ interface Result {
   score: number;
   correctAnswers: number;
   wrongAnswers: number;
-  userAnswers: { id: number | string; answer: string }[];
+  userAnswers: { _id: number | string; answer: string }[];
 }
 
 interface Props {
@@ -48,12 +48,12 @@ const Quizz = (props: Props) => {
   const handleChoiceSelection = (chosenAnswer: string) => {
     setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
-      const existingAnswer = updatedUserAnswers.find((answer) => answer.id === questionId);
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
       if (existingAnswer) {
         existingAnswer.answer = chosenAnswer;
       } else {
-        updatedUserAnswers.push({ id: questionId, answer: chosenAnswer });
+        updatedUserAnswers.push({ _id: questionId, answer: chosenAnswer });
       }
 
       return {
@@ -75,7 +75,7 @@ const Quizz = (props: Props) => {
     interval.stop();
 
     result.userAnswers.forEach((userAnswer) => {
-      const question = questions.find((q) => q.id === userAnswer.id);
+      const question = questions.find((q) => q.id === userAnswer._id);
 
       if (question) {
         if (question.type === "FillInBlank") {
@@ -117,14 +117,14 @@ const Quizz = (props: Props) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
 
       // Check if the current question id is already in userAnswers
-      const existingAnswer = updatedUserAnswers.find((answer) => answer.id === questionId);
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
       if (existingAnswer) {
         // If it exists, update the answer
         existingAnswer.answer = userInput;
       } else {
         // If it doesn't exist, add a new entry
-        updatedUserAnswers.push({ id: questionId, answer: userInput });
+        updatedUserAnswers.push({ _id: questionId, answer: userInput });
       }
 
       return {

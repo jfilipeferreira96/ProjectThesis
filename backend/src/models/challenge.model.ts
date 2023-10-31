@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { User } from "../controllers/user.controller";
 
 export enum ChallengeType {
     TYPE_A = 'Type A',
@@ -17,7 +18,7 @@ interface IChallenge extends Document{
     description: string;
     type: ChallengeType;
     admins: Schema.Types.ObjectId[];
-    participants: Schema.Types.ObjectId[];
+    participants: User[];
     createdAt: Date;
     endDate?: Date;
     status: ChallengeStatus;

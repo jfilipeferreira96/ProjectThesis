@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
 import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model"
+import User from "../models/user.model";
 
 class QuizzController {
   static async GetSingleQuizz(req: Request, res: Response, next: NextFunction) {
@@ -239,8 +240,7 @@ class QuizzController {
     }
   }
 
-  static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction)
-  {
+  static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction){
     try{
       const { quizId, userAnswers } = req.body;
       const user: any = req.user;
@@ -284,8 +284,8 @@ class QuizzController {
       let correctAnswers = 0;
       let wrongAnswers = 0;
 
-      userAnswers.forEach((userAnswer: { id: number | string; answer: string}) => {
-        const question = quiz.questions.find((q) => q.id === userAnswer.id);
+      userAnswers.forEach((userAnswer: { _id: number | string; answer: string}) => {
+        const question = quiz.questions.find((q) => q._id === userAnswer._id);
         const answer = userAnswer.answer;
 
         if (question){
@@ -322,6 +322,23 @@ class QuizzController {
       };
 
       const quizResponse = await QuizResponse.create(quizResponseData);
+      const UserModel = await User.findById(user._id);
+      if (UserModel) {
+        const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
+
+        if (existingChallengeScore) {
+          existingChallengeScore.score += score; // Update the score
+        } else {
+          // If the user doesn't have a score for this challenge, add it
+          UserModel.challengeScores.push({
+            challenge: challenge._id,
+            score: score,
+          });
+        }
+
+        await UserModel.save();
+      } 
+
       return res.status(StatusCodes.OK).json({
         status: true,
         message: "Quiz response saved successfully",

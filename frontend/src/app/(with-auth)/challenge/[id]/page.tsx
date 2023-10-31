@@ -104,6 +104,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           message: response.message,
           color: "red",
         });
+        router.push(routes.home.url);
       }
     } catch (error) {
       notifications.show({

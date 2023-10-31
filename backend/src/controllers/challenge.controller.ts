@@ -67,7 +67,7 @@ class ChallengeController {
         return res.status(200).json(response);
       }
 
-      const isUserInChallenge = challenge.participants.includes(user._id) || challenge.admins.includes(user._id);
+      const isUserInChallenge = challenge.participants.some((participant) => participant._id.toString() === user._id) || challenge.admins.includes(user._id);
       if (!isUserInChallenge) {
         Logger.error("You don't have access to this challenge.");
         response = { status: false, message: "You don't have access to this challenge." };
