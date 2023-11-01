@@ -55,11 +55,19 @@ class ChallengeController {
   static async GetSingleChallenge(req: Request, res: Response, next: NextFunction) {
     try {
       let response = { status: false, message: "" };
-      
+
       const user: any = req.user;
       const id = req.params.id;
 
-      const challenge = await Challenge.findOne({ _id: id }).populate("participants", "fullname email avatar studentId");
+      let challenge = await Challenge.findOne({ _id: id }).populate({
+        path: "participants",
+        select: "fullname email avatar studentId challengeScores",
+        populate: {
+          path: "challengeScores",
+          match: { challenge: id },
+          select: "score",
+        },
+      });
 
       if (!challenge) {
         Logger.error("Challenge not found");
@@ -73,7 +81,7 @@ class ChallengeController {
         response = { status: false, message: "You don't have access to this challenge." };
         return res.status(200).json(response);
       }
-
+      
       return res.status(200).json({
         status: true,
         challenge: challenge,
