@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
+import Challenge from "../models/challenge.model";
 
 export interface User {
   _id: string;
@@ -10,6 +11,7 @@ export interface User {
   studentId: string | number | undefined;
   email: string;
   avatar?: string;
+  adminChallenges?: string[];
 }
 
 interface RefreshToken {
@@ -53,11 +55,15 @@ class UserController {
         return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
       }
 
+      const challengeIds = await Challenge.distinct("_id", { admins: user._id }).exec();
+      const formattedChallengeIds = challengeIds.map((id) => id.toString());
+
       const accessToken = UserController.generateAccessToken({
         _id: user._id,
         fullname: user.fullname,
         studentId: user.studentId,
         email: user.email,
+        adminChallenges: formattedChallengeIds
       });
 
       const refreshToken = UserController.generateRefreshToken({
@@ -73,6 +79,7 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          adminChallenges: formattedChallengeIds,
         },
         accessToken,
         refreshToken,
@@ -106,6 +113,7 @@ class UserController {
         fullname: user.fullname,
         studentId: user.studentId,
         email: user.email,
+        adminChallenges:[]
       });
 
       const refreshToken = UserController.generateRefreshToken({
@@ -121,6 +129,7 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          adminChallenges: [],
         },
         accessToken,
         refreshToken,

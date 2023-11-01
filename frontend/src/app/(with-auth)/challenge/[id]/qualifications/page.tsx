@@ -31,19 +31,19 @@ type DataItem = {
 
 const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
-  const [state, setState] = useState({
+  const [state, setState] = useState<{id: string, rows:DataItem[]}>({
     id: id,
     rows: [],
   });
   const [isLoading, setIsLoading] = useState(false);
-  console.log(state.rows);
+  
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
     try {
       const response = await getSingleChallenge(id);
-      console.log(response);
+      
       if (response.status) {
-        console.log('ok')
+
         const sortedParticipants = response.challenge.participants.sort((a: DataItem, b: DataItem) => {
           return b.challengeScores[0].score - a.challengeScores[0].score;
         });
@@ -100,7 +100,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
           </Text>
         </Table.Td>
         <Table.Td>
-          <Group gap="sm">
+          <Group gap="sm" justify="center">
             <Avatar size={30} src={item.avatar} radius={30} />
             <Text fz="sm" fw={500}>
               {item.fullname}
@@ -130,11 +130,23 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
   const rows = createRows(state.rows);
 
   const dataTop = [
-    { label: "First place", stats: "456,578", color: "teal", icon: <IconPentagonNumber1 style={{ width: rem(30), height: rem(30) }} stroke={1.5} /> },
-    { label: "Second place", stats: "2,550", color: "blue", icon: <IconPentagonNumber2 style={{ width: rem(30), height: rem(30) }} stroke={1.5} /> },
+    {
+      label: "First place",
+      name: state.rows.length >= 1 ? state.rows[0]?.fullname : "---",
+      color: "teal",
+      icon: <IconPentagonNumber1 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
+    },
+
+    {
+      label: "Second place",
+      name: state.rows.length >= 2 ? state.rows[1]?.fullname : "---",
+      color: "blue",
+      icon: <IconPentagonNumber2 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
+    },
+
     {
       label: "Third place",
-      stats: "4,735",
+      name: state.rows.length >= 3 ? state.rows[2]?.fullname : "---",
       color: "red",
       icon: <IconPentagonNumber3 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
     },
@@ -151,7 +163,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
               {stat.label}
             </Text>
             <Text fw={700} size="xl">
-              {stat.stats}
+              {stat.name}
             </Text>
           </div>
         </Group>

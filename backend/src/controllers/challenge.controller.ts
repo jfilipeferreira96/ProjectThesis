@@ -47,6 +47,7 @@ class ChallengeController {
         status: true,
         challenges: sendObj,
       });
+      
     } catch (error) {
       throw new Error("Error fetching challenges: " + error);
     }

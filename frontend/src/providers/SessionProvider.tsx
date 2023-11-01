@@ -11,6 +11,7 @@ export interface User {
   studentId: string;
   email: string;
   avatar: string;
+  adminChallenges?: string[];
 }
 
 interface DecodedToken extends JwtPayload {
@@ -87,6 +88,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             studentId: decodedToken.studentId,
             email: decodedToken.email,
             avatar: avatar,
+            adminChallenges: decodedToken.adminChallenges,
           };
           sessionLogin(userData, accessToken, refreshToken, false);
         }

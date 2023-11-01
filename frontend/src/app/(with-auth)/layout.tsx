@@ -14,6 +14,16 @@ const regex = /^\/challenge\/[0-9a-f]{24}$/;
 const regexQualifications = /^\/challenge\/[0-9a-f]{24}\/qualifications$/;
 const regexSettings = /^\/challenge\/[0-9a-f]{24}\/settings$/;
 
+function getIdFromUrl(url:string): string | null {
+  const regex = /\/challenge\/([a-zA-Z0-9]+)/;
+  const match = url.match(regex);
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   //checking session
   const { user, isReady } = useSession();
@@ -21,6 +31,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname) || regexSettings.test(pathname);
   const [opened, { toggle }] = useDisclosure();
+  const challengeId = isChallengePage && getIdFromUrl(pathname);
   
   useEffect(() => {
     if (!user?._id && isReady) {
@@ -37,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Header>
         <HeaderMenu />
       </AppShell.Header>
-      {isChallengePage && (
+      {isChallengePage && challengeId &&  (
         <AppShell.Navbar>
           <Sidebar />
         </AppShell.Navbar>

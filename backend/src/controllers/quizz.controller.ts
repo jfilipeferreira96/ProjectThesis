@@ -54,7 +54,7 @@ class QuizzController {
         } */
 
         // Sends the user the quiz without the correct awnsers in the form
-        console.log(quiz.questions);
+        
         const questionsWithoutCorrectAnswer = quiz.questions.map(question => {
           return {
             _id: question._id,
@@ -63,7 +63,7 @@ class QuizzController {
             choices: question.choices,
           };
         });
-        console.log(questionsWithoutCorrectAnswer);
+        
         return res.status(StatusCodes.OK).json({
           status: true,
           questions: questionsWithoutCorrectAnswer,
@@ -312,8 +312,6 @@ class QuizzController {
           }
         }
       });
-
-      console.log(score, correctAnswers, wrongAnswers);
 
       // Create and save quiz response
       const quizResponseData = {
