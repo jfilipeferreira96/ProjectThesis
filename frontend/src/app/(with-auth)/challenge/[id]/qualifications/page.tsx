@@ -24,7 +24,7 @@ type DataItem = {
   studentId: string;
   email: string;
   avatar: string;
-  challendeScores: { challenge: string; score: number }[];
+  challengeScores: { challenge: string; score: number }[];
   score: number;
   position: number;
 };
@@ -43,23 +43,23 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
       const response = await getSingleChallenge(id);
       console.log(response);
       if (response.status) {
-
+        console.log('ok')
         const sortedParticipants = response.challenge.participants.sort((a: DataItem, b: DataItem) => {
-          return b.challendeScores[0].score - a.challendeScores[0].score;
+          return b.challengeScores[0].score - a.challengeScores[0].score;
         });
 
-        const mappedParticipants = sortedParticipants.map((participant:DataItem, index:number) => {
+        const mappedParticipants = sortedParticipants.map((participant: DataItem, index: number) => {
           return {
             _id: participant._id,
             fullname: participant.fullname,
             studentId: participant.studentId,
             email: participant.email,
             avatar: participant.avatar,
-            score: participant.challendeScores[0].score,
+            score: participant.challengeScores[0].score,
             position: index + 1,
           };
         });
-
+     
         setState((prevState) => ({
           ...prevState,
           rows: mappedParticipants,
@@ -74,12 +74,12 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
         router.push(routes.home.url);
       }
     } catch (error) {
-      notifications.show({
+      /* notifications.show({
         title: "Error",
         message: "Something went wrong",
         color: "red",
       });
-      router.push(routes.home.url);
+      router.push(routes.home.url); */
     } finally {
       setIsLoading(false);
     }

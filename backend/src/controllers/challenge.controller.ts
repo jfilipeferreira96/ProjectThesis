@@ -120,9 +120,10 @@ class ChallengeController {
 
       // Updates the user model with score = 0
       user.challengeScores.push({ challenge: challenge._id, score: 0 });
+      const userUpdated = await user.save();
 
+      // Updates the challenge model with the new participant
       challenge.participants.push(userId);
-
       const challengeUpdated = await challenge.save();
 
       return res.status(200).json({ status: true, challenge: challengeUpdated });

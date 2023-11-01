@@ -106,7 +106,6 @@ class UserController {
         fullname: user.fullname,
         studentId: user.studentId,
         email: user.email,
-        avatar: user.avatar,
       });
 
       const refreshToken = UserController.generateRefreshToken({
