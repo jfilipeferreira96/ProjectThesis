@@ -27,7 +27,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       questions: [
         {
           question: "",
-          id: randomId(),
+          _id: randomId(),
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
@@ -144,7 +144,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
-        <Quizz questions={form.values.questions} />
+        <Quizz questions={form.values.questions} preview />
       </Modal>
 
       <Flex justify="space-between">
@@ -177,7 +177,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
             </Group>
           </Paper>
         </Grid.Col>
-        
+
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
@@ -186,7 +186,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
               }
 
               return (
-                <div key={item.id}>
+                <div key={item._id}>
                   <Group justify="space-between" align="center" mb={10}>
                     <Title order={3}>Question {index + 1}</Title>
 

@@ -15,6 +15,7 @@ export const endpoints = {
   editQuizzStatusRoute: `${host}/api/quizz/editStatus`,
   deleteQuizzRoute: `${host}/api/quizz/delete`,
   getSingleQuizz: `${host}/api/quizz/`,
+  SaveQuizAnswerRoute: `${host}/api/quizz/answer`,
 };
 
 export const routes = {

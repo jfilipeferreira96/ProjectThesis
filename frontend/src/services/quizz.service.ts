@@ -30,7 +30,7 @@ export interface QuizzData {
   challengeId?: string;
   questions: {
     question: string;
-    id: string;
+    _id: string;
     type: QuestionType;
     choices: string[];
     correctAnswer: string;
@@ -86,6 +86,15 @@ export const deleteQuizz = async (id: string) => {
   
   try {
     const response = await api.post(endpoints.deleteQuizzRoute, { quizId: id });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: { _id: number | string; answer: string }[] }) => {
+  try {
+    const response = await api.post(endpoints.SaveQuizAnswerRoute, data);
     return response.data;
   } catch (error) {
     throw error;

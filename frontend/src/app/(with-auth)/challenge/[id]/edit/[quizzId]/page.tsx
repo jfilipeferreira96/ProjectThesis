@@ -66,7 +66,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       questions: [
         {
           question: "",
-          id: randomId(),
+          _id: randomId(),
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
@@ -184,7 +184,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
-        <Quizz questions={form.values.questions} />
+        <Quizz questions={form.values.questions} preview />
       </Modal>
 
       <Flex justify="space-between">

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import classes from "./random.module.scss";
 import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
+import { SaveQuizAnswer } from "@/services/quizz.service";
 
 export interface Question {
   _id: number | string;
@@ -21,10 +23,11 @@ interface Result {
 interface Props {
   questions: Question[];
   preview?: boolean;
+  quizId?: string
 }
 
 const Quizz = (props: Props) => {
-  const { questions } = props;
+  const { questions, preview, quizId } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -35,14 +38,15 @@ const Quizz = (props: Props) => {
   const [showResult, setShowResult] = useState(false);
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
   useEffect(() => {
     interval.start();
     return interval.stop;
   }, []);
-  
+
   const { _id: questionId, question, choices, type } = questions[currentQuestion];
 
   const handleChoiceSelection = (chosenAnswer: string) => {
@@ -67,6 +71,30 @@ const Quizz = (props: Props) => {
     setCurrentQuestion(id);
   };
 
+  const SendAndSaveAnswer = async (userAnswers: {_id: number | string; answer: string;}[]) => {
+    setIsLoading(true);
+    try {
+      const response = await SaveQuizAnswer({ userAnswers, quizId });
+
+      if (response.status) {
+        setResult({
+          score: response.data.score,
+          correctAnswers: response.data.correctAnswers,
+          wrongAnswers: response.data.wrongAnswers,
+          userAnswers: response.data.userAnswers,
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const endChallenge = () => {
     let score = 0;
     let correctAnswers = 0;
@@ -74,34 +102,39 @@ const Quizz = (props: Props) => {
 
     interval.stop();
 
-    result.userAnswers.forEach((userAnswer) => {
-      const question = questions.find((q) => q._id === userAnswer._id);
+    if (preview === true) {
+      result.userAnswers.forEach((userAnswer) => {
+        const question = questions.find((q) => q._id === userAnswer._id);
 
-      if (question) {
-        if (question.type === "FillInBlank") {
-          if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
-            score += 5;
-            correctAnswers += 1;
+        if (question) {
+          if (question.type === "FillInBlank") {
+            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
+              score += 5;
+              correctAnswers += 1;
+            } else {
+              wrongAnswers += 1;
+            }
           } else {
-            wrongAnswers += 1;
-          }
-        } else {
-          if (userAnswer.answer === question.correctAnswer) {
-            score += 5;
-            correctAnswers += 1;
-          } else {
-            wrongAnswers += 1;
+            if (userAnswer.answer === question.correctAnswer) {
+              score += 5;
+              correctAnswers += 1;
+            } else {
+              wrongAnswers += 1;
+            }
           }
         }
-      }
-    });
+      });
 
-    setResult({
-      score,
-      correctAnswers,
-      wrongAnswers,
-      userAnswers: result.userAnswers,
-    });
+      setResult({
+        score,
+        correctAnswers,
+        wrongAnswers,
+        userAnswers: result.userAnswers,
+      });
+    } else {
+      //Submete para o backend e seta o resultado
+      SendAndSaveAnswer(result.userAnswers);
+    }
 
     setShowResult(true);
   };
@@ -172,7 +205,7 @@ const Quizz = (props: Props) => {
             );
           })}
         </ul>
-      </div >
+      </div>
     );
   };
 

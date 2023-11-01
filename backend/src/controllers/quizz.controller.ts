@@ -36,7 +36,7 @@ class QuizzController {
           quiz,
         });
       } else {
-        console.log('entrei')
+      
         if (quiz.status === Status.Completed)
         {
           return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is completed" });
@@ -285,9 +285,9 @@ class QuizzController {
       let score = 0;
       let correctAnswers = 0;
       let wrongAnswers = 0;
-
+      
       userAnswers.forEach((userAnswer: { _id: number | string; answer: string}) => {
-        const question = quiz.questions.find((q) => q._id === userAnswer._id);
+        const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
         const answer = userAnswer.answer;
 
         if (question){
@@ -325,9 +325,9 @@ class QuizzController {
 
       const quizResponse = await QuizResponse.create(quizResponseData);
       const UserModel = await User.findById(user._id);
+      
       if (UserModel) {
         const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
-
         if (existingChallengeScore) {
           existingChallengeScore.score += score; // Update the score
         } else {
@@ -337,14 +337,19 @@ class QuizzController {
             score: score,
           });
         }
-
+        
         await UserModel.save();
       } 
 
       return res.status(StatusCodes.OK).json({
         status: true,
         message: "Quiz response saved successfully",
-        quizResponse,
+        data: {
+          score: score,
+          correctAnswers: correctAnswers,
+          wrongAnswers: wrongAnswers,
+          userAnswers: userAnswers,
+        },
       });
 
     } catch (error)

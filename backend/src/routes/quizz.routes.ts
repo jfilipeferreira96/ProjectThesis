@@ -15,4 +15,6 @@ quizzRoutes.post("/quizz/edit", authenticateToken, QuizzController.EditQuizz);
 
 quizzRoutes.post("/quizz/editStatus", authenticateToken, QuizzController.EditQuizStatus);
 
+quizzRoutes.post("/quizz/answer", authenticateToken, QuizzController.SaveQuizAnswer);
+
 export default quizzRoutes;

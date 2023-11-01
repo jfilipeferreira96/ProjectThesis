@@ -63,13 +63,13 @@ const jobColors: Record<string, string> = {
 const buttons = (pathname: string, isAdmin: boolean) => {
   if (isAdmin) {
     return [
-      { name: "Play", path: `${pathname}/random`, color: "blue" },
+      { name: "Play", path: `${pathname}/play`, color: "blue" },
       { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
       { name: "Settings", path: `${pathname}/settings`, color: "blue" },
     ];
   } else {
     return [
-      { name: "Play", path: `${pathname}/random`, color: "blue" }, //agapar
+      { name: "Play", path: `${pathname}/play`, color: "blue" }, //agapar
       { name: "Qualifications", path: `${pathname}/qualifications`, color: "blue" },
       { name: "Settings", path: `${pathname}/settings`, color: "blue" },
     ];

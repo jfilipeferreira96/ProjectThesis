@@ -20,9 +20,8 @@ const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: st
 
   const getQuestions = async (id: string) => {
     try {
-      console.log(quizzId)
+      
       const response = await getSingleQuizz(quizzId);
-      console.log(response);
       if (response.status) {
         setQuestions(response.questions);
         setLoading(false);
@@ -61,7 +60,7 @@ const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: st
 
   return (
     <>
-      <Quizz questions={questions} />
+      <Quizz questions={questions} quizId={quizzId} />
     </>
   );
 };
