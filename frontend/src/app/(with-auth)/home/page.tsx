@@ -164,7 +164,7 @@ export default function Home() {
                 <Text fz="xl" fw={700} style={{ lineHeight: 1 }}>
                   {challenge.title}
                 </Text>
-                <Text fz="xs" c="dimmed">
+                <Text fz="xs" c="dimmed" mt={challenge.description ? "" : 20}>
                   {challenge.description}
                 </Text>
               </div>
