@@ -14,13 +14,13 @@ const regex = /^\/challenge\/[0-9a-f]{24}$/;
 const regexQualifications = /^\/challenge\/[0-9a-f]{24}\/qualifications$/;
 const regexSettings = /^\/challenge\/[0-9a-f]{24}\/settings$/;
 
-function getIdFromUrl(url:string): string | null {
+function getIdFromUrl(url:string): string | undefined {
   const regex = /\/challenge\/([a-zA-Z0-9]+)/;
   const match = url.match(regex);
   if (match && match[1]) {
     return match[1];
   } else {
-    return null;
+    return undefined;
   }
 }
 
@@ -31,7 +31,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname) || regexSettings.test(pathname);
   const [opened, { toggle }] = useDisclosure();
-  const challengeId = isChallengePage && getIdFromUrl(pathname);
+  const challengeId = getIdFromUrl(pathname);
   
   useEffect(() => {
     if (!user?._id && isReady) {
@@ -48,9 +48,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Header>
         <HeaderMenu />
       </AppShell.Header>
-      {isChallengePage && challengeId &&  (
+      {isChallengePage && (
         <AppShell.Navbar>
-          <Sidebar />
+          <Sidebar isAdmin={(challengeId !== undefined && user.adminChallenges?.includes(challengeId)) ?? false} />
         </AppShell.Navbar>
       )}
       <AppShell.Main pt={`calc(${rem(60)} + var(--mantine-spacing-md))`}>

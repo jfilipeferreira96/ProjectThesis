@@ -25,6 +25,7 @@ interface SessionContextProps {
   sessionLogin: sessionProps;
   logout: () => void;
   isReady: boolean;
+  addToAdminChallenge: (challengeId: string) => void;
 }
 
 const SessionContext = createContext<SessionContextProps | undefined>(undefined);
@@ -71,8 +72,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
         const decodedToken = jwt.decode(accessToken) as DecodedToken;
 
         if (decodedToken.exp * 1000 < currentDate.getTime()) {
-          
-          if (pathname !== routes.landingpage.url ) {
+          if (pathname !== routes.landingpage.url) {
             notifications.show({
               title: "Error",
               message: "Session expired",
@@ -102,11 +102,23 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     }
   };
 
+  const addToAdminChallenge = (challengeId: string) => {
+    setUser((prevUser) => {
+      if (prevUser) {
+        return {
+          ...prevUser,
+          adminChallenges: [...(prevUser.adminChallenges || []), challengeId],
+        };
+      }
+      return null;
+    });
+  };
+
   useEffect(() => {
     getSession();
   }, []);
 
-  return <SessionContext.Provider value={{ isReady, user, sessionLogin, logout }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ isReady, user, sessionLogin, logout, addToAdminChallenge }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = (): SessionContextProps => {

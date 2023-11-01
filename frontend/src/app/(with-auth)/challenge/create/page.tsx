@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { z } from "zod";
 import { routes } from "@/config/routes";
 import { ChallengeType, CreateChallengeData, createChallenge } from "@/services/challenge.service";
+import { useSession } from "@/providers/SessionProvider";
 
 const StyledPaper = styled(Paper)`
   width: 800px;
@@ -29,6 +30,7 @@ const schema = z.object({
 
 function CreateChallengePage() {
   const router = useRouter();
+  const { addToAdminChallenge } = useSession();
 
   const form = useForm({
     initialValues: {
@@ -48,9 +50,11 @@ function CreateChallengePage() {
           message: "",
           color: "green",
         });
-          
-          //redirect
-        router.push(routes.home.url);
+
+        addToAdminChallenge(response.id);
+
+        //redirect
+        router.push(routes.challenge.url + "/" + response.id);
       }
       
     } catch (error) {

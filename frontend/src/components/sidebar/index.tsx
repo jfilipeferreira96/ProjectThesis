@@ -62,7 +62,12 @@ const data = [
   { icon: IconSettings, label: "Settings", url: "settings" },
 ];
 
-export function Sidebar(){
+interface Props{
+  isAdmin: boolean
+}
+
+export function Sidebar(props: Props) {
+  const { isAdmin } = props;
   const pathname = usePathname();
   const router = useRouter();
   const [active, setActive] = useState<number>(0);
@@ -86,7 +91,15 @@ export function Sidebar(){
     router.push(`${routes.challenge.url}/${getId(pathname)}/${data[index].url}`);
   };
 
-  const links = data.map((link, index) => <NavbarLink {...link} key={link.label} active={index === active} onClick={() => handleNavClick(index)} />);
+  const links = data.map((link, index) => {
+    if (isAdmin === false && link.url === 'settings') {
+      return;
+    }
+    return (
+      <NavbarLink {...link} key={link.label} active={index === active} onClick={() => handleNavClick(index)} />
+    );
+  }
+  );
 
   return (
     <NavbarContainer>
