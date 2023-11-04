@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components';
-//import { Button } from '@mantine/core';
 
 const Pushable = styled.button`
   position: relative;
@@ -17,6 +16,13 @@ const Pushable = styled.button`
 
   &:focus:not(:focus-visible) {
     outline: none;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    &:hover {
+      filter: none;
+    }
   }
 `;
 
@@ -43,7 +49,7 @@ const Edge = styled.span`
   background: ${(props) => props.color};
 `;
 
-const Front = styled.span`
+const Front = styled.span<{ disabled?: boolean }>`
   display: block;
   position: relative;
   padding: 12px 42px;
@@ -58,26 +64,34 @@ const Front = styled.span`
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
   min-width: 230px;
 
-  ${Pushable}:hover & {
-    transform: translateY(-6px);
-    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
-  }
+  ${(props) =>
+    props.disabled
+      ? `
+        filter: brightness(80%);
+      `
+      : `
+        &:hover {
+          transform: translateY(-6px);
+          transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+        }
 
-  ${Pushable}:active & {
-    transform: translateY(-2px);
-    transition: transform 34ms;
-  }
+        &:active {
+          transform: translateY(-2px);
+          transition: transform 34ms;
+        }
+      `}
 `;
 
 
 type Props = {
   children: ReactNode;
   color?: string;
-  onClick?: () => void
+  onClick?: () => void;
+  disabled?: boolean;
 };
 
 function ThreeDButton(props:Props) {
-    const { children, color, onClick } = props;
+    const { children, color, onClick, disabled } = props;
     
     const colorStyles: Record<string, string> = {
       blue: "linear-gradient(to left, #145d9c 0%, #104e80 8%, #0d3e64 92%, #104e80 100%)",
@@ -90,10 +104,12 @@ function ThreeDButton(props:Props) {
     const bgColor = color ? colorStyles[color] : colorStyles.blue;
     
     return (
-      <Pushable onClick={onClick}>
+      <Pushable onClick={onClick} disabled={disabled}>
         <Shadow></Shadow>
         <Edge color={bgColor}></Edge>
-        <Front color={color}>{children}</Front>
+        <Front color={color} disabled={disabled}>
+          {children}
+        </Front>
       </Pushable>
     );
 }
