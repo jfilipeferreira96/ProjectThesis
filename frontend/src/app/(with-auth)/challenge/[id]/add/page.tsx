@@ -27,7 +27,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       questions: [
         {
           question: "",
-          _id: randomId(),
+          key: randomId(),
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
@@ -186,7 +186,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
               }
 
               return (
-                <div key={item._id}>
+                <div key={item.key}>
                   <Group justify="space-between" align="center" mb={10}>
                     <Title order={3}>Question {index + 1}</Title>
 

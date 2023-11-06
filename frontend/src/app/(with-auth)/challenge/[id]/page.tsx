@@ -95,6 +95,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
+        console.log(response)
         setState(response.challenge);
       }
       if (response.status === false) {
@@ -139,7 +140,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
           {state.description && <Text c="dimmed">{state.description}</Text>}
         </Grid.Col>
-        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
+        {/*  <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <Card withBorder radius="md">
             <Title ta="center" size={"h3"}>
               Unleash the Power!
@@ -167,9 +168,23 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
               }
             />
           </Card>
+        </Grid.Col> */}
+        <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
+          <Card withBorder radius="md">
+            <Title ta="center" size={"h3"}>
+              {true ? "Game Time! Are You Set?" : "No Games Available at the Moment"}
+            </Title>
+
+            <Text c="dimmed" size="md" ta="center" mt="sm" mb="sm">
+              {true ? "Get Ready to Dive In!" : "Hold Tight for More Action!"}
+            </Text>
+            <ThreeDButton color="blue" onClick={() => console.log("asd")} disabled>
+              Play
+            </ThreeDButton>
+          </Card>
         </Grid.Col>
       </Grid>
-      <Center>
+      {/*  <Center>
         <Stack align="center" p={10}>
           {buttons(pathname, true).map((button, index) => {
             return (
@@ -185,7 +200,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
             );
           })}
         </Stack>
-      </Center>
+      </Center> */}
     </>
   );
 };

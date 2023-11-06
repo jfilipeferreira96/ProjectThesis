@@ -79,7 +79,7 @@ class QuizzController {
     try {
       const { questions, challengeId, name, startdate, enddate } = req.body;
       const user = req.user;
-
+      console.log(req.body)
       const quiz = await Quizz.create({
         user,
         name,
@@ -90,7 +90,7 @@ class QuizzController {
       });
 
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });
-
+      console.log('ok')
       return res.status(StatusCodes.OK).json({
         status: true,
         id: quiz._id,

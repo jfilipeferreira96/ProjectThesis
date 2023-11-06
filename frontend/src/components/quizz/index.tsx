@@ -6,7 +6,8 @@ import { useInterval } from "@mantine/hooks";
 import { SaveQuizAnswer } from "@/services/quizz.service";
 
 export interface Question {
-  _id: number | string;
+  _id?: number | string;
+  key?: number | string;
   question: string;
   choices?: string[];
   correctAnswer: string;
