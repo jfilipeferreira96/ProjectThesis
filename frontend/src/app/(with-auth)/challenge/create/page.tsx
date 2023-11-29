@@ -80,8 +80,8 @@ function CreateChallengePage() {
 
           <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" defaultValue={ChallengeType.TYPE_A} {...form.getInputProps("type")}>
             <StyledList spacing="xs" size="xs" center icon={<></>}>
-              <List.Item>Type A - Fast paced challenge and short duration, ideal for a single class;</List.Item>
-              <List.Item>Type B - Long challenge with multiple session, football matches idk;</List.Item>
+              <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class!</List.Item>
+              <List.Item>Type B - A league-based challenge comprised of multiple challenges.</List.Item>
             </StyledList>
 
             <Group mt="xs" align="center" justify="center">
