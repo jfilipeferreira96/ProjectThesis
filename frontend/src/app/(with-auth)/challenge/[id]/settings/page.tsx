@@ -223,7 +223,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     <Grid justify="center" align="stretch" mb={10}>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
         <Title order={1}>Settings</Title>
-        <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 4 }} style={{ display: "flex", flexDirection: "column" }}>
+{/*         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 4 }} style={{ display: "flex", flexDirection: "column" }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
@@ -237,7 +237,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
               </Button>
             </Flex>
           </Paper>
-        </Grid.Col>
+        </Grid.Col> */}
 
         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
