@@ -15,23 +15,27 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar }: Props) => {
   const fetchAvatars = async () => {
     setLoading(true);
     const newAvatars = [];
-   
-    for (let i = 0; i < 4; i++) {
-      const response = await fetch(`https://robohash.org/${Math.round(Math.random() * 1000)}?set=set5`);
-      const data = await response.arrayBuffer();
-      const array = Array.from(new Uint8Array(data));
-      const encodedData = btoa(array.map((byte) => String.fromCharCode(byte)).join(""));
-      newAvatars.push(`data:image/png;base64,${encodedData}`);
-    }
-    setAvatars(newAvatars);
 
+    const usedIndexes = new Set<number>();
+
+    while (newAvatars.length < 4) {
+      const randomIndex = Math.floor(Math.random() * 51); 
+      if (!usedIndexes.has(randomIndex)) {
+        
+        const avatarUrl = `/avatars/avatar_${randomIndex}.png`; 
+        newAvatars.push(avatarUrl);
+        usedIndexes.add(randomIndex);
+      }
+    }
+
+    setAvatars(newAvatars);
     setLoading(false);
   };
 
   const setClickedAvatar = (id: number) => {
     setSelectedAvatar(avatars[id]);
   };
- 
+
   useEffect(() => {
     fetchAvatars();
   }, []);

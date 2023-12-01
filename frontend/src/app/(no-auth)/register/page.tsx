@@ -83,7 +83,7 @@ export default function Register() {
   return (
     <Center>
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-        <title>Register</title>
+        <title>Sign Up</title>
         <Title ta="center" mt={100}>
           Create an account!
         </Title>
