@@ -25,6 +25,7 @@ export default function Home() {
 
   return (
     <>
+      <title>Project Score</title>
       <AffixComponent />
       <Hero />
       <FeaturesCards />

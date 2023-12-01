@@ -135,6 +135,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <>
       <Grid justify="center" align="stretch" mt={10} mb={10}>
+        <title>Challenge</title>
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
           <Title order={1}>{state.title} </Title>
 

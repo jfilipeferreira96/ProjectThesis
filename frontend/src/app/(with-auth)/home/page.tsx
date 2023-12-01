@@ -99,6 +99,7 @@ export default function Home() {
 
   return (
     <Grid justify="center" align="stretch" mt={10} mb={10}>
+      <title>Home</title>
       <Modal
         opened={opened}
         onClose={close}

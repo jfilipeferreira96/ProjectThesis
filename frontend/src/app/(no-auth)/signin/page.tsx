@@ -60,6 +60,7 @@ export default function SignIn(){
 
   return (
     <Center>
+      <title>Sign In</title>
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
         
         <Title ta="center" mt={100}>Welcome!</Title>

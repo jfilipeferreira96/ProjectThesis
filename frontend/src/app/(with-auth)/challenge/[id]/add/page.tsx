@@ -142,6 +142,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+      <title>Add Challenge</title>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
         <Quizz questions={form.values.questions} preview />

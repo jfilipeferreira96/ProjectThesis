@@ -43,15 +43,18 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const [state, setState] = useState({
     id: id,
     rows: [],
+    type: undefined
   });
   const [isLoading, setIsLoading] = useState(false);
+  const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
+  console.log(state)
 
   const GetAllChallengeQuizzes = async (id: string) => {
     setIsLoading(true);
     try {
       const response = await getAllChallengeQuizzes(id);
       if (response.status) {
-        setState((prevState) => ({ ...prevState, rows: response.quizzes }));
+        setState((prevState) => ({ ...prevState, rows: response.quizzes, type: response.type }));
       }
       if (response.status === false) {
         notifications.show({
@@ -221,9 +224,12 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   
   return (
     <Grid justify="center" align="stretch" mb={10}>
+     
+      <title>Settings</title>
+      
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
         <Title order={1}>Settings</Title>
-{/*         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 4 }} style={{ display: "flex", flexDirection: "column" }}>
+        {/*         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 4 }} style={{ display: "flex", flexDirection: "column" }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
@@ -242,9 +248,17 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Flex justify={"flex-end"}>
-              <Button size="lg" variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
-                Add Quizz
-              </Button>
+              {isTypeABlockAcess ? (
+                <Tooltip label={"A Type A challenge cannot contain multiple challenges."} withArrow>
+                  <Button size="lg" variant="filled" disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                    Add Quizz
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button size="lg" variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                  Add Quizz
+                </Button>
+              )}
             </Flex>
             <Title order={3}>Quizzes</Title>
             <StyledTableContainer minWidth={800}>

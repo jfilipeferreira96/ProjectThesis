@@ -156,7 +156,7 @@ class ChallengeController {
       const quizzIds = challenge.quizzes;
       const quizzes = await Quizz.find({ _id: { $in: quizzIds } });
       
-      return res.status(200).json({ status: true, quizzes });
+      return res.status(200).json({ status: true, quizzes, type: challenge.type  });
     } catch (error) {
       throw new Error("Error fecthing all quizzes from challenge: " + error);
     }

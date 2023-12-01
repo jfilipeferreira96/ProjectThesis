@@ -83,8 +83,10 @@ export default function Register() {
   return (
     <Center>
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-        
-        <Title ta="center" mt={100}>Create an account!</Title>
+        <title>Register</title>
+        <Title ta="center" mt={100}>
+          Create an account!
+        </Title>
 
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Already have an account?
@@ -108,6 +110,5 @@ export default function Register() {
         </StyledPaper>
       </form>
     </Center>
-
   );
 }

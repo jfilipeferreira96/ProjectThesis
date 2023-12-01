@@ -31,8 +31,8 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
           
           form.setValues({
             name: response.quiz.name,
-            startdate: new Date(response.quiz.startDate) as unknown as string,
-            enddate: new Date(response.quiz.endDate) as unknown as string,
+            startdate: response.quiz.startDate ? (new Date(response.quiz.startDate) as unknown as string) : "",
+            enddate: response.quiz.endDat ? (new Date(response.quiz.endDate) as unknown as string) : "",
             questions: initialQuestions.map((question: QuizzData) => ({
               ...question,
               id: randomId(),
@@ -182,6 +182,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
 
   return (
     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+      <title>Edit Challenge</title>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
         <Quizz questions={form.values.questions} preview />
