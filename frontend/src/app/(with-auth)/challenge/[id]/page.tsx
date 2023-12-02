@@ -28,7 +28,11 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSession();
   const userIsAdmin = user ? state.admins.includes(user?._id) : false;
-  console.log(state)
+  const activeAndCompleted = state.activeQuizz?.id && state.activeQuizz?.completed;
+  const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
+  const noActiveQuizz = !state.activeQuizz?.id;
+
+  
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
     try {
@@ -117,13 +121,14 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
             <Card withBorder radius="md">
               <Title ta="center" size={"h3"}>
-                {state.activeQuizz?.id ? "Game Time! Are You Set?" : "No Active Challenges at the Moment"}
+                {activeAndNotCompleted ? "Game Time! Are You Set?" : activeAndCompleted ? "You Already Completed This Challenge" : "No Active Challenges at the Moment"}
               </Title>
 
               <Text c="dimmed" size="md" ta="center" mt="sm" mb="sm">
-                {state.activeQuizz?.id ? "Get Ready to Dive In!" : "Hold Tight for More Action!"}
+                {activeAndNotCompleted ? "Get Ready to Dive In!" : activeAndCompleted ? "Congratulations! Challenge Conquered! " : "Hold Tight for More Action!"}
               </Text>
-              {state.activeQuizz?.id ? (
+
+              {activeAndNotCompleted ? (
                 <ThreeDButton
                   color="blue"
                   onClick={() => {
@@ -131,16 +136,18 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
                       router.push(`${routes.challenge.url}/${id}/play/${state.activeQuizz?.id}`);
                     }
                   }}
-                  disabled={state.activeQuizz?.completed ? false : true}
+                  disabled={state.activeQuizz?.completed === false ? false : true}
                 >
                   Play
                 </ThreeDButton>
+              ) : activeAndCompleted ? (
+                <Flex align={"center"}>
+                  <Image src="/completed.png" alt="Wait" style={{ marginLeft: "auto", marginRight: "auto", width: "60%" }} />
+                </Flex>
               ) : (
-                <>
-                  <Flex align={"center"}>
-                    <Image src="/wait.png" alt="Wait" style={{ "marginLeft": "auto", "marginRight": "auto", "width": "60%" }} />
-                  </Flex>
-                </>
+                <Flex align={"center"}>
+                  <Image src="/waiting.png" alt="Wait" style={{ marginLeft: "auto", marginRight: "auto", width: "60%" }} />
+                </Flex>
               )}
             </Card>
           </Grid.Col>
