@@ -1,5 +1,6 @@
 "use client";
 import AffixComponent from "@/components/affix";
+import { CarouselSection } from "@/components/landing-page/sections/carousel";
 import { FaqSimple } from "@/components/landing-page/sections/faq";
 import { FeaturesCards } from "@/components/landing-page/sections/feature-cards";
 import Footer from "@/components/landing-page/sections/footer";
@@ -29,6 +30,7 @@ export default function Home() {
       <AffixComponent />
       <Hero />
       <FeaturesCards />
+      {/* <CarouselSection /> */}
       <FaqSimple />
       <Footer />
     </>

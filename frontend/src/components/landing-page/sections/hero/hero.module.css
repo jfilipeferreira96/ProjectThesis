@@ -41,17 +41,6 @@
   }
 }
 
-.image {
-  @media (max-width: $mantine-breakpoint-md) {
-    margin-top: 2rem;
-    width: rem(376px);
-  }
-    @media (max-width: $mantine-breakpoint-lg) {
-    margin-top: 2rem;
-    width: rem(376px);
-  }
-}
-
 .highlight {
   position: relative;
   background-color: var(--mantine-color-blue-light);
