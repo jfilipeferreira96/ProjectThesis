@@ -90,7 +90,7 @@ export default function Register() {
 
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Already have an account?
-          <Anchor size="sm" component="button" ml={2} onClick={() => router.push(routes.signin.url)}>
+          <Anchor size="sm" component="a" ml={2} onClick={() => router.push(routes.signin.url)}>
             Sign In
           </Anchor>
         </Text>

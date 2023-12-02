@@ -67,7 +67,7 @@ export default function SignIn(){
 
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?
-          <Anchor size="sm" component="button" ml={2} onClick={() => router.push(routes.register.url)}>
+          <Anchor size="sm" component="a" ml={2} onClick={() => router.push(routes.register.url)}>
             Create account
           </Anchor>
         </Text>
