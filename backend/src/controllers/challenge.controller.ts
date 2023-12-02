@@ -107,7 +107,6 @@ class ChallengeController {
           challenge: responseChallenge,
         });
       } else {
-
         return res.status(200).json({
           status: true,
           challenge: challenge,
@@ -185,6 +184,65 @@ class ChallengeController {
       return res.status(200).json({ status: true, quizzes, type: challenge.type });
     } catch (error) {
       throw new Error("Error fecthing all quizzes from challenge: " + error);
+    }
+  }
+
+  static async addAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { challengeId, userId } = req.body;
+
+      // Verificar se o user existe
+      const userExists = await User.exists({ _id: userId });
+      if (!userExists) {
+        return res.status(404).json({ status: false, message: "User not found" });
+      }
+
+      // Verificar se o user já é um admin
+      const challenge = await Challenge.findById(challengeId);
+      if (challenge) {
+        if (challenge.admins.includes(userId)) {
+          return res.status(400).json({ status: false, message: "User is already an admin of this challenge" });
+        }
+
+        // Verificar se o user já está no desafio como participante
+        if (challenge.participants.includes(userId)) {
+          return res.status(400).json({ status: false, message: "User is already a participant in this challenge" });
+        }
+
+        // Adicionar o user como admin do desafio
+        challenge.admins.push(userId);
+        await challenge.save();
+
+        return res.status(200).json({ status: true, message: "User added as admin successfully" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async removeAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { challengeId, userId } = req.body;
+
+      // Verificar se o desafio existe
+      const challenge = await Challenge.findById(challengeId);
+      if (!challenge) {
+        return res.status(404).json({ status: false, message: "Challenge not found" });
+      }
+
+      // Verificar se o user é um administrador do desafio
+      if (!challenge.admins.includes(userId)) {
+        return res.status(400).json({ status: false, message: "User is not an admin of this challenge" });
+      }
+
+      // Remover o user como administrador do desafio
+      const index = challenge.admins.indexOf(userId);
+      challenge.admins.splice(index, 1);
+      await challenge.save();
+
+      return res.status(200).json({ status: true, message: "Admin removed from the challenge successfully" });
+    } catch (error) {
+      next(error);
     }
   }
 }

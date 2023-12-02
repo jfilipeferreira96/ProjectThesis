@@ -67,6 +67,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         {
           question: "",
           _id: randomId(),
+          key: randomId(),
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",

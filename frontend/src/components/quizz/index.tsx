@@ -7,7 +7,7 @@ import { SaveQuizAnswer } from "@/services/quizz.service";
 
 export interface Question {
   _id?: number | string;
-  key?: number | string;
+  key: number | string;
   question: string;
   choices?: string[];
   correctAnswer: string;
@@ -42,14 +42,17 @@ const Quizz = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-
+  
   useEffect(() => {
+    if (!preview) {
+      
     interval.start();
     return interval.stop;
+    }
   }, []);
 
-  const { _id: questionId, question, choices, type } = questions[currentQuestion];
-
+  const { _id: questionId, key, question, choices, type } = questions[currentQuestion];
+  console.log(questions[currentQuestion]);
   const handleChoiceSelection = (chosenAnswer: string) => {
     setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
@@ -58,7 +61,7 @@ const Quizz = (props: Props) => {
       if (existingAnswer) {
         existingAnswer.answer = chosenAnswer;
       } else {
-        updatedUserAnswers.push({ _id: questionId, answer: chosenAnswer });
+        updatedUserAnswers.push(questionId ? { _id: questionId, answer: chosenAnswer } : { _id: key, answer: chosenAnswer });
       }
 
       return {
@@ -158,7 +161,7 @@ const Quizz = (props: Props) => {
         existingAnswer.answer = userInput;
       } else {
         // If it doesn't exist, add a new entry
-        updatedUserAnswers.push({ _id: questionId, answer: userInput });
+        updatedUserAnswers.push(questionId ? { _id: questionId, answer: userInput } : { _id: key, answer: userInput });
       }
 
       return {
@@ -270,9 +273,11 @@ const Quizz = (props: Props) => {
                 <p>
                   Wrong Answers: <span>{result.wrongAnswers}</span>
                 </p>
-                <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
-                  Try again
-                </Button>
+                {preview && (
+                  <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
+                    Try again
+                  </Button>
+                )}
               </Stack>
             )}
           </>

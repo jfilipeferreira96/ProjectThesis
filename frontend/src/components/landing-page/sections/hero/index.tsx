@@ -1,10 +1,8 @@
-import { Grid, GridCol, Image, Container, Title, Button, Group, Text, List, ThemeIcon, rem } from "@mantine/core";
+import { Grid, GridCol, Image, Container, Title, Button, Group, Text, List, ThemeIcon, rem, Flex } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import classes from "./hero.module.css";
 import Link from "next/link";
 import { routes } from "@/config/routes";
-import { Carousel } from "@mantine/carousel";
-import "@mantine/carousel/styles.css";
 
 export function Hero() {
   return (
@@ -57,15 +55,9 @@ export function Hero() {
             </div>
           </Grid.Col>
           <Grid.Col span={{ md: 6, sm: 12, xs: 12, lg: 4 }}>
-            <Carousel slideSize="100%" align="start" slideGap="md" controlSize={5} loop withControls={false} withIndicators>
-              <Carousel.Slide>
-                <Image src={"./happy1.png"} className={classes.image} alt="Image Hero" />
-              </Carousel.Slide>
-
-              <Carousel.Slide>
-                <Image src={"./happy1.png"} className={classes.image} alt="Image Hero" />
-              </Carousel.Slide>
-            </Carousel>
+            <Flex align={"center"}>
+              <Image src="/hero5.png" alt="Wait" style={{ marginLeft: "auto", marginRight: "auto", width: "110%" }} />
+            </Flex> 
           </Grid.Col>
         </Grid>
       </div>

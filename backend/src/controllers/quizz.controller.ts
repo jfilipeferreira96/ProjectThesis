@@ -88,9 +88,9 @@ class QuizzController {
         questions,
         challenge: challengeId,
       });
-
+      console.log("quiz", quiz);
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });
-      console.log('ok')
+      console.log("ok", challenge);
       return res.status(StatusCodes.OK).json({
         status: true,
         id: quiz._id,

@@ -30,7 +30,8 @@ export interface QuizzData {
   challengeId?: string;
   questions: {
     question: string;
-    _id: string;
+    _id?: string;
+    key: string;
     type: QuestionType;
     choices: string[];
     correctAnswer: string;

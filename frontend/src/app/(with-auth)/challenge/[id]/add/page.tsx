@@ -37,8 +37,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     validate: (values) => {
       const errors: FormErrors = {};
 
-      if (values.startdate && values.enddate && new Date(values.startdate) >= new Date(values.enddate))
-      {
+      if (values.startdate && values.enddate && new Date(values.startdate) >= new Date(values.enddate)) {
         errors.startdate = "Start date must be before end date.";
         errors.enddate = "End date must be after start date.";
       }
