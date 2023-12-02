@@ -7,6 +7,8 @@ const challengeRoutes: Router = express.Router();
 
 challengeRoutes.post("/challenges/create", authenticateToken, ChallengeController.CreateChallenge);
 
+challengeRoutes.post("/challenges/edit", authenticateToken, ChallengeController.EditChallenge);
+
 challengeRoutes.get("/challenges", authenticateToken, ChallengeController.GetChallengesByUserId);
 
 challengeRoutes.get("/challenges/:id", authenticateToken, ChallengeController.GetSingleChallenge);

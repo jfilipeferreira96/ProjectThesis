@@ -29,6 +29,40 @@ class ChallengeController {
     }
   }
 
+  static async EditChallenge(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { title, description, type } = req.body;
+      const user: any = req.user;
+
+      const challenge = await Challenge.findById(id);
+
+      if (!challenge) {
+        return res.status(404).json({ status: false, message: "Challenge not found" });
+      }
+
+      // Verificar se o user é um administrador do desafio
+      if (!challenge.admins.includes(user._id)) {
+        return res.status(403).json({ status: false, message: "You are not authorized to edit this challenge" });
+      }
+
+      // Atualizar os detalhes do desafio
+      challenge.title = title || challenge.title;
+      challenge.description = description || challenge.description;
+      challenge.type = type || challenge.type;
+
+      const updatedChallenge = await challenge.save();
+
+      return res.status(200).json({
+        status: true,
+        message: "Challenge updated successfully",
+        challenge: updatedChallenge,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async GetChallengesByUserId(req: Request, res: Response, next: NextFunction) {
     try {
       const user: any = req.user;

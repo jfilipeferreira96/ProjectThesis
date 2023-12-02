@@ -31,7 +31,6 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const activeAndCompleted = state.activeQuizz?.id && state.activeQuizz?.completed;
   const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
   const noActiveQuizz = !state.activeQuizz?.id;
-
   
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
