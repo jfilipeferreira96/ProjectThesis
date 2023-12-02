@@ -23,6 +23,10 @@ interface IChallenge extends Document{
     endDate?: Date;
     status: ChallengeStatus;
     quizzes: Schema.Types.ObjectId[];
+    activeQuizz?: {
+        id: string;
+        completed: boolean
+    };
 }
 
 const challengeSchema: Schema<IChallenge> = new mongoose.Schema({

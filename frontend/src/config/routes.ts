@@ -36,8 +36,5 @@ export const routes = {
     create: {
       url: "/challenge/create"
     }
-  },
-  teams: {
-    url: "/teams",
-  },
+  }
 };

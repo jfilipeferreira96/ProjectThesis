@@ -47,7 +47,6 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
-  console.log(state)
 
   const GetAllChallengeQuizzes = async (id: string) => {
     setIsLoading(true);
@@ -196,11 +195,13 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                 </ActionIcon>
               </Tooltip>
             )}
-            <Tooltip label={"Delete quizz"} withArrow position="top">
-              <ActionIcon variant="subtle" color="red" onClick={() => DeleteQuizz(item._id)}>
-                <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-              </ActionIcon>
-            </Tooltip>
+            {item.status !== QuizzStatus.Completed && (
+              <Tooltip label={"Delete quizz"} withArrow position="top">
+                <ActionIcon variant="subtle" color="red" onClick={() => DeleteQuizz(item._id)}>
+                  <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Tooltip>
+            )}
           </Group>
         </Table.Td>
       </Table.Tr>
@@ -249,7 +250,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Flex justify={"flex-end"}>
               {isTypeABlockAcess ? (
-                <Tooltip label={"A Type A challenge cannot contain multiple challenges."} withArrow>
+                <Tooltip label={"Type A challenge cannot contain multiple challenges."} withArrow>
                   <Button size="lg" variant="filled" disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
                     Add Quizz
                   </Button>

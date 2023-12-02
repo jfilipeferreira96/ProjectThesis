@@ -4,7 +4,8 @@ import Challenge from "../models/challenge.model";
 import User from "../models/user.model";
 import { ObjectId } from "mongodb";
 import Logger from "../utils/logger";
-import Quizz from "../models/quizz.model";
+import Quizz, { Status } from "../models/quizz.model";
+import QuizResponse from "../models/quizzResponse.model";
 
 class ChallengeController {
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
@@ -35,7 +36,7 @@ class ChallengeController {
       let challenges = await Challenge.find({
         $or: [{ admins: user._id }, { participants: user._id }],
       }).exec();
-    
+
       const sendObj = challenges.map((challenge) => {
         return {
           ...challenge.toObject(),
@@ -47,7 +48,6 @@ class ChallengeController {
         status: true,
         challenges: sendObj,
       });
-      
     } catch (error) {
       throw new Error("Error fetching challenges: " + error);
     }
@@ -82,11 +82,37 @@ class ChallengeController {
         response = { status: false, message: "You don't have access to this challenge." };
         return res.status(200).json(response);
       }
-      
-      return res.status(200).json({
-        status: true,
-        challenge: challenge,
+
+      const activeQuizz = await Quizz.findOne({
+        challenge: id,
+        status: Status.InProgress,
       });
+
+      if (activeQuizz) {
+        const quizResponseCount = await QuizResponse.countDocuments({
+          quiz: activeQuizz._id,
+          user: user._id,
+        });
+
+        const responseChallenge = {
+          ...challenge.toObject(),
+          activeQuizz: {
+            id: activeQuizz._id,
+            completed: quizResponseCount > 0,
+          },
+        };
+
+        return res.status(200).json({
+          status: true,
+          challenge: responseChallenge,
+        });
+      } else {
+
+        return res.status(200).json({
+          status: true,
+          challenge: challenge,
+        });
+      }
     } catch (error) {
       throw new Error("Error fetching challenges: " + error);
     }
@@ -135,12 +161,12 @@ class ChallengeController {
 
   static async GetAllChallengeQuizzes(req: Request, res: Response, next: NextFunction) {
     let response = { status: false, message: "" };
-    const challengeId  = req.params.id;
+    const challengeId = req.params.id;
     const userId: any = req.user._id;
-    
+
     try {
       const challenge = await Challenge.findById(challengeId);
-      
+
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
@@ -155,8 +181,8 @@ class ChallengeController {
 
       const quizzIds = challenge.quizzes;
       const quizzes = await Quizz.find({ _id: { $in: quizzIds } });
-      
-      return res.status(200).json({ status: true, quizzes, type: challenge.type  });
+
+      return res.status(200).json({ status: true, quizzes, type: challenge.type });
     } catch (error) {
       throw new Error("Error fecthing all quizzes from challenge: " + error);
     }

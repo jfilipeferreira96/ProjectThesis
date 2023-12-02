@@ -21,7 +21,7 @@ interface DecodedToken extends JwtPayload {
 
 type sessionProps = (userData: User, accessToken: string, refreshToken: string, redirect?: boolean | undefined) => void;
 interface SessionContextProps {
-  user: User | null;
+  user: User | null | any;
   sessionLogin: sessionProps;
   logout: () => void;
   isReady: boolean;
