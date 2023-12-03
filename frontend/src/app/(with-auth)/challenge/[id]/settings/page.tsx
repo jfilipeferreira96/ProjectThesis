@@ -32,6 +32,7 @@ import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@
 import dayjs from "dayjs";
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
+import { useMediaQuery } from "@mantine/hooks";
 
 type DataItem = {
   _id: string;
@@ -76,7 +77,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       completed: false,
     },
   });
-  
+  const isScreenXL = useMediaQuery("(min-width: 1200px)");
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
     const GetSingleChallenge = async (id: string) => {
@@ -307,35 +308,68 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <Grid justify="center" align="stretch" mb={10}>
       <title>Settings</title>
-
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
         <Title order={1}>Settings</Title>
-        <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 5.5 }} style={{ display: "flex", flexDirection: "column" }}>
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-            <Title order={3}>Configurations</Title>
-            <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-              <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
+        {rows.length === 0 && (
+          <Text c="dimmed" fw={500}>
+            To get started, add a
+            <Text span c="red" fw={700} inherit>
+              {" "}
+              quiz
+              {" "}
+            </Text>
+            so your students can participate
+          </Text>
+        )}
 
-              <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
+        <Flex display={isScreenXL ? "flex" : "block"}>
+          <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 5 }} style={{ display: "flex", flexDirection: "column" }}>
+            <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+              <Title order={3}>Configurations</Title>
+              <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+                <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
 
-              <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
-                <StyledList spacing="xs" size="xs" center icon={<></>}>
-                  <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class.</List.Item>
-                  <List.Item>Type B - A league-based challenge comprised of one or multiple challenges.</List.Item>
-                </StyledList>
+                <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
-                <Group mt="xs" align="center" justify="center">
-                  <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked={state.type === ChallengeType.TYPE_A} icon={CheckIcon} mt="md" />
-                  <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} checked={state.type === ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
-                </Group>
-              </Radio.Group>
+                <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
+                  <StyledList spacing="xs" size="xs" center icon={<></>}>
+                    <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class.</List.Item>
+                    <List.Item>Type B - A league-based challenge comprised of one or multiple challenges.</List.Item>
+                  </StyledList>
+
+                  <Group mt="xs" align="center" justify="center">
+                    <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked={state.type === ChallengeType.TYPE_A} icon={CheckIcon} mt="md" />
+                    <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} checked={state.type === ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
+                  </Group>
+                </Radio.Group>
+
+                <Button fullWidth mt="md" type="submit">
+                  Update
+                </Button>
+              </form>
+            </Paper>
+          </Grid.Col>
+          <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
+            <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+              <Title order={3}>Admins</Title>
+              <Table verticalSpacing="sm">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Name</Table.Th>
+
+                    <Table.Th>Actions</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                {/* {adminRows.length > 0 && <Table.Tbody>{adminRows}</Table.Tbody>} */}
+              </Table>
 
               <Button fullWidth mt="md" type="submit">
-                Create
+                Add admin
               </Button>
-            </form>
-          </Paper>
-        </Grid.Col>
+            </Paper>
+          </Grid.Col>
+        </Flex>
+
         <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Flex justify={"flex-end"}>
