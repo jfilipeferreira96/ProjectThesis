@@ -223,11 +223,11 @@ class ChallengeController {
   static async AddAdmin(req: Request, res: Response, next: NextFunction) {
     try {
       const { challengeId, email } = req.body;
-
       // Verificar se o user existe
       const userExists = await User.exists({ email: email });
+      
       if (!userExists) {
-        return res.status(404).json({ status: false, message: "User not found" });
+        return res.json({ status: false, message: "User not found" });
       }
 
       // Verificar se o user já é um admin
@@ -260,7 +260,7 @@ class ChallengeController {
       // Verificar se o desafio existe
       const challenge = await Challenge.findById(challengeId);
       if (!challenge) {
-        return res.status(404).json({ status: false, message: "Challenge not found" });
+        return res.json({ status: false, message: "Challenge not found" });
       }
 
       // Verificar se o user é um administrador do desafio

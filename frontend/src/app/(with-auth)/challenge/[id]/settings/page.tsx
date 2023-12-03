@@ -1,6 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import classes from "./settings.module.css";
+import { IconPhoto, IconSettings } from "@tabler/icons-react";
 import { routes } from "@/config/routes";
 import {
   Text,
@@ -15,6 +16,7 @@ import {
   Loader,
   Table,
   ActionIcon,
+  Tabs,
   rem,
   Paper,
   Tooltip,
@@ -33,7 +35,7 @@ import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@
 import dayjs from "dayjs";
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import {  useMediaQuery } from "@mantine/hooks";
 
 type DataItem = {
   _id: string;
@@ -78,9 +80,10 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       completed: false,
     },
   });
-   const [adminEmail, setAdminEmail] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const iconStyle = { width: rem(12), height: rem(12) };
   const isScreenXL = useMediaQuery("(min-width: 1200px)");
-  const [opened, { open, close }] = useDisclosure(false);
+  
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
     const GetSingleChallenge = async (id: string) => {
@@ -240,8 +243,6 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
              message: "",
              color: "green",
            });
-           //close modal
-           close();
            //reload
            GetSingleChallenge(id);
          }
@@ -343,140 +344,139 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   return (
-    <Grid justify="center" align="stretch" mb={10}>
-      <title>Settings</title>
+    <>
+      <Grid justify="center" align="stretch" mb={10}>
+        <title>Settings</title>
 
-      <Modal
-        opened={opened}
-        onClose={close}
-        title=""
-        size="md"
-        overlayProps={{
-          backgroundOpacity: 0.8,
-        }}
-      >
-        <Title ta="center">ADD AN ADMIN</Title>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
+          <Tabs variant="outline" defaultValue="Quizzes">
+            <Tabs.List>
+              <Tabs.Tab value="Quizzes" leftSection={<IconPhoto style={iconStyle} />}>
+                Quizzes
+              </Tabs.Tab>
+              <Tabs.Tab value="settings" leftSection={<IconSettings style={iconStyle} />}>
+                Settings
+              </Tabs.Tab>
+            </Tabs.List>
 
-        <Text c="dimmed" size="md" ta="center" mt={5}>
-          Enter the e-mail of the admin that you want to add.
-        </Text>
-        <form onSubmit={onSubmitAdminHandler}>
-          <TextInput mt={10} placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
-          <Center>
-            <Button mt={10} type="submit">
-              Submit
-            </Button>
-          </Center>
-        </form>
-      </Modal>
+            <Tabs.Panel value="Quizzes">
+              <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
+                <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+                  <Title order={2}>Quizzes</Title>
+                  {rows.length === 0 && (
+                    <Text c="dimmed" fw={500}>
+                      To get started, add a
+                      <Text span c="red" fw={700} inherit>
+                        {" "}
+                        quizz{" "}
+                      </Text>
+                      so your students can participate
+                    </Text>
+                  )}
+                  <StyledTableContainer minWidth={800}>
+                    <Table verticalSpacing="sm">
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th>Name</Table.Th>
+                          <Table.Th>No. Questions</Table.Th>
+                          <Table.Th>Start Date</Table.Th>
+                          <Table.Th>End Date</Table.Th>
+                          <Table.Th>State</Table.Th>
+                          <Table.Th>Actions</Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
+                    </Table>
 
-      <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
-        <Title order={1}>Settings</Title>
-        {rows.length === 0 && (
-          <Text c="dimmed" fw={500}>
-            To get started, add a
-            <Text span c="red" fw={700} inherit>
-              {" "}
-              quiz{" "}
-            </Text>
-            so your students can participate
-          </Text>
-        )}
+                    {rows.length === 0 && (
+                      <Flex justify={"center"} mt="xl" display="block">
+                        <ActionIcon size="xl" disabled aria-label="No records found">
+                          <IconDatabaseOff />
+                        </ActionIcon>
+                        <Text c="dimmed" size="sm" ta="center" mt={5}>
+                          {"No records found"}
+                        </Text>
+                      </Flex>
+                    )}
+                  </StyledTableContainer>
 
-        <Flex display={isScreenXL ? "flex" : "block"}>
-          <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 5 }} style={{ display: "flex", flexDirection: "column" }}>
-            <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-              <Title order={3}>Configurations</Title>
-              <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-                <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
+                  {isTypeABlockAcess ? (
+                    <Tooltip label={"Type A challenge cannot contain multiple challenges."} withArrow>
+                      <Button fullWidth mt={"lg"} variant="filled" disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                        Add Quizz
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <Button fullWidth mt={"lg"} variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                      Add Quizz
+                    </Button>
+                  )}
+                </Paper>
+              </Grid.Col>
+            </Tabs.Panel>
 
-                <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
+            <Tabs.Panel value="settings">
+              <Flex display={isScreenXL ? "flex" : "block"}>
+                <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 6 }} style={{ display: "flex", flexDirection: "column" }}>
+                  <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+                    <Title order={2}>Configurations</Title>
+                    <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+                      <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
 
-                <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
-                  <StyledList spacing="xs" size="xs" center icon={<></>}>
-                    <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class.</List.Item>
-                    <List.Item>Type B - A league-based challenge comprised of one or multiple challenges.</List.Item>
-                  </StyledList>
+                      <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
-                  <Group mt="xs" align="center" justify="center">
-                    <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked={state.type === ChallengeType.TYPE_A} icon={CheckIcon} mt="md" />
-                    <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} checked={state.type === ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
-                  </Group>
-                </Radio.Group>
+                      <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
+                        <StyledList spacing="xs" size="xs" center icon={<></>}>
+                          <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class.</List.Item>
+                          <List.Item>Type B - A league-based challenge comprised of one or multiple challenges.</List.Item>
+                        </StyledList>
 
-                <Button fullWidth mt="md" type="submit">
-                  Update
-                </Button>
-              </form>
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
-            <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-              <Title order={3}>Admins</Title>
-              <Table verticalSpacing="sm">
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>E-mail</Table.Th>
+                        <Group mt="xs" align="center" justify="center">
+                          <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked={state.type === ChallengeType.TYPE_A} icon={CheckIcon} mt="md" />
+                          <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} checked={state.type === ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
+                        </Group>
+                      </Radio.Group>
 
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                {/* {adminRows.length > 0 && <Table.Tbody>{adminRows}</Table.Tbody>} */}
-              </Table>
+                      <Button fullWidth mt="md" type="submit">
+                        Update
+                      </Button>
+                    </form>
+                  </Paper>
+                </Grid.Col>
+                <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 5 }} style={{ display: "flex", flexDirection: "column" }}>
+                  <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+                    <Title order={2}>Admins</Title>
+                    <Table verticalSpacing="sm">
+                      <Table.Thead>
+                        <Table.Tr>
+                          <Table.Th>E-mail</Table.Th>
 
-              <Button fullWidth mt="md" onClick={open}>
-                Add admin
-              </Button>
-            </Paper>
-          </Grid.Col>
-        </Flex>
+                          <Table.Th>Actions</Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      {/* {adminRows.length > 0 && <Table.Tbody>{adminRows}</Table.Tbody>} */}
+                    </Table>
 
-        <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-            <Flex justify={"flex-end"}>
-              {isTypeABlockAcess ? (
-                <Tooltip label={"Type A challenge cannot contain multiple challenges."} withArrow>
-                  <Button size="lg" variant="filled" disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
-                    Add Quizz
-                  </Button>
-                </Tooltip>
-              ) : (
-                <Button size="lg" variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
-                  Add Quizz
-                </Button>
-              )}
-            </Flex>
-            <Title order={3}>Quizzes</Title>
-            <StyledTableContainer minWidth={800}>
-              <Table verticalSpacing="sm">
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Name</Table.Th>
-                    <Table.Th>No. Questions</Table.Th>
-                    <Table.Th>Start Date</Table.Th>
-                    <Table.Th>End Date</Table.Th>
-                    <Table.Th>State</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
-              </Table>
-
-              {rows.length === 0 && (
-                <Flex justify={"center"} mt="xl" display="block">
-                  <ActionIcon size="xl" disabled aria-label="No records found">
-                    <IconDatabaseOff />
-                  </ActionIcon>
-                  <Text c="dimmed" size="sm" ta="center" mt={5}>
-                    {"No records found"}
-                  </Text>
-                </Flex>
-              )}
-            </StyledTableContainer>
-          </Paper>
+                    <form onSubmit={onSubmitAdminHandler}>
+                      <TextInput
+                        mt={10}
+                        label="Admin Email"
+                        placeholder="you@gmail.com"
+                        required value={adminEmail}
+                        onChange={(e) => setAdminEmail(e.target.value)}
+                      />
+                      <Button fullWidth mt="md" type="submit">
+                        Add admin
+                      </Button>
+                    </form>
+                  </Paper>
+                </Grid.Col>
+              </Flex>
+            </Tabs.Panel>
+          </Tabs>
         </Grid.Col>
-      </Grid.Col>
-    </Grid>
+      </Grid>
+    </>
   );
 };
 
