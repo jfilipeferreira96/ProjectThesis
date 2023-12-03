@@ -95,7 +95,7 @@ export const deleteQuizz = async (id: string) => {
 
 export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: { _id: number | string; answer: string }[] }) => {
   try {
-    const response = await api.post(endpoints.SaveQuizAnswerRoute, data);
+    const response = await api.post(endpoints.saveQuizAnswerRoute, data);
     return response.data;
   } catch (error) {
     throw error;

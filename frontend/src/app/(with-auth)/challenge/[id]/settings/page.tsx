@@ -27,7 +27,7 @@ import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStopFilled, IconFileDa
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { ChallengeType, CreateChallengeData, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
+import { ChallengeType, CreateChallengeData, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
 import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@/services/quizz.service";
 import dayjs from "dayjs";
 import { z } from "zod";
@@ -205,8 +205,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   }, []);
 
     const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
+      
       try {
-        const response = await editChallenge(data);
+        const response = await editChallenge({...data, id: id});
         if (response.status) {
           notifications.show({
             title: "Success",

@@ -9,6 +9,8 @@ challengeRoutes.post("/challenges/create", authenticateToken, ChallengeControlle
 
 challengeRoutes.post("/challenges/edit", authenticateToken, ChallengeController.EditChallenge);
 
+challengeRoutes.post("/challenges/admin", authenticateToken, ChallengeController.ManageAdmin);
+
 challengeRoutes.get("/challenges", authenticateToken, ChallengeController.GetChallengesByUserId);
 
 challengeRoutes.get("/challenges/:id", authenticateToken, ChallengeController.GetSingleChallenge);

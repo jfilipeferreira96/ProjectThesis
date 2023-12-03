@@ -54,7 +54,6 @@ class QuizzController {
         } */
 
         // Sends the user the quiz without the correct awnsers in the form
-        
         const questionsWithoutCorrectAnswer = quiz.questions.map(question => {
           return {
             _id: question._id,
@@ -88,9 +87,9 @@ class QuizzController {
         questions,
         challenge: challengeId,
       });
-      console.log("quiz", quiz);
+      
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });
-      console.log("ok", challenge);
+      
       return res.status(StatusCodes.OK).json({
         status: true,
         id: quiz._id,

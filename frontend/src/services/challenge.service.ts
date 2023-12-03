@@ -29,6 +29,7 @@ export function getStatusInfo(status: ChallengeStatus) {
 }
 
 export interface CreateChallengeData {
+  id?: string;
   title: string;
   description: string;
   type: ChallengeType;
@@ -42,6 +43,15 @@ export const createChallenge = async (data: CreateChallengeData) => {
   }
   catch (error)
   {
+    throw error;
+  }
+};
+
+export const editChallenge = async (data: CreateChallengeData) => {
+  try {
+    const response = await api.post(endpoints.editChallengeRoute, data);
+    return response.data;
+  } catch (error) {
     throw error;
   }
 };

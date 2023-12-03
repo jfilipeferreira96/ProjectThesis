@@ -2,20 +2,25 @@
 const host = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : "https://chat-has8.onrender.com";
 export const endpoints = {
   host: host,
+  /*################## Auth #############################*/
   loginRoute: `${host}/api/auth/login`,
   registerRoute: `${host}/api/auth/register`,
   logoutRoute: `${host}/api/auth/logout`,
+  /*################## Challenges #############################*/
   createChallengeRoute: `${host}/api/challenges/create`,
+  editChallengeRoute: `${host}/api/challenges/edit`,
   getChallengesByUserId: `${host}/api/challenges`,
   getSingleChallenge: `${host}/api/challenges/`,
   joinChallenge: `${host}/api/challenges/join`,
   getAllChallengeQuizzes: `${host}/api/challenges/quizzes/`,
+  challengeAdminRoute: `${host}/api/challenges/admin`,
+  /*################## Quizz #############################*/
   createQuizzRoute: `${host}/api/quizz/create`,
   editQuizzRoute: `${host}/api/quizz/edit`,
   editQuizzStatusRoute: `${host}/api/quizz/editStatus`,
   deleteQuizzRoute: `${host}/api/quizz/delete`,
   getSingleQuizz: `${host}/api/quizz/`,
-  SaveQuizAnswerRoute: `${host}/api/quizz/answer`,
+  saveQuizAnswerRoute: `${host}/api/quizz/answer`,
 };
 
 export const routes = {
