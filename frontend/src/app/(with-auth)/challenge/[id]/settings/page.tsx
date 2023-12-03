@@ -22,17 +22,18 @@ import {
   List,
   CheckIcon,
   Textarea,
+  Modal,
 } from "@mantine/core";
 import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStopFilled, IconFileDatabase, IconDatabaseOff } from "@tabler/icons-react";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { ChallengeType, CreateChallengeData, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
+import { ChallengeType, CreateChallengeData, addAdmin, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
 import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@/services/quizz.service";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 
 type DataItem = {
   _id: string;
@@ -77,7 +78,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       completed: false,
     },
   });
+   const [adminEmail, setAdminEmail] = useState("");
   const isScreenXL = useMediaQuery("(min-width: 1200px)");
+  const [opened, { open, close }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
     const GetSingleChallenge = async (id: string) => {
@@ -224,6 +227,40 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         });
       }
     }, []);
+  
+     const onSubmitAdminHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+       e.preventDefault();
+   
+       try {
+         const response = await addAdmin(id, adminEmail);
+         console.log(response)
+         if (response.status) {
+           notifications.show({
+             title: "Success",
+             message: "",
+             color: "green",
+           });
+           //close modal
+           close();
+           //reload
+           GetSingleChallenge(id);
+         }
+         if (response.status === false) {
+           notifications.show({
+             title: "Oops",
+             message: response.message,
+             color: "red",
+           });
+         }
+       } catch (error) {
+         notifications.show({
+           title: "Error",
+           message: "Something went wrong",
+           color: "red",
+         });
+       }
+       setAdminEmail("");
+     };
 
   const form = useForm({
     initialValues: {
@@ -308,6 +345,31 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   return (
     <Grid justify="center" align="stretch" mb={10}>
       <title>Settings</title>
+
+      <Modal
+        opened={opened}
+        onClose={close}
+        title=""
+        size="md"
+        overlayProps={{
+          backgroundOpacity: 0.8,
+        }}
+      >
+        <Title ta="center">ADD AN ADMIN</Title>
+
+        <Text c="dimmed" size="md" ta="center" mt={5}>
+          Enter the e-mail of the admin that you want to add.
+        </Text>
+        <form onSubmit={onSubmitAdminHandler}>
+          <TextInput mt={10} placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
+          <Center>
+            <Button mt={10} type="submit">
+              Submit
+            </Button>
+          </Center>
+        </form>
+      </Modal>
+
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
         <Title order={1}>Settings</Title>
         {rows.length === 0 && (
@@ -315,8 +377,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
             To get started, add a
             <Text span c="red" fw={700} inherit>
               {" "}
-              quiz
-              {" "}
+              quiz{" "}
             </Text>
             so your students can participate
           </Text>
@@ -355,7 +416,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
               <Table verticalSpacing="sm">
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>Name</Table.Th>
+                    <Table.Th>E-mail</Table.Th>
 
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>
@@ -363,7 +424,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                 {/* {adminRows.length > 0 && <Table.Tbody>{adminRows}</Table.Tbody>} */}
               </Table>
 
-              <Button fullWidth mt="md" type="submit">
+              <Button fullWidth mt="md" onClick={open}>
                 Add admin
               </Button>
             </Paper>

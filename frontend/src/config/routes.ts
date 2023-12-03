@@ -13,7 +13,8 @@ export const endpoints = {
   getSingleChallenge: `${host}/api/challenges/`,
   joinChallenge: `${host}/api/challenges/join`,
   getAllChallengeQuizzes: `${host}/api/challenges/quizzes/`,
-  challengeAdminRoute: `${host}/api/challenges/admin`,
+  addAdminRoute: `${host}/api/challenges/admin/add`,
+  removeAdminRoute: `${host}/api/challenges/admin/remove`,
   /*################## Quizz #############################*/
   createQuizzRoute: `${host}/api/quizz/create`,
   editQuizzRoute: `${host}/api/quizz/edit`,

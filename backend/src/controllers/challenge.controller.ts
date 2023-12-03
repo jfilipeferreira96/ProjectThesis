@@ -33,7 +33,7 @@ class ChallengeController {
     try {
       const { title, description, type, id } = req.body;
       const user: any = req.user;
-      
+
       const challenge = await Challenge.findById(id);
 
       if (!challenge) {
@@ -220,9 +220,42 @@ class ChallengeController {
     }
   }
 
-  static async ManageAdmin(req: Request, res: Response, next: NextFunction) {
+  static async AddAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      const { challengeId, userId, operation } = req.body;
+      const { challengeId, email } = req.body;
+
+      // Verificar se o user existe
+      const userExists = await User.exists({ email: email });
+      if (!userExists) {
+        return res.status(404).json({ status: false, message: "User not found" });
+      }
+
+      // Verificar se o user já é um admin
+      const challenge = await Challenge.findById(challengeId);
+      if (challenge) {
+        if (challenge.admins.includes(userExists._id)) {
+          return res.status(400).json({ status: false, message: "User is already an admin of this challenge" });
+        }
+
+        // Verificar se o user já está no desafio como participante
+        if (challenge.participants.includes(userExists._id)) {
+          return res.status(400).json({ status: false, message: "User is already a participant in this challenge" });
+        }
+
+        // Adicionar o user como admin do desafio
+        challenge.admins.push(userExists._id);
+        await challenge.save();
+
+        return res.status(200).json({ status: true, message: "User added as admin successfully" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async RemoveAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { challengeId, userId } = req.body;
 
       // Verificar se o desafio existe
       const challenge = await Challenge.findById(challengeId);
@@ -230,43 +263,17 @@ class ChallengeController {
         return res.status(404).json({ status: false, message: "Challenge not found" });
       }
 
-      // Verificar se o usuário existe
-      const userExists = await User.exists({ _id: userId });
-      if (!userExists) {
-        return res.status(404).json({ status: false, message: "User not found" });
+      // Verificar se o user é um administrador do desafio
+      if (!challenge.admins.includes(userId)) {
+        return res.status(400).json({ status: false, message: "User is not an admin of this challenge" });
       }
 
-      if (operation === "add") {
-        // Verificar se o usuário já é um admin
-        if (challenge.admins.includes(userId)) {
-          return res.status(400).json({ status: false, message: "User is already an admin of this challenge" });
-        }
+      // Remover o user como administrador do desafio
+      const index = challenge.admins.indexOf(userId);
+      challenge.admins.splice(index, 1);
+      await challenge.save();
 
-        // Verificar se o usuário está no desafio como participante
-        if (challenge.participants.includes(userId)) {
-          return res.status(400).json({ status: false, message: "User is already a participant in this challenge" });
-        }
-
-        // Adicionar o usuário como admin do desafio
-        challenge.admins.push(userId);
-        await challenge.save();
-
-        return res.status(200).json({ status: true, message: "User added as admin successfully" });
-      } else if (operation === "remove") {
-        // Verificar se o usuário é um administrador do desafio
-        if (!challenge.admins.includes(userId)) {
-          return res.status(400).json({ status: false, message: "User is not an admin of this challenge" });
-        }
-
-        // Remover o usuário como administrador do desafio
-        const index = challenge.admins.indexOf(userId);
-        challenge.admins.splice(index, 1);
-        await challenge.save();
-
-        return res.status(200).json({ status: true, message: "Admin removed from the challenge successfully" });
-      } else {
-        return res.status(400).json({ status: false, message: "Invalid operation" });
-      }
+      return res.status(200).json({ status: true, message: "Admin removed from the challenge successfully" });
     } catch (error) {
       next(error);
     }

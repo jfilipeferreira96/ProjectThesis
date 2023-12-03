@@ -92,3 +92,20 @@ export const joinChallenge = async (token: string) => {
     throw error;
   }
 };
+
+export const addAdmin = async (challengeId: string, email: string) => {
+  try {
+    const response = await api.post(endpoints.addAdminRoute, { challengeId: challengeId, email: email });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const removeAdmin = async (challengeId: string, userId: string) => {
+  try {
+    const response = await api.post(endpoints.removeAdminRoute, { challengeId: challengeId, userId: userId });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
