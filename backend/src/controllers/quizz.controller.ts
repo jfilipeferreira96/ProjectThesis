@@ -26,7 +26,7 @@ class QuizzController {
         return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Challenge not found" });
       }
 
-      const userIsAdmin = challenge.admins.includes(user._id);
+      const userIsAdmin =  challenge.admins.some(admin => admin._id.toString() === user._id);
 
       if (userIsAdmin)
       {
@@ -122,7 +122,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.includes(user._id);
+      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
 
       if (isAdmin) {
         const updatedQuiz = await Quizz.findByIdAndUpdate(
@@ -175,7 +175,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.includes(user._id);
+      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
 
       if (isAdmin) {
         quiz.status = newStatus;
@@ -220,7 +220,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.includes(user._id);
+      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
       if (isAdmin) {
         const deletedQuiz = await Quizz.findByIdAndDelete(quizId);
 
@@ -265,7 +265,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.includes(user._id);
+      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
       if (isAdmin){
         return res.status(StatusCodes.FORBIDDEN).json({
           status: false,

@@ -43,7 +43,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {!isChallengePage && <Container size="responsive">{children}</Container>}
       {isChallengePage && (
         <div style={{ display: "flex" }}>
-          <Sidebar />
+          <Sidebar isAdmin={false} />
           <StyledContainer>{children}</StyledContainer>
         </div>
       )}

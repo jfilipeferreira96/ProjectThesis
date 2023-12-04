@@ -13,11 +13,11 @@ export enum ChallengeStatus{
     Completed = 3
 }
 
-interface IChallenge extends Document{
+interface IChallenge extends Document {
     title: string;
     description: string;
     type: ChallengeType;
-    admins: Schema.Types.ObjectId[];
+    admins: User[];
     participants: User[];
     createdAt: Date;
     endDate?: Date;
@@ -25,7 +25,7 @@ interface IChallenge extends Document{
     quizzes: Schema.Types.ObjectId[];
     activeQuizz?: {
         id: string;
-        completed: boolean
+        completed: boolean;
     };
 }
 
@@ -61,8 +61,8 @@ const challengeSchema: Schema<IChallenge> = new mongoose.Schema({
     },
     status: {
         type: Number,
-        enum: ChallengeStatus, 
-        default: ChallengeStatus.Active, 
+        enum: ChallengeStatus,
+        default: ChallengeStatus.Active,
     },
     quizzes: [{
         type: Schema.Types.ObjectId,

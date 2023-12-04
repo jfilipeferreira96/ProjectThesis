@@ -41,7 +41,7 @@ class ChallengeController {
       }
 
       // Verificar se o user é um administrador do desafio
-      if (!challenge.admins.includes(user._id)) {
+      if (!challenge.admins.some(admin => admin._id.toString() === user._id.toString())) {
         return res.status(401).json({ status: false, message: "You are not authorized to edit this challenge" });
       }
 
@@ -73,7 +73,7 @@ class ChallengeController {
       const sendObj = challenges.map((challenge) => {
         return {
           ...challenge.toObject(),
-          user_type: challenge.admins.includes(user._id) ? "Admin" : "User",
+          user_type: challenge.admins.some(admin => admin._id.toString() === user._id.toString()) ? "Admin" : "User",
         };
       });
 
@@ -93,23 +93,25 @@ class ChallengeController {
       const user: any = req.user;
       const id = req.params.id;
 
-      let challenge = await Challenge.findOne({ _id: id }).populate({
-        path: "participants",
-        select: "fullname email avatar studentId challengeScores",
-        populate: {
-          path: "challengeScores",
-          match: { challenge: id },
-          select: "score",
-        },
-      });
-
+      let challenge = await Challenge.findOne({ _id: id })
+        .populate({
+          path: "participants",
+          select: "fullname email avatar studentId challengeScores",
+          populate: {
+            path: "challengeScores",
+            match: { challenge: id },
+            select: "score",
+          },
+        })
+        .populate('admins', 'fullname email avatar');
+      console.log(challenge)
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
         return res.status(200).json(response);
       }
 
-      const isUserInChallenge = challenge.participants.some((participant) => participant._id.toString() === user._id) || challenge.admins.includes(user._id);
+      const isUserInChallenge = challenge.participants.some((participant) => participant._id.toString() === user._id) || challenge.admins.some(admin => admin._id.toString() === user._id.toString());
       if (!isUserInChallenge) {
         Logger.error("You don't have access to this challenge.");
         response = { status: false, message: "You don't have access to this challenge." };
@@ -171,7 +173,7 @@ class ChallengeController {
         return res.status(200).json(response);
       }
 
-      if (challenge.admins.includes(user._id)) {
+      if (challenge.admins.some(admin => admin._id.toString() === user._id.toString())) {
         Logger.error("You are an admin of this challenge.");
         response = { status: false, message: "You are an admin of this challenge." };
         return res.status(200).json(response);
@@ -205,7 +207,7 @@ class ChallengeController {
         return res.status(200).json(response);
       }
 
-      if (!challenge.admins.includes(userId)) {
+      if (!challenge.admins.some(admin => admin._id.toString() === userId.toString())) {
         Logger.error("No permissions");
         response = { status: false, message: "No permissions" };
         return res.status(200).json(response);
@@ -233,7 +235,7 @@ class ChallengeController {
       // Verificar se o user já é um admin
       const challenge = await Challenge.findById(challengeId);
       if (challenge) {
-        if (challenge.admins.includes(userExists._id)) {
+        if (challenge.admins.some(admin => admin._id.toString() === userExists._id.toString())) {
           return res.status(400).json({ status: false, message: "User is already an admin of this challenge" });
         }
 
@@ -264,7 +266,7 @@ class ChallengeController {
       }
 
       // Verificar se o user é um administrador do desafio
-      if (!challenge.admins.includes(userId)) {
+      if (!challenge.admins.some(admin => admin._id.toString() === userId.toString())) {
         return res.status(400).json({ status: false, message: "User is not an admin of this challenge" });
       }
 

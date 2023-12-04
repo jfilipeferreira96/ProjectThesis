@@ -7,7 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { usePathname, useRouter } from "next/navigation";
 import { getSingleChallenge, getStatusInfo } from "@/services/challenge.service";
 import ThreeDButton from "@/components/3dbutton";
-import { useSession } from "@/providers/SessionProvider";
+import { User, useSession } from "@/providers/SessionProvider";
 
 const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
@@ -17,7 +17,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     title: "",
     description: "",
     type: "",
-    admins: [] as string[],
+    admins: [] as User[],
     participants: [],
     status: 0,
     activeQuizz: {
@@ -27,7 +27,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSession();
-  const userIsAdmin = user ? state.admins.includes(user?._id) : false;
+  const userIsAdmin = user ? state.admins.some(admin => admin._id.toString() === user?._id) : false;
   const activeAndCompleted = state.activeQuizz?.id && state.activeQuizz?.completed;
   const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
   const noActiveQuizz = !state.activeQuizz?.id;
