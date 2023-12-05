@@ -57,7 +57,9 @@ export default function SignIn(){
     },
     validate: zodResolver(schema),
   });
+  console.log("process.env.NODE_ENV", process.env.NODE_ENV, process.env.NEXT_PUBLIC_NODE_ENV)
 
+  console.log("process.env.API", process.env.API)
   return (
     <Center>
       <title>Sign In</title>
