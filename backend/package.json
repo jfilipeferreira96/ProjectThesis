@@ -5,8 +5,9 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "nodemon --files src/server.ts",
+    "build_win": "copy src\\.env dist\\.env && tsc",
     "build": "cp src/.env ./dist/.env && tsc",
-    "start": "yarn build && node dist/server.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
