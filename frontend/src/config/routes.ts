@@ -1,5 +1,5 @@
 
-const host = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : process.env.API;
+const host = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? "http://localhost:5000" : process.env.NEXT_PUBLIC_API;
 export const endpoints = {
   host: host,
   /*################## Auth #############################*/
