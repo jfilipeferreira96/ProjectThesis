@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "nodemon --files src/server.ts",
-    "build": "rm -rf dist && tsc && cp src/.env ./dist/.env",
-    "start": "node dist/server.js"
+    "dev": "nodemon NODE_ENV=development --files src/server.ts",
+    "build": "rm -rf dist && tsc",
+    "start": "node dist/server.js",
+    "clean": "rm -rf node_modules dist"
   },
   "keywords": [],
   "author": "",
