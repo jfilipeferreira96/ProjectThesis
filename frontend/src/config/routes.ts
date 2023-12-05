@@ -1,5 +1,8 @@
 
 const host = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : process.env.API;
+console.log("process.env.NODE_ENV", process.env.NODE_ENV)
+
+console.log("process.env.API", process.env.API)
 export const endpoints = {
   host: host,
   /*################## Auth #############################*/
