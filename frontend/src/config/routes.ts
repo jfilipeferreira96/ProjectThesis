@@ -1,5 +1,5 @@
 
-const host = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : "https://chat-has8.onrender.com";
+const host = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : process.env.API;
 export const endpoints = {
   host: host,
   /*################## Auth #############################*/
