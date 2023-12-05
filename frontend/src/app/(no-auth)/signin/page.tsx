@@ -61,8 +61,8 @@ export default function SignIn(){
   return (
     <Center>
       <title>Sign In</title>
-      <p>{process.env.NODE_ENV}</p>
-      <p>{process.env.NEXT_PUBLIC_NODE_ENV}</p>
+      <p>{process.env.API}</p>
+      <p>{process.env.NEXT_PUBLIC_API}</p>
 
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
         
