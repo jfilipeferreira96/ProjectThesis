@@ -31,7 +31,7 @@ class ChallengeController {
 
   static async EditChallenge(req: Request, res: Response, next: NextFunction) {
     try {
-      const { title, description, type, id } = req.body;
+      const { title, description, type, id, status } = req.body;
       const user: any = req.user;
 
       const challenge = await Challenge.findById(id);
@@ -49,6 +49,7 @@ class ChallengeController {
       challenge.title = title || challenge.title;
       challenge.description = description || challenge.description;
       challenge.type = type || challenge.type;
+      challenge.status = status || challenge.status;
 
       const updatedChallenge = await challenge.save();
 

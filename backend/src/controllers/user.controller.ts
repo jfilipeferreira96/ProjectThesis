@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { StatusCodes } from "http-status-codes";
 import Challenge from "../models/challenge.model";
 
 export interface User {
@@ -22,7 +21,7 @@ interface RefreshToken {
 class UserController {
   static generateAccessToken(user: User) {
     const secret = process.env.JWT_SECRET;
-
+    
     if (!secret) {
       throw new Error("JWT_SECRET is not defined in the environment.");
     }

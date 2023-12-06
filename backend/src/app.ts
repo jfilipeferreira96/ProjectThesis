@@ -4,6 +4,9 @@ import morgan from "morgan";
 import authRoutes from "./routes/user.routes";
 import connectToDatabase from "./config/mongoose.config";
 import routes from "./routes/routes";
+import * as dotenv from "dotenv";
+dotenv.config();
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));

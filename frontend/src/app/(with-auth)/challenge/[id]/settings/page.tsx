@@ -25,12 +25,13 @@ import {
   CheckIcon,
   Textarea,
   Modal,
+  Select,
 } from "@mantine/core";
 import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStopFilled, IconFileDatabase, IconDatabaseOff } from "@tabler/icons-react";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { ChallengeType, CreateChallengeData, addAdmin, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
+import { ChallengeType, CreateChallengeData, addAdmin, challengeStatusOptions, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
 import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@/services/quizz.service";
 import dayjs from "dayjs";
 import { z } from "zod";
@@ -98,6 +99,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
             title: response.challenge.title,
             description: response.challenge.description,
             type: response.challenge.type,
+            status: challengeStatusOptions.find((option) => option.value === response.challenge.status)?.label,
           }); 
         }
         if (response.status === false) {
@@ -211,63 +213,66 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     }
   }, []);
 
-    const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
-      
-      try {
-        const response = await editChallenge({...data, id: id});
-        if (response.status) {
-          notifications.show({
-            title: "Success",
-            message: "",
-            color: "green",
-          });
-        }
-      } catch (error) {
+  const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
+  
+    const indexStatus = challengeStatusOptions.findIndex((option) => option.label === data.status);
+    
+    try {
+      const response = await editChallenge({ ...data, id: id, status: challengeStatusOptions[indexStatus].value });
+      if (response.status) {
         notifications.show({
-          title: "Error",
-          message: "Something went wrong",
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+  }, []);
+
+  const onSubmitAdminHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await addAdmin(id, adminEmail);
+      console.log(response)
+      if (response.status) {
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+        //reload
+        GetSingleChallenge(id);
+      }
+      if (response.status === false) {
+        notifications.show({
+          title: "Oops",
+          message: response.message,
           color: "red",
         });
       }
-    }, []);
-  
-     const onSubmitAdminHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-       e.preventDefault();
-   
-       try {
-         const response = await addAdmin(id, adminEmail);
-         console.log(response)
-         if (response.status) {
-           notifications.show({
-             title: "Success",
-             message: "",
-             color: "green",
-           });
-           //reload
-           GetSingleChallenge(id);
-         }
-         if (response.status === false) {
-           notifications.show({
-             title: "Oops",
-             message: response.message,
-             color: "red",
-           });
-         }
-       } catch (error) {
-         notifications.show({
-           title: "Error",
-           message: "Something went wrong",
-           color: "red",
-         });
-       }
-       setAdminEmail("");
-     };
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+    }
+    setAdminEmail("");
+  };
 
   const form = useForm({
     initialValues: {
       title: "",
       description: "",
       type: ChallengeType.TYPE_A,
+      status: "",
     },
     validate: zodResolver(schema),
   });
@@ -437,6 +442,14 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                         </Group>
                       </Radio.Group>
 
+                      <Select
+                        {...form.getInputProps("status")}
+                        label="Challenge Status"
+                        placeholder="Pick status"
+                        withAsterisk
+                        data={challengeStatusOptions.map((option) => option.label)}
+                      />
+
                       <Button fullWidth mt="md" type="submit">
                         Update
                       </Button>
@@ -458,13 +471,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                     </Table>
 
                     <form onSubmit={onSubmitAdminHandler}>
-                      <TextInput
-                        mt={10}
-                        label="Admin Email"
-                        placeholder="you@gmail.com"
-                        required value={adminEmail}
-                        onChange={(e) => setAdminEmail(e.target.value)}
-                      />
+                      <TextInput mt={10} label="Admin Email" placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
                       <Button fullWidth mt="md" type="submit">
                         Add admin
                       </Button>

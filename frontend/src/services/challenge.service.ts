@@ -13,6 +13,18 @@ export enum ChallengeStatus {
   Completed = 3,
 }
 
+type StatusOption = {
+  label: string;
+  value: number;
+};
+
+export const challengeStatusOptions: StatusOption[] = [
+  { label: "Deleted", value: ChallengeStatus.Deleted },
+  { label: "Active", value: ChallengeStatus.Active },
+  { label: "In Progress", value: ChallengeStatus.InProgress },
+  { label: "Completed", value: ChallengeStatus.Completed },
+];
+
 export function getStatusInfo(status: ChallengeStatus) {
   switch (status) {
     case ChallengeStatus.Deleted:
@@ -33,6 +45,7 @@ export interface CreateChallengeData {
   title: string;
   description: string;
   type: ChallengeType;
+  status?: ChallengeStatus | string;
 }
 
 export const createChallenge = async (data: CreateChallengeData) => {
