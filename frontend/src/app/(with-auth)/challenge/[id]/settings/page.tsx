@@ -3,40 +3,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import classes from "./settings.module.css";
 import { IconPhoto, IconSettings } from "@tabler/icons-react";
 import { routes } from "@/config/routes";
-import {
-  Text,
-  Badge,
-  Button,
-  Group,
-  Center,
-  Grid,
-  Title,
-  TextInput,
-  Flex,
-  Loader,
-  Table,
-  ActionIcon,
-  Tabs,
-  rem,
-  Paper,
-  Tooltip,
-  Radio,
-  List,
-  CheckIcon,
-  Textarea,
-  Modal,
-  Select,
-} from "@mantine/core";
+import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select } from "@mantine/core";
 import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStopFilled, IconFileDatabase, IconDatabaseOff } from "@tabler/icons-react";
 import styled from "styled-components";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { ChallengeType, CreateChallengeData, addAdmin, challengeStatusOptions, editChallenge, getAllChallengeQuizzes, getSingleChallenge } from "@/services/challenge.service";
+import { ChallengeType, CreateChallengeData, addAdmin, challengeStatusOptions, editChallenge, getAllChallengeQuizzes, getSingleChallenge, removeAdmin } from "@/services/challenge.service";
 import { QuizzStatus, getQuizzStatusInfo, deleteQuizz, editQuizzStatus } from "@/services/quizz.service";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
-import {  useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery } from "@mantine/hooks";
+import { useSession } from "@/providers/SessionProvider";
 
 type DataItem = {
   _id: string;
@@ -45,6 +23,12 @@ type DataItem = {
   status: number;
   startDate: string;
   endDate: string;
+};
+
+type AdminItem = {
+  _id: string;
+  fullname: string;
+  email: string;
 };
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
@@ -73,7 +57,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     type: undefined,
     title: "",
     description: "",
-    admins: [] as string[],
+    admins: [],
     participants: [],
     status: 0,
     activeQuizz: {
@@ -84,50 +68,51 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const [adminEmail, setAdminEmail] = useState("");
   const iconStyle = { width: rem(12), height: rem(12) };
   const isScreenXL = useMediaQuery("(min-width: 1200px)");
-  
+  const { user } = useSession();
+  const [activeTab, setActiveTab] = useState<"Quizzes" | "settings">("Quizzes");
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
-    const GetSingleChallenge = async (id: string) => {
-      setIsLoading(true);
-      try {
-        const response = await getSingleChallenge(id);
-        if (response.status) {
-          setState({ ...response.challenge, rows: [] });
-          GetAllChallengeQuizzes(id);
-          
-          form.setValues({
-            title: response.challenge.title,
-            description: response.challenge.description,
-            type: response.challenge.type,
-            status: challengeStatusOptions.find((option) => option.value === response.challenge.status)?.label,
-          }); 
-        }
-        if (response.status === false) {
-          notifications.show({
-            title: "Oops",
-            message: response.message,
-            color: "red",
-          });
-          router.push(routes.home.url);
-        }
-      } catch (error) {
+
+  const GetSingleChallenge = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const response = await getSingleChallenge(id);
+      if (response.status) {
+        setState({ ...response.challenge, rows: [] });
+        GetAllChallengeQuizzes(id);
+
+        form.setValues({
+          title: response.challenge.title,
+          description: response.challenge.description,
+          type: response.challenge.type,
+          status: challengeStatusOptions.find((option) => option.value === response.challenge.status)?.label,
+        });
+      }
+      if (response.status === false) {
         notifications.show({
-          title: "Error",
-          message: "Something went wrong",
+          title: "Oops",
+          message: response.message,
           color: "red",
         });
         router.push(routes.home.url);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Something went wrong",
+        color: "red",
+      });
+      router.push(routes.home.url);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const GetAllChallengeQuizzes = async (id: string) => {
     setIsLoading(true);
     try {
       const response = await getAllChallengeQuizzes(id);
       if (response.status) {
-        console.log(response);
         setState((prevState) => ({ ...prevState, rows: response.quizzes, type: response.type }));
       }
       if (response.status === false) {
@@ -214,9 +199,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   }, []);
 
   const onSubmitHandler = useCallback(async (data: CreateChallengeData) => {
-  
     const indexStatus = challengeStatusOptions.findIndex((option) => option.label === data.status);
-    
+
     try {
       const response = await editChallenge({ ...data, id: id, status: challengeStatusOptions[indexStatus].value });
       if (response.status) {
@@ -240,7 +224,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
     try {
       const response = await addAdmin(id, adminEmail);
-      console.log(response)
+
       if (response.status) {
         notifications.show({
           title: "Success",
@@ -338,7 +322,42 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     ));
   };
 
+  const createAdminRows = (data: AdminItem[]) => {
+    return data.map((item: AdminItem) => (
+      <Table.Tr key={item._id}>
+        <Table.Td>
+          <Text fz="sm">{item.fullname}</Text>
+        </Table.Td>
+
+        <Table.Td>
+          <Text fz="sm">{item.email}</Text>
+        </Table.Td>
+
+        <Table.Td>
+          <Group gap={0} justify="center">
+            {item._id !== user._id && (
+              <Tooltip label={"Remove admin"} withArrow position="top">
+                <ActionIcon
+                  variant="subtle"
+                  color="red"
+                  onClick={() => {
+                    removeAdmin(id, item._id).then(() => {
+                      GetSingleChallenge(id);
+                    });
+                  }}
+                >
+                  <IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </Group>
+        </Table.Td>
+      </Table.Tr>
+    ));
+  };
+
   const rows = createRows(state.rows);
+  const rowAdmins = createAdminRows(state.admins);
 
   if (isLoading) {
     return (
@@ -354,12 +373,12 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
         <title>Settings</title>
 
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
-          <Tabs variant="outline" defaultValue="Quizzes">
+          <Tabs variant="outline" defaultValue="Quizzes" value={activeTab}>
             <Tabs.List>
-              <Tabs.Tab value="Quizzes" leftSection={<IconPhoto style={iconStyle} />}>
+              <Tabs.Tab value="Quizzes" leftSection={<IconPhoto style={iconStyle} />} onClick={(tab) => setActiveTab("Quizzes")}>
                 Quizzes
               </Tabs.Tab>
-              <Tabs.Tab value="settings" leftSection={<IconSettings style={iconStyle} />}>
+              <Tabs.Tab value="settings" leftSection={<IconSettings style={iconStyle} />} onClick={(tab) => setActiveTab("settings")}>
                 Settings
               </Tabs.Tab>
             </Tabs.List>
@@ -442,13 +461,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                         </Group>
                       </Radio.Group>
 
-                      <Select
-                        {...form.getInputProps("status")}
-                        label="Challenge Status"
-                        placeholder="Pick status"
-                        withAsterisk
-                        data={challengeStatusOptions.map((option) => option.label)}
-                      />
+                      <Select {...form.getInputProps("status")} label="Challenge Status" placeholder="Pick status" withAsterisk data={challengeStatusOptions.map((option) => option.label)} />
 
                       <Button fullWidth mt="md" type="submit">
                         Update
@@ -459,16 +472,18 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                 <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 5 }} style={{ display: "flex", flexDirection: "column" }}>
                   <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
                     <Title order={2}>Admins</Title>
-                    <Table verticalSpacing="sm">
-                      <Table.Thead>
-                        <Table.Tr>
-                          <Table.Th>E-mail</Table.Th>
-
-                          <Table.Th>Actions</Table.Th>
-                        </Table.Tr>
-                      </Table.Thead>
-                      {/* {adminRows.length > 0 && <Table.Tbody>{adminRows}</Table.Tbody>} */}
-                    </Table>
+                    <StyledTableContainer minWidth={400}>
+                      <Table verticalSpacing="sm">
+                        <Table.Thead>
+                          <Table.Tr>
+                            <Table.Th>Fullname</Table.Th>
+                            <Table.Th>E-mail</Table.Th>
+                            <Table.Th>Actions</Table.Th>
+                          </Table.Tr>
+                        </Table.Thead>
+                        {rowAdmins.length > 0 && <Table.Tbody>{rowAdmins}</Table.Tbody>}
+                      </Table>
+                    </StyledTableContainer>
 
                     <form onSubmit={onSubmitAdminHandler}>
                       <TextInput mt={10} label="Admin Email" placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
