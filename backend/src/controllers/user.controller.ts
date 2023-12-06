@@ -47,12 +47,12 @@ class UserController {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
+        return res.json({ error: "Unauthorized", status: false, message: "Incorrect Email or Password" });
       }
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(StatusCodes.UNAUTHORIZED).json({ error: "Unauthorized", message: "Incorrect Email or Password" });
+        return res.json({ error: "Unauthorized", status: false, message: "Incorrect Email or Password" });
       }
 
       const challengeIds = await Challenge.distinct("_id", { admins: user._id }).exec();

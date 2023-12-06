@@ -31,13 +31,23 @@ export default function SignIn(){
     try
     {
       const response = await login(data);
-     
-      notifications.show({
-        title: "Success",
-        message: '',
-        color: 'green'
-      })
-      sessionLogin(response.user, response.accessToken, response.refreshToken);
+      console.log(response)
+      if (response.status)
+      {
+        notifications.show({
+          title: "Success",
+          message: '',
+          color: 'green'
+        })
+        sessionLogin(response.user, response.accessToken, response.refreshToken);
+      }
+      if (response.status === false)
+      {
+        notifications.show({
+          message: response.message,
+          color: "red",
+        });
+      }
     }
     catch (error)
     {
@@ -61,7 +71,7 @@ export default function SignIn(){
   return (
     <Center>
       <title>Sign In</title>
-
+      
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
         
         <Title ta="center" mt={100}>Welcome!</Title>
