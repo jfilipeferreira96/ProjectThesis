@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --files src/server.ts",
     "build": "rm -rf dist && tsc",
-    "start": "node dist/server.js",
+    "start": "ts-node -T src/server.ts",
     "clean": "rm -rf node_modules dist"
   },
   "keywords": [],
@@ -30,8 +30,9 @@
     "@types/express": "^4.17.18",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/morgan": "^1.9.5",
-    "@types/node": "^20.6.5",
+    "@types/node": "^20.12.4",
     "ts-node-dev": "^1.1.8",
+    "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   },
   "exclude": [
