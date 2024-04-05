@@ -1,5 +1,5 @@
 # Use a imagem oficial do Node.js como base
-FROM node:alpine
+FROM node:18-alpine
 
 WORKDIR /usr/app
 
@@ -8,7 +8,6 @@ COPY package*.json ./
 
 # Instale as dependências da aplicação
 RUN npm install
-RUN npm install -g ts-node
 
 # Copia o restante dos ficheiros da aplicação para a pasta
 COPY . .
