@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  backend_thesis:
-    container_name: backend_thesis
+  api:
+    container_name: api
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -11,3 +11,25 @@ services:
     volumes:
       - ./backend:/usr/app
       - /usr/app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:6-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - node-network
+
+volumes:
+  dbdata6:
+
+networks:
+  node-network:
+    driver: bridge
+
+  
