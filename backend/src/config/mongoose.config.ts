@@ -4,7 +4,7 @@ import Logger from "../utils/logger";
 
 const connectToDatabase = async (retryCount = 0) => {
   const options: ConnectOptions = {};
-  const uri = config.local.localUrlDatabase ?? "mongodb://mongo:27017/docker";
+  const uri = config.local.localUrlDatabase ?? "mongodb://mongodb:27017/docker";
 
   mongoose.set("strictQuery", true);
 
