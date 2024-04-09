@@ -2,8 +2,8 @@
 import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
 import { useSession } from "@/providers/SessionProvider";
-import { register, RegisterData } from "@/services/auth.service";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center } from "@mantine/core";
+import { register, RegisterData, UserType } from "@/services/auth.service";
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center, Radio, CheckIcon, CheckboxGroup } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -29,6 +29,7 @@ export default function Register() {
   const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const { sessionLogin } = useSession();
+  const [userType, setUserType] = useState<string[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -36,6 +37,7 @@ export default function Register() {
       email: "",
       studentId: "",
       password: "",
+      type: null,
       avatar: "",
     },
     validate: zodResolver(schema), 
@@ -51,7 +53,10 @@ export default function Register() {
   }, [selectedAvatar]);
 
   const onSubmitHandler = useCallback(async (data: RegisterData) => {
-    try {
+    data.type = userType.length > 0 ? userType[0] as UserType : null;
+    
+    try
+    {
       const response = await register(data);
       if (response.status) {
         notifications.show({
@@ -78,7 +83,22 @@ export default function Register() {
         color: "red",
       });
     }
-  }, []);
+  }, [userType]);
+  
+  const handleCheckboxChange = (value: string[]) => {
+    setUserType(prevUserType => {
+      if (value.length === 0)
+      {
+        return [];
+      }
+      else
+      {
+        const valueToSave = value.length > 1 ? value[1] : value[0]
+        return [valueToSave];
+      }
+    });
+  };
+
 
   return (
     <Center>
@@ -98,7 +118,21 @@ export default function Register() {
         <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
           <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
+
+          <Checkbox.Group
+            label="User type"
+            mb="xs"
+            value={userType}
+            onChange={handleCheckboxChange}
+          >
+            <Group mb="xs" align="center" justify="center">
+              <Checkbox value={UserType.TEACHER} label={UserType.TEACHER} />
+              <Checkbox value={UserType.STUDENT} label={UserType.STUDENT} />
+            </Group>
+          </Checkbox.Group>
+
           <TextInput label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
+
           <PasswordInput label="Password" placeholder="Your password" required {...form.getInputProps("password")} />
 
           <Input.Wrapper label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
