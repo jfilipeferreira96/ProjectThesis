@@ -10,6 +10,9 @@ import { notifications } from "@mantine/notifications";
 import classes from "./home.module.css";
 import { IconFlag, IconGasStation, IconGauge, IconManualGearbox, IconUserCheck, IconUsers } from "@tabler/icons-react";
 import { ChallengeStatus, ChallengeType, getChallenges, getStatusInfo, joinChallenge } from "@/services/challenge.service";
+import { UserType } from "@/services/auth.service";
+import { useSession } from "@/providers/SessionProvider";
+import { GiggleCard } from "@/components/card";
 
 type ChallengeProps = {
   _id: string;
@@ -28,6 +31,7 @@ export default function Home() {
   const [challenges, setChallenges] = useState<ChallengeProps>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showHiddenChallenges, setShowHiddenChallenges] = useState(false);
+  const { user } = useSession();
 
   const GetUserChallenges = async () => {
     setIsLoading(true);
@@ -133,25 +137,29 @@ export default function Home() {
           </form>
         </Modal>
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
-          <Card withBorder radius="md">
-            <div onClick={open} className={classes.pointer}>
-              <Text fz="sm" c="dimmed" className={classes.label}>
-                Join a challenge
-              </Text>
-              <div className={classes.imageSection}>
-                <Image className={classes.image} src="./37541671.png" alt="Join image" />
+          <GiggleCard defaultHeight="510px">
+            {(user.type === UserType.STUDENT || !user.type) && (
+              <div onClick={open} className={classes.pointer}>
+                <Text fz="sm" c="dimmed" className={classes.label}>
+                  Join a challenge
+                </Text>
+                <div className={classes.imageSection}>
+                  <Image className={classes.image} src="./37541671.png" alt="Join image" />
+                </div>
               </div>
-            </div>
+            )}
 
-            <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
-              <Text fz="sm" c="dimmed" className={classes.label}>
-                Create a challenge
-              </Text>
-              <div className={classes.imageSection}>
-                <Image className={classes.image} src="./5000_4_07.png" alt="Create image" />
-              </div>
-            </Card.Section>
-          </Card>
+            {(user.type === UserType.TEACHER || !user.type) && (
+              <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
+                <Text fz="sm" c="dimmed" className={classes.label}>
+                  Create a challenge
+                </Text>
+                <div className={classes.imageSection}>
+                  <Image className={classes.image} src="./5000_4_07.png" alt="Create image" />
+                </div>
+              </Card.Section>
+            )}
+          </GiggleCard> 
         </Grid.Col>
 
         {/* Renderiza os desafios ativos */}

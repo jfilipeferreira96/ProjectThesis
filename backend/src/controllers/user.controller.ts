@@ -92,7 +92,7 @@ class UserController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { fullname, studentId, avatar, email, password, type } = req.body;
-
+      
       const emailCheck = await User.findOne({ email });
 
       if (emailCheck) {
