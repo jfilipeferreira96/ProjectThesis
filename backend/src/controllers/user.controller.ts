@@ -78,6 +78,7 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          type: user.type,
           adminChallenges: formattedChallengeIds,
         },
         accessToken,
@@ -90,7 +91,7 @@ class UserController {
 
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const { fullname, studentId, avatar, email, password } = req.body;
+      const { fullname, studentId, avatar, email, password, type } = req.body;
 
       const emailCheck = await User.findOne({ email });
 
@@ -104,6 +105,7 @@ class UserController {
         fullname,
         studentId,
         avatar,
+        type: type,
         password: hashedPassword,
       });
 
@@ -128,6 +130,7 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          type: user.type,
           adminChallenges: [],
         },
         accessToken,
