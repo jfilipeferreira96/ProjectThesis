@@ -13,6 +13,7 @@ import { ChallengeStatus, ChallengeType, getChallenges, getStatusInfo, joinChall
 import { UserType } from "@/services/auth.service";
 import { useSession } from "@/providers/SessionProvider";
 import { GiggleCard } from "@/components/card";
+import ThreeDButton from "@/components/3dbutton";
 
 type ChallengeProps = {
   _id: string;
@@ -130,9 +131,9 @@ export default function Home() {
           <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
             <TextInput mt={10} placeholder="Challenge token" required {...form.getInputProps("token")} />
             <Center>
-              <Button mt={10} type="submit">
+              <ThreeDButton color="blue" smaller mt="sm" type="submit">
                 Submit
-              </Button>
+              </ThreeDButton>
             </Center>
           </form>
         </Modal>
@@ -220,7 +221,7 @@ export default function Home() {
           hiddenChallenges.length > 0 &&
           hiddenChallenges.map((challenge, index) => (
             <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }} key={challenge._id}>
-              <GiggleCard className={classes.card} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
+              <GiggleCard onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
                 <Flex justify={"flex-end"}>
                   <Badge variant="filled" size="md" color={getStatusInfo(challenge.status).color}>
                     {getStatusInfo(challenge.status).name}
@@ -272,7 +273,9 @@ export default function Home() {
       {/* Botão para mostrar desafios escondidos */}
       {!showHiddenChallenges && hiddenChallenges.length > 0 && (
         <Center mt={20}>
-          <Button onClick={() => setShowHiddenChallenges(true)}>Show Hidden Challenges</Button>
+          <ThreeDButton color="blue" onClick={() => setShowHiddenChallenges(true)}>
+            Show Hidden Challenges
+          </ThreeDButton>
         </Center>
       )}
     </>

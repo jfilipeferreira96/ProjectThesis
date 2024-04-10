@@ -9,6 +9,7 @@ import { routes } from "@/config/routes";
 import styled from "styled-components";
 import { useSession } from "@/providers/SessionProvider";
 import { z } from 'zod';
+import ThreeDButton from "@/components/3dbutton";
 
 const StyledPaper = styled(Paper)`
   width: 500px;
@@ -71,10 +72,11 @@ export default function SignIn(){
   return (
     <Center>
       <title>Sign In</title>
-      
+
       <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-        
-        <Title ta="center" mt={100}>Welcome!</Title>
+        <Title ta="center" mt={100}>
+          Welcome!
+        </Title>
 
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?
@@ -91,9 +93,9 @@ export default function SignIn(){
               Forgot password?
             </Anchor>
           </Group>
-          <Button fullWidth mt="xl" type="submit">
+          <ThreeDButton color="blue" mt="xl" type="submit">
             Sign in
-          </Button>
+          </ThreeDButton>
         </StyledPaper>
       </form>
     </Center>

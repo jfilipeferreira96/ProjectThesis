@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const StyledCard = styled(Card)`
   border-width: 2px;
   border-bottom-width: 4px;
-  min-height: 530px;
+  min-height: 540px;
   border-radius: 0.75rem;
   cursor: pointer;
 

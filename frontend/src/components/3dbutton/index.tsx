@@ -1,7 +1,8 @@
+import { Box, Paper } from '@mantine/core';
 import React, { ReactNode } from 'react'
 import styled from 'styled-components';
 
-const Pushable = styled.button`
+const Pushable = styled.button<{ width?: number }>`
   position: relative;
   border: none;
   background: transparent;
@@ -9,6 +10,7 @@ const Pushable = styled.button`
   cursor: pointer;
   outline-offset: 4px;
   transition: filter 250ms;
+  width: 100%;
 
   &:hover {
     filter: brightness(110%);
@@ -49,10 +51,10 @@ const Edge = styled.span`
   background: ${(props) => props.color};
 `;
 
-const Front = styled.span<{ disabled?: boolean }>`
+const Front = styled.span<{ disabled?: boolean; smaller?: boolean }>`
   display: block;
   position: relative;
-  padding: 12px 42px;
+  padding: ${(props) => props.smaller ? "6px 42px" : "12px 42px" };
   border-radius: 12px;
   font-size: 1.25rem;
   font-weight: 700;
@@ -85,13 +87,17 @@ const Front = styled.span<{ disabled?: boolean }>`
 
 type Props = {
   children: ReactNode;
-  color?: string;
+  color?: "blue" | "red" | "green" | "yellow" | "purple" | "white";
   onClick?: () => void;
   disabled?: boolean;
+  smaller?: boolean;
+  mt?: "sm" | "md" | "lg" | "xl";
+  type?: any;
+  width?: number;
 };
 
 function ThreeDButton(props:Props) {
-    const { children, color, onClick, disabled } = props;
+    const { children, color, onClick, disabled, mt, smaller } = props;
     
     const colorStyles: Record<string, string> = {
       blue: "linear-gradient(to left, #145d9c 0%, #104e80 8%, #0d3e64 92%, #104e80 100%)",
@@ -103,15 +109,17 @@ function ThreeDButton(props:Props) {
 
     const bgColor = color ? colorStyles[color] : colorStyles.blue;
     
-    return (
+  return (
+    <Box mt={mt}>
       <Pushable onClick={onClick} disabled={disabled}>
         <Shadow></Shadow>
         <Edge color={bgColor}></Edge>
-        <Front color={color} disabled={disabled}>
+        <Front color={color} disabled={disabled} smaller={smaller}>
           {children}
         </Front>
       </Pushable>
-    );
+    </Box>
+  );
 }
 
 export default ThreeDButton
