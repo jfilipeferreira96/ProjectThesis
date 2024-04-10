@@ -14,6 +14,13 @@ export const theme = createTheme({
   headings: {
     fontFamily: "Feather Bold, sans-serif",
   },
+  fontSizes: {
+    xs: "0.875rem",
+    sm: "1rem ",
+    md: "1.125rem",
+    lg: "1.25rem",
+    xl: "1.35rem"
+  }
 });
 
 const colorSchemeManager = localStorageColorSchemeManager({ key: "color-scheme" });
