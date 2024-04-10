@@ -64,9 +64,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   ],
   type: {
     type: String,
-    enum: UserType,
+    enum: [null, ...Object.values(UserType)],
     required: false,
-    default: null
   },
   createdAt: {
     type: Date,
