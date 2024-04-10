@@ -96,6 +96,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
               </Text>
 
               <Input
+                className="specialinput"
                 placeholder="Clearable input"
                 defaultValue={id}
                 rightSectionPointerEvents="all"

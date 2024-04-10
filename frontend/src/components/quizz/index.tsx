@@ -189,7 +189,7 @@ const Quizz = (props: Props) => {
     if (type === "FillInBlank") {
       return (
         <div className={classes.answerDiv}>
-          <Input size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
+          <Input className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
         </div>
       );
     }

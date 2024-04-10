@@ -84,8 +84,8 @@ export default function SignIn(){
         </Text>
 
         <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
-          <PasswordInput label="Password" placeholder="Your password" required mt="md" {...form.getInputProps("password")} />
+          <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
+          <PasswordInput className="specialinput" label="Password" placeholder="Your password" required mt="md" {...form.getInputProps("password")} />
           <Group justify={"flex-end"} mt="lg">
             <Anchor component="button" size="sm">
               Forgot password?

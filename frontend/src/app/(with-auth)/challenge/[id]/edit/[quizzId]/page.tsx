@@ -276,6 +276,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                   </Radio.Group>
 
                   <TextInput
+                    className="specialinput"
                     label={"Question"}
                     placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
                     withAsterisk
@@ -288,6 +289,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                     item.choices.map((choice, choiceIndex) => {
                       return (
                         <TextInput
+                          className="specialinput"
                           key={choiceIndex}
                           placeholder={`Awnser nº ${choiceIndex + 1}`}
                           defaultValue={choice}
@@ -308,10 +310,10 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                    <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
                   )}
 
-                  <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
+                  <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 
                   <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
                     {active !== 0 && (

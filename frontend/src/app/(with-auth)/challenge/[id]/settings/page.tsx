@@ -445,9 +445,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                   <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
                     <Title order={2}>Configurations</Title>
                     <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-                      <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
+                      <TextInput className="specialinput" label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
 
-                      <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
+                      <Textarea className="specialinput" label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
                       <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
                         <StyledList spacing="xs" size="xs" center icon={<></>}>
@@ -486,7 +486,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                     </StyledTableContainer>
 
                     <form onSubmit={onSubmitAdminHandler}>
-                      <TextInput mt={10} label="Admin Email" placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
+                      <TextInput className="specialinput" mt={10} label="Admin Email" placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
                       <Button fullWidth mt="md" type="submit">
                         Add admin
                       </Button>

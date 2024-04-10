@@ -4,7 +4,7 @@ import { Notifications } from '@mantine/notifications';
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
 import { SessionProvider } from "@/providers/SessionProvider";
-import "./global.css";
+import "./global.scss";
 
 
 export const theme = createTheme({

@@ -116,26 +116,21 @@ export default function Register() {
         </Text>
 
         <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
-          <TextInput label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
+          <TextInput className="specialinput" label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
+          <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
 
-          <Checkbox.Group
-            label="User type"
-            mb="xs"
-            value={userType}
-            onChange={handleCheckboxChange}
-          >
+          <Checkbox.Group label="User type" mb="xs" value={userType} onChange={handleCheckboxChange}>
             <Group mb="xs" align="center" justify="center">
               <Checkbox value={UserType.TEACHER} label={UserType.TEACHER} />
               <Checkbox value={UserType.STUDENT} label={UserType.STUDENT} />
             </Group>
           </Checkbox.Group>
 
-          <TextInput label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
+          <TextInput className="specialinput" label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
 
-          <PasswordInput label="Password" placeholder="Your password" required {...form.getInputProps("password")} />
+          <PasswordInput className="specialinput" label="Password" placeholder="Your password" required {...form.getInputProps("password")} />
 
-          <Input.Wrapper label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
+          <Input.Wrapper className="specialinput" label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
             <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
           </Input.Wrapper>
           <Button fullWidth mt="xl" type="submit">

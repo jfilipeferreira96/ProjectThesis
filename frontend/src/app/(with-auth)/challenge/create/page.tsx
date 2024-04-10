@@ -74,9 +74,9 @@ function CreateChallengePage() {
         </Title>
 
         <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-          <TextInput label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
+          <TextInput className="specialinput" label="Title" placeholder="Example: Java Loops" required {...form.getInputProps("title")} />
 
-          <Textarea label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
+          <Textarea className="specialinput" label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
           <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" defaultValue={ChallengeType.TYPE_A} {...form.getInputProps("type")}>
             <StyledList spacing="xs" size="xs" center icon={<></>}>

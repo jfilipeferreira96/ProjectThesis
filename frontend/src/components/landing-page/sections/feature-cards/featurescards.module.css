@@ -54,6 +54,6 @@
   width: 100%;
   height: calc(3rem);
   display: block;
-  background-color: light-dark(var(--mantine-color-default), var(--mantine-color-dark-8));
-  fill: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-7));
+  background-color: light-dark(var(--mantine-color-default), var(--mantine-color-dark-7));
+  fill: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-8));
 }

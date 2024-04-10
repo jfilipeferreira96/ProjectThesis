@@ -169,7 +169,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
-            <TextInput label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
+            <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
             <Group grow>
               <DateTimePicker label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
@@ -235,6 +235,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                   </Radio.Group>
 
                   <TextInput
+                    className="specialinput"
                     label={"Question"}
                     placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
                     withAsterisk
@@ -247,6 +248,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     item.choices.map((choice, choiceIndex) => {
                       return (
                         <TextInput
+                          className="specialinput"
                           key={choiceIndex}
                           placeholder={`Awnser nº ${choiceIndex + 1}`}
                           defaultValue={choice}
@@ -267,10 +269,10 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                    <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
                   )}
 
-                  <Input.Wrapper size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
+                  <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
 
                   <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
                     {active !== 0 && (
