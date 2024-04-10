@@ -136,7 +136,7 @@ export default function Home() {
             </Center>
           </form>
         </Modal>
-       
+
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <GiggleCard>
             {(user.type === UserType.STUDENT || !user.type) && (
@@ -160,7 +160,7 @@ export default function Home() {
                 </div>
               </Card.Section>
             )}
-          </GiggleCard> 
+          </GiggleCard>
         </Grid.Col>
 
         {/* Renderiza os desafios ativos */}
@@ -220,7 +220,7 @@ export default function Home() {
           hiddenChallenges.length > 0 &&
           hiddenChallenges.map((challenge, index) => (
             <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }} key={challenge._id}>
-              <Card withBorder radius="md" className={classes.card} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
+              <GiggleCard className={classes.card} onClick={() => router.push(`${routes.challenge.url}/${challenge._id}`)}>
                 <Flex justify={"flex-end"}>
                   <Badge variant="filled" size="md" color={getStatusInfo(challenge.status).color}>
                     {getStatusInfo(challenge.status).name}
@@ -265,7 +265,7 @@ export default function Home() {
                     )}
                   </Group>
                 </Card.Section>
-              </Card>
+              </GiggleCard>
             </Grid.Col>
           ))}
       </Grid>
