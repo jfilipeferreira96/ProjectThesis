@@ -4,13 +4,16 @@ import { Notifications } from '@mantine/notifications';
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
 import { SessionProvider } from "@/providers/SessionProvider";
+import "./global.css";
+
 
 export const theme = createTheme({
   /* Put your mantine theme override here */
-  //  type DefaultMantineColor = 'dark' | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'teal' | (string & {});
-  /*   primaryShade: { light: 6, dark: 4 } ,
-    fontFamily: "Open Sans, sans-serif",
-    primaryColor: "cyan", */
+  fontFamily: "DIN Round Pro, sans-serif",
+  fontFamilyMonospace: 'DIN Round Pro, sans-serif',
+  headings: {
+    fontFamily: "Feather Bold, sans-serif",
+  },
 });
 
 const colorSchemeManager = localStorageColorSchemeManager({ key: "color-scheme" });
