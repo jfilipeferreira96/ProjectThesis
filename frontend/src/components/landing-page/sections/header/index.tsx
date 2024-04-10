@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "@/providers/SessionProvider";
 import { IconLogout } from "@tabler/icons-react";
 import Image from "next/image"; 
+import { ToogleColorTheme } from "@/components/toogle-color";
 
 export const HeaderMenu = () => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -37,6 +38,7 @@ export const HeaderMenu = () => {
               </>
             ) : (
               <>
+                <ToogleColorTheme />
                 <Link href={routes.signin.url}>
                   <Button variant="default">Log in</Button>
                 </Link>

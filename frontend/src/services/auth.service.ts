@@ -1,18 +1,22 @@
 import api from "@/config/api";
 import { endpoints } from "@/config/routes";
 
-export interface LoginData
-{
+export interface LoginData {
   email: string;
   password: string;
 }
 
-export interface RegisterData
-{
+export enum UserType {
+  STUDENT = "Student",
+  TEACHER = "Teacher",
+}
+
+export interface RegisterData {
   email: string;
   fullname: string;
   password: string;
   avatar: string;
+  type: UserType | null;
   studentId?: number | string;
 }
 

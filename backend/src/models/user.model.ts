@@ -1,7 +1,11 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface IUser extends Document
-{
+export enum UserType{
+  STUDENT = "Student",
+  TEACHER = "Teacher"
+}
+
+export interface IUser extends Document {
   fullname: string;
   email: string;
   password: string;
@@ -11,6 +15,7 @@ export interface IUser extends Document
     challenge: Schema.Types.ObjectId;
     score: number;
   }[];
+  type: UserType | null; 
   createdAt: Date;
 }
 
@@ -57,6 +62,11 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
       },
     },
   ],
+  type: {
+    type: String,
+    enum: [null, ...Object.values(UserType)],
+    required: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

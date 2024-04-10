@@ -6,6 +6,7 @@ declare namespace Express {
       studentId: string | number | undefined;
       email: string;
       avatar: string;
+      type: string;
     };
   }
 }

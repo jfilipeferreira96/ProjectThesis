@@ -78,6 +78,7 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          type: user.type,
           adminChallenges: formattedChallengeIds,
         },
         accessToken,
@@ -90,10 +91,9 @@ class UserController {
 
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const { fullname, studentId, avatar, email, password } = req.body;
+      const { fullname, studentId, avatar, email, password, type } = req.body;
 
       const emailCheck = await User.findOne({ email });
-
       if (emailCheck) {
         return res.status(200).json({ error: "Bad Request", message: "Email already used" });
       }
@@ -104,6 +104,7 @@ class UserController {
         fullname,
         studentId,
         avatar,
+        type: type,
         password: hashedPassword,
       });
 
@@ -128,13 +129,15 @@ class UserController {
           studentId: user.studentId,
           email: user.email,
           avatar: user.avatar,
+          type: user.type,
           adminChallenges: [],
         },
         accessToken,
         refreshToken,
       });
     } catch (ex) {
-      throw new Error("An error occurred during registration.");
+      console.error("Error during registration:", ex);
+      return res.status(500).json({ error: "Internal Server Error", message: ex.message });
     }
   }
 
