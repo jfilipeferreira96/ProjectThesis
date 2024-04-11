@@ -10,9 +10,11 @@ const StyledCard = styled(Card)`
   min-height: 540px;
   border-radius: 0.75rem;
   cursor: pointer;
+  transition: border-bottom-width 0.2s ease; 
 
-   &:hover {
+  &:hover {
     filter: brightness(90%);
+    transition: filter 0.2s ease; 
   }
 
   &:active{
