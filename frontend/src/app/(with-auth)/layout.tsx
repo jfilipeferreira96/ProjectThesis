@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { routes } from "@/config/routes";
 import { Sidebar } from "@/components/sidebar";
 import styled from "styled-components";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { AppShell, Burger, Group, Skeleton } from "@mantine/core";
 
 const regex = /^\/challenge\/[0-9a-f]{24}$/;
@@ -32,7 +32,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isChallengePage = regex.test(pathname) || regexQualifications.test(pathname) || regexSettings.test(pathname);
   const [opened, { toggle }] = useDisclosure();
   const challengeId = getIdFromUrl(pathname);
-  
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   useEffect(() => {
     if (!user?._id && isReady) {
       router.push(routes.landingpage.url)
@@ -48,13 +49,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppShell.Header>
         <HeaderMenu />
       </AppShell.Header>
-      {isChallengePage && (
+      {isChallengePage && !isMobile && (
         <AppShell.Navbar>
           <Sidebar isAdmin={(challengeId !== undefined && user.adminChallenges?.includes(challengeId)) ?? false} />
         </AppShell.Navbar>
       )}
       <AppShell.Main pt={`calc(${rem(60)} + var(--mantine-spacing-md))`}>
         <Container size="responsive">{children}</Container>
+        {isMobile && <Sidebar isAdmin={(challengeId !== undefined && user.adminChallenges?.includes(challengeId)) ?? false} />}
       </AppShell.Main>
     </AppShell>
   );

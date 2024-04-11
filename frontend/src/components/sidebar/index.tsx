@@ -1,11 +1,12 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Center, Tooltip, UnstyledButton, Stack, rem } from "@mantine/core";
+import { Center, Tooltip, UnstyledButton, Stack, rem, Flex } from "@mantine/core";
 import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconFingerprint, IconCalendarStats, IconUser, IconSettings, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { getId } from "@/utils/getID";
 import styled from 'styled-components';
+import { useMediaQuery } from "@mantine/hooks";
 
 const NavbarContainer = styled.nav`
   width: ${rem(80)};
@@ -15,6 +16,22 @@ const NavbarContainer = styled.nav`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const LayedDownNavbar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-top:calc(0.0625rem * var(--mantine-scale)) solid var(--_app-shell-border-color);
 `;
 
 const Link = styled(UnstyledButton)`
@@ -71,6 +88,7 @@ export function Sidebar(props: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [active, setActive] = useState<number>(0);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     const activeIndex = data.findIndex((item) => {
@@ -102,12 +120,24 @@ export function Sidebar(props: Props) {
   );
 
   return (
-    <NavbarContainer>
-      <div>
-        <Stack justify="center" gap={0}>
-          {links}
-        </Stack>
-      </div>
-    </NavbarContainer>
+    <>
+      {!isMobile && (
+        <NavbarContainer>
+          <div>
+            <Stack justify="center" gap={0}>
+              {links}
+            </Stack>
+          </div>
+        </NavbarContainer>
+      )}
+
+      {isMobile && (
+        <LayedDownNavbar>
+          <Flex gap="md" justify="center" align="center" direction="row">
+            {links}
+          </Flex>
+        </LayedDownNavbar>
+      )}
+    </>
   );
 }
