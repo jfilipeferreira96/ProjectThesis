@@ -7,6 +7,8 @@ import { routes } from "@/config/routes";
 import { getId } from "@/utils/getID";
 import styled from 'styled-components';
 import { useMediaQuery } from "@mantine/hooks";
+import { HomeIcon } from "../icons/IconHome";
+import classes from "./sidebar.module.css";
 
 const NavbarContainer = styled.nav`
   width: ${rem(80)};
@@ -57,26 +59,27 @@ const Link = styled(UnstyledButton)`
 `;
 
 interface NavbarLinkProps {
-  icon: typeof IconHome2;
+  icon: React.ReactNode;
   label: string;
   active?: boolean;
   onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon, label, active, onClick }: NavbarLinkProps) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <Link onClick={onClick} data-active={active || undefined}>
-        <Icon style={{ width: rem(25), height: rem(25) }} stroke={1.5} />
-      </Link>
+      <div onClick={onClick} data-active={active || undefined} className={active ? classes.linkSelected : classes.link}>
+        {icon}
+      </div>
     </Tooltip>
   );
 }
 
 const data = [
-  { icon: IconHome2, label: "Home", url: "" },
-  { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications" },
-  { icon: IconSettings, label: "Settings", url: "settings" },
+  { icon: <HomeIcon style={{ width: rem(42), height: rem(42) }} />, label: "Home", url: "" },
+  { icon: <HomeIcon style={{ width: rem(42), height: rem(42) }} />, label: "Home", url: "" },
+  /* { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications" },
+  { icon: IconSettings, label: "Settings", url: "settings" }, */
 ];
 
 interface Props{
@@ -124,7 +127,7 @@ export function Sidebar(props: Props) {
       {!isMobile && (
         <NavbarContainer>
           <div>
-            <Stack justify="center" gap={0}>
+            <Stack justify="center" gap={15}>
               {links}
             </Stack>
           </div>
