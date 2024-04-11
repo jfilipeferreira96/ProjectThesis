@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import classes from "./random.module.scss";
+import classes from "./quizz.module.scss";
 import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";

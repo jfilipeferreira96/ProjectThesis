@@ -1,4 +1,5 @@
 "use client";
+import ThreeDButton from "@/components/3dbutton";
 import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
 import { useSession } from "@/providers/SessionProvider";
@@ -133,9 +134,9 @@ export default function Register() {
           <Input.Wrapper className="specialinput" label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
             <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} />
           </Input.Wrapper>
-          <Button fullWidth mt="xl" type="submit">
+          <ThreeDButton color="blue" mt="xl" type="submit" smaller>
             Register
-          </Button>
+          </ThreeDButton>
         </StyledPaper>
       </form>
     </Center>

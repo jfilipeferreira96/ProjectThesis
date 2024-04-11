@@ -1,6 +1,6 @@
 import { Box, Paper } from '@mantine/core';
 import React, { ReactNode } from 'react'
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Pushable = styled.button<{ width?: number }>`
   position: relative;
@@ -51,14 +51,14 @@ const Edge = styled.span`
   background: ${(props) => props.color};
 `;
 
-const Front = styled.span<{ disabled?: boolean; smaller?: boolean }>`
+const Front = styled.span<{ disabled?: boolean; smaller?: boolean, color?: string, textColor?: string, animationOnHover?: boolean }>`
   display: block;
   position: relative;
   padding: ${(props) => props.smaller ? "6px 42px" : "12px 42px" };
   border-radius: 12px;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--mantine-color-white);
+  color: ${(props) => props.textColor ? `var(--mantine-color-${props.textColor})` : `var(--mantine-color-white)`};
   background: hsl(345deg 100% 47%);
   background: ${(props) => `var(--mantine-color-${props.color}-filled)`};
   will-change: transform;
@@ -68,19 +68,26 @@ const Front = styled.span<{ disabled?: boolean; smaller?: boolean }>`
 
   ${(props) =>
     props.disabled
-      ? `
-        filter: brightness(80%);
-      `
-      : `
-        &:hover {
-          transform: translateY(-6px);
-          transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
-        }
+      ? css`
+          filter: brightness(80%);
+        `
+      : props.animationOnHover
+        ? css`
+          &:hover {
+            transform: translateY(-6px);
+            transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+          }
 
-        &:active {
-          transform: translateY(-2px);
-          transition: transform 34ms;
-        }
+          &:active {
+            transform: translateY(-2px);
+            transition: transform 34ms;
+          }
+        `
+      : css`
+          &:active {
+            transform: translateY(-2px);
+            transition: transform 34ms;
+          }
       `}
 `;
 
@@ -91,13 +98,15 @@ type Props = {
   onClick?: () => void;
   disabled?: boolean;
   smaller?: boolean;
+  animationOnHover?: boolean;
   mt?: "sm" | "md" | "lg" | "xl";
   type?: any;
   width?: number;
+  textColor?: string;
 };
 
 function ThreeDButton(props:Props) {
-    const { children, color, onClick, disabled, mt, smaller } = props;
+  const { children, color, onClick, disabled, mt, smaller, textColor, animationOnHover = true } = props;
     
     const colorStyles: Record<string, string> = {
       blue: "linear-gradient(to left, #145d9c 0%, #104e80 8%, #0d3e64 92%, #104e80 100%)",
@@ -112,9 +121,15 @@ function ThreeDButton(props:Props) {
   return (
     <Box mt={mt}>
       <Pushable onClick={onClick} disabled={disabled}>
-        <Shadow></Shadow>
-        <Edge color={bgColor}></Edge>
-        <Front color={color} disabled={disabled} smaller={smaller}>
+        <Shadow />
+        <Edge color={bgColor} />
+        <Front
+          color={color}
+          textColor={textColor}
+          disabled={disabled}
+          smaller={smaller}
+          animationOnHover={animationOnHover}
+        >
           {children}
         </Front>
       </Pushable>

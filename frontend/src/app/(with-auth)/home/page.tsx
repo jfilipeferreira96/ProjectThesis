@@ -131,7 +131,7 @@ export default function Home() {
           <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
             <TextInput mt={10} placeholder="Challenge token" required {...form.getInputProps("token")} />
             <Center>
-              <ThreeDButton color="blue" smaller mt="sm" type="submit">
+              <ThreeDButton color="blue" smaller mt="sm" type="submit" animationOnHover={false}>
                 Submit
               </ThreeDButton>
             </Center>

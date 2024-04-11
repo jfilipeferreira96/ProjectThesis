@@ -1,0 +1,31 @@
+/* Button.module.css */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  outline: none;
+  transition: background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Add more styles for different variants and sizes */
+.defaultButton {
+  background-color: white;
+  color: black;
+  border: 2px solid #718096;
+  border-bottom-width: 4px;
+}
+
+.primaryButton {
+  background-color: #90cdf4;
+  color: #fff;
+  border: 4px solid #4299e1;
+}
+
+/* Define other button variants and sizes similarly */

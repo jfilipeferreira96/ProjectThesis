@@ -29,22 +29,43 @@ $disabled: #9c9c9c;
       text-decoration: none;
       list-style: none;
       color: var(--_input-color);
-      background: #25262B;
-      border: 1px solid $disabled;
+      //background: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-2));
       border-radius: 16px;
-      padding: 11px;
+      padding: 16px;
       margin-top: 15px;
       cursor: pointer;
+      cursor: pointer;
+      outline: 0;
+      touch-action: manipulation;
+      transition: border-bottom-width 0.2s ease; 
+      border: 2px solid var(--mantine-color-gray-3);
+      border-width: 2px;
+      border-bottom-width: 4px;
+      min-height: 60px;
+
+      &:hover {
+        filter: brightness(90%);
+        transition: filter 0.2s ease; 
+      }
+
+      &:active{
+        border-bottom-width: 2px;
+      }
+
       span{
         font-size: 16px;
         font-weight: 400;
       }
+
     }
 
     .selectedAnswer {
-      background: linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%);
-      border: 1px solid linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%);
+      /* background: linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%); */
+      background: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-2));
       color: var(--mantine-color-bright);
+      border-bottom-width: 2px;
+      filter: brightness(90%);
+      transition: filter 0.2s ease; 
     }
   }
 

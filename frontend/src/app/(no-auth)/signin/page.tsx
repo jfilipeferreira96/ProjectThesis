@@ -93,7 +93,7 @@ export default function SignIn(){
               Forgot password?
             </Anchor>
           </Group>
-          <ThreeDButton color="blue" mt="xl" type="submit">
+          <ThreeDButton color="blue" mt="xl" type="submit" smaller>
             Sign in
           </ThreeDButton>
         </StyledPaper>

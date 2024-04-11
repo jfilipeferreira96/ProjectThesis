@@ -10,6 +10,7 @@ import { z } from "zod";
 import { routes } from "@/config/routes";
 import { ChallengeType, CreateChallengeData, createChallenge } from "@/services/challenge.service";
 import { useSession } from "@/providers/SessionProvider";
+import ThreeDButton from "@/components/3dbutton";
 
 const StyledPaper = styled(Paper)`
   width: 800px;
@@ -90,9 +91,9 @@ function CreateChallengePage() {
             </Group>
           </Radio.Group>
 
-          <Button fullWidth mt="md" type="submit">
+          <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} type="submit">
             Create
-          </Button>
+          </ThreeDButton>
         </StyledPaper>
       </form>
     </Center>
