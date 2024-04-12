@@ -22,9 +22,9 @@ export const HeaderMenu = () => {
         <Group justify="space-between" h="100%" ml={10} mr={10}>
           <Flex align={"center"} onClick={() => router.push(user?._id ? routes.home.url : routes.landingpage.url)} style={{ cursor: "pointer" }}>
             <Image src="/20521.png" alt="Logo" width={85} height={45} /> 
-            <Title size="h2" ml={10} visibleFrom="xs">
+            {/* <Title size="h2" ml={10} visibleFrom="xs" className={classes.logo}>
               Score
-            </Title>
+            </Title> */}
           </Flex>
 
           <Group visibleFrom={user?._id ? "sm" : ""}>

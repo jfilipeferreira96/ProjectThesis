@@ -44,3 +44,7 @@
   padding-bottom: var(--mantine-spacing-xl);
   border-top: rem(1px) solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
 }
+
+.logo{
+  color: #f6b03b;
+}
