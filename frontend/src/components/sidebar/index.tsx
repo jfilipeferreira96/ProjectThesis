@@ -1,14 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Center, Tooltip, UnstyledButton, Stack, rem, Flex } from "@mantine/core";
-import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconFingerprint, IconCalendarStats, IconUser, IconSettings, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { getId } from "@/utils/getID";
 import styled from 'styled-components';
 import { useMediaQuery } from "@mantine/hooks";
-import { HomeIcon } from "../icons/IconHome";
 import classes from "./sidebar.module.css";
+import SVG from 'next/image';
 
 const NavbarContainer = styled.nav`
   width: ${rem(80)};
@@ -76,10 +75,27 @@ function NavbarLink({ icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const data = [
-  { icon: <HomeIcon style={{ width: rem(42), height: rem(42) }} />, label: "Home", url: "" },
-  { icon: <HomeIcon style={{ width: rem(42), height: rem(42) }} />, label: "Home", url: "" },
-  /* { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications" },
-  { icon: IconSettings, label: "Settings", url: "settings" }, */
+  {
+    icon: <SVG
+      src="/svgs/home.svg"
+      alt="My SVG"
+      width={42}
+      height={42} />, label: "Home", url: "" },
+  {
+    icon: <SVG
+      src="/svgs/leaderboard.svg"
+      alt="My SVG"
+      width={42}
+      height={42}
+    />, label: "Qualifications", url: "qualifications" },
+  {
+    icon: <SVG
+      src="/svgs/laptop-settings-12589.svg"
+      alt="My SVG"
+      width={42}
+      height={42}
+    />, label: "Settings", url: "settings" }, 
+  /* { icon: IconDeviceDesktopAnalytics, label: "Qualifications", url: "qualifications" }, */
 ];
 
 interface Props{
