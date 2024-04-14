@@ -6,6 +6,11 @@ export enum QuestionType {
   MultipleQuestions = "MultipleQuestions",
 }
 
+export enum EvalutionType {
+  Automatic = "Automatic",
+  Manual = "Manual",
+}
+
 export enum QuizzStatus {
   PendingStart = 0,
   InProgress = 1,

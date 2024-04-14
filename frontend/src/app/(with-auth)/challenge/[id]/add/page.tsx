@@ -9,9 +9,14 @@ import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
 import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
-import { QuestionType, QuizzData, createQuizz } from "@/services/quizz.service";
+import { EvalutionType, QuestionType, QuizzData, createQuizz } from "@/services/quizz.service";
 import { useRouter } from "next/navigation";
 import '@mantine/dates/styles.css';
+import styled from "styled-components";
+
+const StyledList = styled(List)`
+  color: var(--mantine-color-dimmed);
+`;
 
 const Add = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
@@ -29,6 +34,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           question: "",
           key: randomId(),
           type: QuestionType.MultipleQuestions,
+          evaluation: EvalutionType.Automatic,
           choices: ["", "", "", ""],
           correctAnswer: "",
         },
@@ -115,6 +121,11 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     }
   };
 
+  const handleRadioChangeEvalution = (type: EvalutionType) => {
+    console.log(type)
+  };
+
+
   const onSubmitHandler = useCallback(async (data: QuizzData) => {
 
     try {
@@ -171,10 +182,32 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
             <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
             <Group grow>
-              <DateTimePicker label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
+              <DateTimePicker className="specialinput" label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
-              <DateTimePicker label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
+              <DateTimePicker className="specialinput" label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
             </Group>
+
+            <Radio.Group
+              name="evaluation"
+              label="Evaluation type"
+              withAsterisk
+              defaultValue={EvalutionType.Automatic}
+              {...form.getInputProps(`evaluation`)}
+              onChange={(type) => handleRadioChangeEvalution(type as EvalutionType)}
+            >
+              <StyledList spacing="xs" size="xs" center icon={<></>}>
+                <List.Item>
+                  <b>Automatic:</b> Multiple questions and Fill in the blank
+                </List.Item>
+                <List.Item>
+                  <b>Manual:</b> Multiple questions, Fill in the blank, File Upload and Open Answer
+                </List.Item>
+              </StyledList>
+              <Group align="center" justify="center">
+                <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="md" />
+                <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="md" />
+              </Group>
+            </Radio.Group>
           </Paper>
         </Grid.Col>
 

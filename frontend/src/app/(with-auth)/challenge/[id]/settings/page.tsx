@@ -15,6 +15,7 @@ import { z } from "zod";
 import { useForm, zodResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
 import { useSession } from "@/providers/SessionProvider";
+import ThreeDButton from "@/components/3dbutton";
 
 type DataItem = {
   _id: string;
@@ -426,14 +427,14 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
                   {isTypeABlockAcess ? (
                     <Tooltip label={"Type A challenge cannot contain multiple challenges."} withArrow>
-                      <Button fullWidth mt={"lg"} variant="filled" disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                      <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
                         Add Quizz
-                      </Button>
+                      </ThreeDButton>
                     </Tooltip>
                   ) : (
-                    <Button fullWidth mt={"lg"} variant="filled" onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
+                    <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
                       Add Quizz
-                    </Button>
+                    </ThreeDButton>
                   )}
                 </Paper>
               </Grid.Col>
@@ -451,8 +452,12 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
                       <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
                         <StyledList spacing="xs" size="xs" center icon={<></>}>
-                          <List.Item>Type A - Fast paced challenge and short duration, perfect for a single dynamic class.</List.Item>
-                          <List.Item>Type B - A league-based challenge comprised of one or multiple challenges.</List.Item>
+                          <List.Item>
+                            <b>Type A -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
+                          </List.Item>
+                          <List.Item>
+                            <b>Type B -</b> A league-based challenge comprised of one or multiple challenges.
+                          </List.Item>
                         </StyledList>
 
                         <Group mt="xs" align="center" justify="center">
@@ -463,9 +468,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
                       <Select {...form.getInputProps("status")} label="Challenge Status" placeholder="Pick status" withAsterisk data={challengeStatusOptions.map((option) => option.label)} />
 
-                      <Button fullWidth mt="md" type="submit">
+                      <ThreeDButton smaller color="blue" animationOnHover={false} mt="md" type="submit">
                         Update
-                      </Button>
+                      </ThreeDButton>
                     </form>
                   </Paper>
                 </Grid.Col>
@@ -487,9 +492,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
                     <form onSubmit={onSubmitAdminHandler}>
                       <TextInput className="specialinput" mt={10} label="Admin Email" placeholder="you@gmail.com" required value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
-                      <Button fullWidth mt="md" type="submit">
+                      <ThreeDButton color="blue" animationOnHover={false} smaller mt="md" type="submit">
                         Add admin
-                      </Button>
+                      </ThreeDButton>
                     </form>
                   </Paper>
                 </Grid.Col>
