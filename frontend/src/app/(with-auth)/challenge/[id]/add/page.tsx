@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput, NumberInput } from "@mantine/core";
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
@@ -37,6 +37,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
+          pontuation: 10
         },
       ],
     },
@@ -51,6 +52,9 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       values.questions.forEach((item, index) => {
         if (!item.question) {
           errors.question = `Please fill in the question in question ${index + 1}.`;
+        }
+        if (!item.pontuation) {
+          errors.question = `Please fill in the pontuation in question ${index + 1}.`;
         }
         if (item.type === QuestionType.FillInBlank && !item.correctAnswer) {
           errors.correctAnswer = `Please fill in the correct answer field in question ${index + 1}.`;
@@ -133,6 +137,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
        type: QuestionType.MultipleQuestions,
        choices: ["", "", "", ""],
        correctAnswer: "",
+       pontuation: 10,
      },
    ]);
 
@@ -270,21 +275,35 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     </div>
                   </Group>
 
-                  <Radio.Group
-                    name="type"
-                    label="Select the question type"
-                    withAsterisk
-                    defaultValue={item.type}
-                    {...form.getInputProps(`questions.${index}.type`)}
-                    onChange={(type) => handleRadioChange(index, type as QuestionType)}
-                  >
-                    <Group align="center" justify="center">
-                      <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
-                      <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
-                      {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
-                    </Group>
-                  </Radio.Group>
+                  <Group grow mb={40}>
+                    <Radio.Group
+                      name="type"
+                      label="Select the question type"
+                      withAsterisk
+                      defaultValue={item.type}
+                      {...form.getInputProps(`questions.${index}.type`)}
+                      onChange={(type) => handleRadioChange(index, type as QuestionType)}
+                    >
+                      <Group align="center" justify="center">
+                        <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
+                        <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
+                        {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
+                      </Group>
+                    </Radio.Group>
 
+                    {!isManualEvaluation && (
+                      <NumberInput
+                        label="Pontuation"
+                        className="specialinput"
+                        description="Select the points awarded for this question when answered correctly"
+                        mt={10}
+                        withAsterisk
+                        placeholder="Enter the points (e.g., 10)"
+                        defaultValue={item.pontuation}
+                        {...form.getInputProps(`questions.${index}.pontuation`)}
+                      />
+                    )}
+                  </Group>
                   <TextInput
                     className="specialinput"
                     label={"Question"}
@@ -332,7 +351,6 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                   )}
 
                   {item.type === QuestionType.FileUpload && (
-                    /*  <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} /> */
                     <FileInput
                       className="specialinput"
                       rightSection={<IconFile />}
