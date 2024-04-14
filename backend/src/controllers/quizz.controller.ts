@@ -292,16 +292,17 @@ class QuizzController {
           const answer = userAnswer.answer;
 
           if (question) {
+            let questionScore = question.pontuation || 5; // Use question.pontuation if available, otherwise default to 5
             if (question.type === "FillInBlank") {
               if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
-                score += 5;
+                score += questionScore; // Use questionScore instead of fixed 5
                 correctAnswers += 1;
               } else {
                 wrongAnswers += 1;
               }
             } else {
               if (answer === question.correctAnswer) {
-                score += 5;
+                score += questionScore; // Use questionScore instead of fixed 5
                 correctAnswers += 1;
               } else {
                 wrongAnswers += 1;

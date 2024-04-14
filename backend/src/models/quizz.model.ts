@@ -35,6 +35,7 @@ interface IQuestion {
   type: QuestionType;
   choices?: string[];
   correctAnswer: string;
+  pontuation?: number;
 }
 
 const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
@@ -78,6 +79,7 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
       },
       choices: [String],
       correctAnswer: String,
+      pontuation: Number
     },
   ],
 });

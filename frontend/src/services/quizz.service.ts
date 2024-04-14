@@ -42,6 +42,7 @@ export interface QuizzData {
     type: QuestionType;
     choices: string[];
     correctAnswer: string;
+    pontuation?: number;
   }[];
 }
 export const createQuizz = async (data: QuizzData) => {
