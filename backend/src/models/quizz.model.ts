@@ -1,9 +1,14 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
-enum QuestionType {
+export enum QuestionType {
   FillInBlank = "FillInBlank",
   MultipleQuestions = "MultipleQuestions",
-  FileUpload = "FileUpload"
+  FileUpload = "FileUpload",
+}
+
+export enum EvalutionType {
+  Automatic = "Automatic",
+  Manual = "Manual",
 }
 
 export enum Status {
@@ -18,6 +23,7 @@ interface IQuiz extends Document {
   name: String;
   endDate?: Date;
   startDate?: Date;
+  evaluation: EvalutionType;
   challenge: Schema.Types.ObjectId;
   questions: IQuestion[];
   status: Status;
@@ -39,7 +45,7 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -47,6 +53,11 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   endDate: Date,
   startDate: Date,
+  evaluation: {
+    type: String,
+    enum: EvalutionType,
+    required: true,
+  },
   status: {
     type: Number,
     enum: Status,

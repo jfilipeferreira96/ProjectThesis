@@ -34,6 +34,7 @@ export function getQuizzStatusInfo(status: QuizzStatus) {
 export interface QuizzData {
   quizzId?: string;
   challengeId?: string;
+  evaluation?: EvalutionType;
   questions: {
     question: string;
     _id?: string;

@@ -5,7 +5,8 @@ export interface IQuizResponse extends Document {
   user: Schema.Types.ObjectId;
   answers: string[];
   score: number; 
-  lastUpdate?: Date; 
+  lastUpdate?: Date;
+  filename?: string | any;
 }
 
 const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({

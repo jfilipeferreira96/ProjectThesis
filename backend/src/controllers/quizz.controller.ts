@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import Quizz, { Status } from "../models/quizz.model";
+import Quizz, { EvalutionType, Status } from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
@@ -285,45 +285,43 @@ class QuizzController {
       let correctAnswers = 0;
       let wrongAnswers = 0;
       
-      userAnswers.forEach((userAnswer: { _id: number | string; answer: string}) => {
-        const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
-        const answer = userAnswer.answer;
+      if (quiz.evaluation === EvalutionType.Automatic) {
+        userAnswers.forEach((userAnswer: { _id: number | string; answer: string }) => {
+          const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
+          const answer = userAnswer.answer;
 
-        if (question){
-          if (question.type === "FillInBlank"){
-            if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase())
-            {
-              score += 5;
-              correctAnswers += 1;
-            } else
-            {
-              wrongAnswers += 1;
-            }
-          } else {
-            if (answer === question.correctAnswer)
-            {
-              score += 5;
-              correctAnswers += 1;
-            } else
-            {
-              wrongAnswers += 1;
+          if (question) {
+            if (question.type === "FillInBlank") {
+              if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
+                score += 5;
+                correctAnswers += 1;
+              } else {
+                wrongAnswers += 1;
+              }
+            } else {
+              if (answer === question.correctAnswer) {
+                score += 5;
+                correctAnswers += 1;
+              } else {
+                wrongAnswers += 1;
+              }
             }
           }
-        }
-      });
-
+        });
+      }
+      
       // Create and save quiz response
       const quizResponseData = {
         quiz: quizId,
         user: user._id,
         answers: userAnswers,
-        score,
+        score: score,
       };
 
       const quizResponse = await QuizResponse.create(quizResponseData);
       const UserModel = await User.findById(user._id);
       
-      if (UserModel) {
+      if (UserModel && quiz.evaluation === EvalutionType.Automatic) {
         const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
         if (existingChallengeScore) {
           existingChallengeScore.score += score; // Update the score
@@ -334,20 +332,29 @@ class QuizzController {
             score: score,
           });
         }
-        
+
         await UserModel.save();
       } 
 
-      return res.status(StatusCodes.OK).json({
+      
+      let sendObj: any = {
         status: true,
         message: "Quiz response saved successfully",
-        data: {
-          score: score,
-          correctAnswers: correctAnswers,
-          wrongAnswers: wrongAnswers,
-          userAnswers: userAnswers,
-        },
-      });
+      };
+
+      if (quiz.evaluation === EvalutionType.Automatic) {
+        sendObj = {
+          ...sendObj,
+          data: {
+            score: score,
+            correctAnswers: correctAnswers,
+            wrongAnswers: wrongAnswers,
+            userAnswers: userAnswers,
+          },
+        };
+      }
+
+      return res.status(StatusCodes.OK).json(sendObj);
 
     } catch (error)
     {
