@@ -37,7 +37,12 @@
 .control {
   @media (max-width: $mantine-breakpoint-xs) {
     flex: 1;
+    span{
+      min-width: auto!important;
+      padding: 10px;
+    }
   }
+
 }
 
 .highlight {

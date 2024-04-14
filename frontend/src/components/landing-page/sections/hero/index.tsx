@@ -3,6 +3,7 @@ import { IconCheck } from "@tabler/icons-react";
 import classes from "./hero.module.css";
 import Link from "next/link";
 import { routes } from "@/config/routes";
+import ThreeDButton from "@/components/3dbutton";
 
 export function Hero() {
   return (
@@ -41,15 +42,15 @@ export function Hero() {
               </List>
 
               <Group mt={30}>
-                <Link href={routes.signin.url}>
-                  <Button radius="xl" size="md" className={classes.control}>
+                <Link href={routes.signin.url} className={classes.control}>
+                  <ThreeDButton rounded color="blue">
                     Get started
-                  </Button>
+                  </ThreeDButton>
                 </Link>
-                <Link href={"https://github.com/jfilipeferreira96/ProjectThesis"} target="_blank">
-                  <Button variant="default" radius="xl" size="md" className={classes.control}>
+                <Link href={"https://github.com/jfilipeferreira96/ProjectThesis"} target="_blank" className={classes.control}>
+                  <ThreeDButton rounded color="gray">
                     Source code
-                  </Button>
+                  </ThreeDButton>
                 </Link>
               </Group>
             </div>
@@ -57,7 +58,7 @@ export function Hero() {
           <Grid.Col span={{ md: 6, sm: 12, xs: 12, lg: 4 }}>
             <Flex align={"center"}>
               <Image src="/hero5.png" alt="Wait" style={{ marginLeft: "auto", marginRight: "auto", width: "110%" }} />
-            </Flex> 
+            </Flex>
           </Grid.Col>
         </Grid>
       </div>
