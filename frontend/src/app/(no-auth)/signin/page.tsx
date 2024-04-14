@@ -32,7 +32,7 @@ export default function SignIn(){
     try
     {
       const response = await login(data);
-      console.log(response)
+      
       if (response.status)
       {
         notifications.show({

@@ -52,7 +52,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
         if (!item.question) {
           errors.question = `Please fill in the question in question ${index + 1}.`;
         }
-        if (item.type === QuestionType.MultipleQuestions && !item.correctAnswer) {
+        if (item.type === QuestionType.FillInBlank && !item.correctAnswer) {
           errors.correctAnswer = `Please fill in the correct answer field in question ${index + 1}.`;
         }
 
@@ -229,6 +229,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
+              const isManualEvaluation = form.values.evaluation === EvalutionType.Manual;
+
               if (index !== active) {
                 return;
               }
@@ -279,7 +281,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     <Group align="center" justify="center">
                       <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
                       <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
-                      {form.values.evaluation === EvalutionType.Manual && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
+                      {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
                     </Group>
                   </Radio.Group>
 
@@ -318,12 +320,29 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                    <TextInput
+                      className="specialinput"
+                      label={isManualEvaluation ? "Answer" : "Correct answer"}
+                      withAsterisk={isManualEvaluation ? false : true}
+                      placeholder={isManualEvaluation ? "Answer" : "Correct answer"}
+                      style={{ flex: 1 }}
+                      {...form.getInputProps(`questions.${index}.correctAnswer`)}
+                      mt={10}
+                    />
                   )}
 
                   {item.type === QuestionType.FileUpload && (
                     /*  <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} /> */
-                    <FileInput className="specialinput" rightSection={<IconFile />} label="Upload your file" placeholder="Your file" withAsterisk rightSectionPointerEvents="none" mt={10} radius="lg" />
+                    <FileInput
+                      className="specialinput"
+                      rightSection={<IconFile />}
+                      label="Upload your file"
+                      placeholder="Your file"
+                      withAsterisk={isManualEvaluation ? false : true}
+                      rightSectionPointerEvents="none"
+                      mt={10}
+                      radius="lg"
+                    />
                   )}
 
                   <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />

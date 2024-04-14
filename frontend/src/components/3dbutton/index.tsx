@@ -110,8 +110,8 @@ type Props = {
 
 function ThreeDButton(props:Props) {
   const { children, color, onClick, disabled, mt, smaller, textColor, animationOnHover = true, rounded } = props;
-   const { colorScheme } = useMantineColorScheme();
-  console.log(colorScheme);
+  const { colorScheme } = useMantineColorScheme();
+  
   const colorStyles: Record<string, string> = {
     blue: "linear-gradient(to left, #145d9c 0%, #104e80 8%, #0d3e64 92%, #104e80 100%)",
     red: "linear-gradient(to left, #b02a2a 0%, #8c2424 8%, #671d1d 92%, #421616 100%)",

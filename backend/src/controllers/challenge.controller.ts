@@ -105,7 +105,7 @@ class ChallengeController {
           },
         })
         .populate('admins', 'fullname email avatar');
-      console.log(challenge)
+      
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };

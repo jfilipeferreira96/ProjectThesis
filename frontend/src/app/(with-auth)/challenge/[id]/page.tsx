@@ -37,7 +37,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
-        console.log(response)
+        
         setState(response.challenge);
       }
       if (response.status === false) {

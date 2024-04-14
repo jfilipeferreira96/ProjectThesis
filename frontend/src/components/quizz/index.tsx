@@ -52,7 +52,7 @@ const Quizz = (props: Props) => {
   }, []);
 
   const { _id: questionId, key, question, choices, type } = questions[currentQuestion];
-  console.log(questions[currentQuestion]);
+  
   const handleChoiceSelection = (chosenAnswer: string) => {
     setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
