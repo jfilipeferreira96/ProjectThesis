@@ -56,7 +56,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       )}
       <AppShell.Main pt={`calc(${rem(60)} + var(--mantine-spacing-md))`}>
         <Container size="responsive">{children}</Container>
-        {isMobile && <Sidebar isAdmin={(challengeId !== undefined && user.adminChallenges?.includes(challengeId)) ?? false} />}
+        {isMobile && isChallengePage && <Sidebar isAdmin={(challengeId !== undefined && user.adminChallenges?.includes(challengeId)) ?? false} />}
       </AppShell.Main>
     </AppShell>
   );

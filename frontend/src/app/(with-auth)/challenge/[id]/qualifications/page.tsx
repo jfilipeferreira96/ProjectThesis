@@ -180,7 +180,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   return (
-    <Grid justify="center" align="stretch" mt={10} mb={10}>
+    <Grid justify="center" align="stretch" mt={10} mb={10} style={{marginBottom:"3rem"}}>
 
       <title>Qualifications</title>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>

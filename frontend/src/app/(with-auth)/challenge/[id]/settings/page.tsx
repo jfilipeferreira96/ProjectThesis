@@ -370,10 +370,10 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <>
-      <Grid justify="center" align="stretch" mb={10}>
+      <Grid justify="center" align="stretch">
         <title>Settings</title>
 
-        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
+        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }} style={{ marginBottom: "5rem" }}>
           <Tabs variant="outline" defaultValue="Quizzes" value={activeTab}>
             <Tabs.List>
               <Tabs.Tab value="Quizzes" leftSection={<IconPhoto style={iconStyle} />} onClick={(tab) => setActiveTab("Quizzes")}>

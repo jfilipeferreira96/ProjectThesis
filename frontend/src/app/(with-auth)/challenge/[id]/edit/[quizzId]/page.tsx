@@ -206,7 +206,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       <Title>Edit Quizz</Title>
       <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-      <Grid>
+      <Grid style={{marginBottom:"3rem"}}>
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>

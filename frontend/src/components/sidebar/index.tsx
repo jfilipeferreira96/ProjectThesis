@@ -17,6 +17,8 @@ const NavbarContainer = styled.nav`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background:var(--mantine-color-body);
+  z-index: 99;
 `;
 
 const LayedDownNavbar = styled.div`
@@ -32,7 +34,9 @@ const LayedDownNavbar = styled.div`
   display: flex;
   justify-content: center;
   padding: 10px;
-  border-top:calc(0.0625rem * var(--mantine-scale)) solid var(--_app-shell-border-color);
+  border-top: calc(0.0625rem * var(--mantine-scale)) solid var(--_app-shell-border-color);
+  background:var(--mantine-color-body);
+  z-index: 99;
 `;
 
 const Link = styled(UnstyledButton)`
@@ -135,8 +139,7 @@ export function Sidebar(props: Props) {
     return (
       <NavbarLink {...link} key={link.label} active={index === active} onClick={() => handleNavClick(index)} />
     );
-  }
-  );
+  });
 
   return (
     <>
