@@ -3,6 +3,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 enum QuestionType {
   FillInBlank = "FillInBlank",
   MultipleQuestions = "MultipleQuestions",
+  FileUpload = "FileUpload"
 }
 
 export enum Status {

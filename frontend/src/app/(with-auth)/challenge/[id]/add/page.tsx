@@ -1,12 +1,12 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput } from "@mantine/core";
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
 import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconPlus, IconTrash, IconFile } from "@tabler/icons-react";
 import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { EvalutionType, QuestionType, QuizzData, createQuizz } from "@/services/quizz.service";
@@ -29,12 +29,12 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       name: "",
       startdate: "",
       enddate: "",
+      evaluation: EvalutionType.Automatic,
       questions: [
         {
           question: "",
           key: randomId(),
           type: QuestionType.MultipleQuestions,
-          evaluation: EvalutionType.Automatic,
           choices: ["", "", "", ""],
           correctAnswer: "",
         },
@@ -121,9 +121,24 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
     }
   };
 
-  const handleRadioChangeEvalution = (type: EvalutionType) => {
-    console.log(type)
-  };
+ const handleRadioChangeEvalution = (type: EvalutionType) => {
+    // Atualiza o valor do tipo de avaliação
+   form.setFieldValue(`evaluation`, type); 
+
+   // Reset das perguntas para o estado inicial
+   form.setFieldValue(`questions`, [
+     {
+       question: "",
+       key: randomId(),
+       type: QuestionType.MultipleQuestions,
+       choices: ["", "", "", ""],
+       correctAnswer: "",
+     },
+   ]);
+
+   // Volta para a questão 1
+   setActive(0);
+ };
 
 
   const onSubmitHandler = useCallback(async (data: QuizzData) => {
@@ -200,7 +215,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                   <b>Automatic:</b> Multiple questions and Fill in the blank
                 </List.Item>
                 <List.Item>
-                  <b>Manual:</b> Multiple questions, Fill in the blank, File Upload and Open Answer
+                  <b>Manual:</b> Multiple questions, Fill in the blank and File Upload
                 </List.Item>
               </StyledList>
               <Group align="center" justify="center">
@@ -264,13 +279,14 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     <Group align="center" justify="center">
                       <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
                       <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
+                      {form.values.evaluation === EvalutionType.Manual && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
                     </Group>
                   </Radio.Group>
 
                   <TextInput
                     className="specialinput"
                     label={"Question"}
-                    placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
+                    placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
                     withAsterisk
                     style={{ flex: 1 }}
                     {...form.getInputProps(`questions.${index}.question`)}
@@ -303,6 +319,11 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
 
                   {item.type === QuestionType.FillInBlank && (
                     <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                  )}
+
+                  {item.type === QuestionType.FileUpload && (
+                    /*  <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} /> */
+                    <FileInput className="specialinput" rightSection={<IconFile />} label="Upload your file" placeholder="Your file" withAsterisk rightSectionPointerEvents="none" mt={10} radius="lg" />
                   )}
 
                   <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />

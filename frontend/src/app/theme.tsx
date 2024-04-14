@@ -5,6 +5,7 @@ import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
 import { SessionProvider } from "@/providers/SessionProvider";
 import "./global.scss";
+import styled from "styled-components";
 
 
 export const theme = createTheme({
@@ -25,13 +26,22 @@ export const theme = createTheme({
 
 const colorSchemeManager = localStorageColorSchemeManager({ key: "color-scheme" });
 
+const StyledNotification = styled(Notifications)`
+  div {
+    border-radius: 12px;
+    &:before {
+      margin-left: 5px;
+    }
+  }
+`;
+
 const Theme = ({ children }: { children: React.ReactNode }) => {
   
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark" colorSchemeManager={colorSchemeManager}>
       <SessionProvider>
-        <Notifications position="top-center" zIndex={1000} limit={3} />
-          {children}
+        <StyledNotification position="top-center" zIndex={1000} limit={3} />
+        {children}
       </SessionProvider>
     </MantineProvider>
   );

@@ -4,6 +4,7 @@ import { endpoints } from "@/config/routes";
 export enum QuestionType {
   FillInBlank = "FillInBlank",
   MultipleQuestions = "MultipleQuestions",
+  FileUpload = "FileUpload"
 }
 
 export enum EvalutionType {
