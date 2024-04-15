@@ -44,7 +44,7 @@ const Quizz = (props: Props) => {
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
   
   useEffect(() => {
@@ -74,6 +74,7 @@ const Quizz = (props: Props) => {
       };
     });
   };
+  console.log(result.userAnswers)
 
   const handleFile = (file: File | null | string) => {
     setResult((prevResult) =>
@@ -102,10 +103,12 @@ const Quizz = (props: Props) => {
 
   const SendAndSaveAnswer = async (userAnswers: {_id: number | string; answer: string;}[]) => {
     setIsLoading(true);
+    console.log(userAnswers)
+    
     try {
       const response = await SaveQuizAnswer({ userAnswers, quizId });
 
-      if (response.status) {
+      if (response.status && response?.data) {
         setResult({
           score: response.data.score,
           correctAnswers: response.data.correctAnswers,
@@ -231,8 +234,7 @@ const Quizz = (props: Props) => {
             rightSectionPointerEvents="none"
             mt={10}
             radius="lg"
-            //value={result.userAnswers[currentQuestion]?.answer  || ""}
-            //onChange={() => handleFile()}
+            name="files"
             onChange={handleFile}
             clearable
           />
@@ -322,7 +324,13 @@ const Quizz = (props: Props) => {
                         Wrong Answers: <span>{result.wrongAnswers}</span>
                       </p>
                     </>
-                }
+                  }
+                  {!isAutomatic &&
+                    <>
+                      <h3>Sit tight!</h3>
+                      <h5>Your answer will be analyzed</h5>
+                    </>
+                  }
                 {preview && (
                   <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
                     Review the quiz once more

@@ -6,6 +6,8 @@ import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
 import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model"
 import User from "../models/user.model";
+import fs from "fs";
+import path from "path";
 
 class QuizzController {
   static async GetSingleQuizz(req: Request, res: Response, next: NextFunction) {
@@ -279,6 +281,24 @@ class QuizzController {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
           message: "Quiz is not in progress",
+        });
+      }
+
+      const storagePath = `src/storage/${quizId}`;
+      //Tratamento de ficheiros
+      if (!fs.existsSync(storagePath))
+      {
+        fs.mkdirSync(storagePath, { recursive: true });
+      }
+      console.log(req.files)
+      // Loop dos arquivos enviados 
+      // Verifica se req.files é um array de arquivos
+      if (Array.isArray(req.files))
+      {
+        // Loop através dos arquivos enviados e mova-os para a pasta de armazenamento
+        (req.files).forEach((file) => {
+          const filePath = path.join(storagePath, file.originalname);
+          fs.writeFileSync(filePath, file.buffer);
         });
       }
 
