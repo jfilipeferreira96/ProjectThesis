@@ -7,14 +7,16 @@ import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { getSingleQuizz } from "@/services/quizz.service";
 
-interface PlayPageProps{
-  id: string;
-  quizzId: string;
-  isAutomatic?: boolean
+interface PlayPageProps {
+  params: {
+    id: string;
+    quizzId: string;
+    isAutomatic?: boolean
+  };
 }
 
 const PlayPage = (props: PlayPageProps) => {
-  const { id, quizzId, isAutomatic } = props;
+  const { id, quizzId, isAutomatic } = props.params;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
