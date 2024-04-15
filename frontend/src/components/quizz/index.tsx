@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import classes from "./quizz.module.scss";
-import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input } from "@mantine/core";
+import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
 import { SaveQuizAnswer } from "@/services/quizz.service";
+import { IconFile } from "@tabler/icons-react";
 
 export interface Question {
   _id?: number | string;
@@ -20,7 +21,7 @@ interface Result {
   score: number;
   correctAnswers: number;
   wrongAnswers: number;
-  userAnswers: { _id: number | string; answer: string }[];
+  userAnswers: { _id: number | string; answer: string | File | any }[];
 }
 
 interface Props {
@@ -65,6 +66,27 @@ const Quizz = (props: Props) => {
         existingAnswer.answer = chosenAnswer;
       } else {
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: chosenAnswer } : { _id: key, answer: chosenAnswer });
+      }
+
+      return {
+        ...prevResult,
+        userAnswers: updatedUserAnswers,
+      };
+    });
+  };
+
+  const handleFile = (file: File | null | string) => {
+    setResult((prevResult) =>
+    {
+      const updatedUserAnswers = prevResult.userAnswers.slice();
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
+
+      if (existingAnswer)
+      {
+        existingAnswer.answer = file; // Assuming you want to store the file object
+      } else
+      {
+        updatedUserAnswers.push(questionId ? { _id: questionId, answer: file } : { _id: key, answer: file });
       }
 
       return {
@@ -193,6 +215,27 @@ const Quizz = (props: Props) => {
       return (
         <div className={classes.answerDiv}>
           <Input className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
+        </div>
+      );
+    }
+
+    if (type === "FileUpload"){
+      return (
+        <div className={classes.answerDiv}>
+          <FileInput
+            className="specialinput"
+            rightSection={<IconFile />}
+            label="Upload your file"
+            placeholder="Your file"
+            withAsterisk={true}
+            rightSectionPointerEvents="none"
+            mt={10}
+            radius="lg"
+            //value={result.userAnswers[currentQuestion]?.answer  || ""}
+            //onChange={() => handleFile()}
+            onChange={handleFile}
+            clearable
+          />
         </div>
       );
     }
