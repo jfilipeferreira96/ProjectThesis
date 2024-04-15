@@ -12,6 +12,8 @@ export interface Question {
   choices?: string[];
   correctAnswer: string;
   type: string;
+  pontuation?: number;
+  file?: File | any | string
 }
 
 interface Result {
@@ -24,11 +26,12 @@ interface Result {
 interface Props {
   questions: Question[];
   preview?: boolean;
-  quizId?: string
+  quizId?: string;
+  isAutomatic?: boolean;
 }
 
 const Quizz = (props: Props) => {
-  const { questions, preview, quizId } = props;
+  const { questions, preview, quizId, isAutomatic } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -51,7 +54,7 @@ const Quizz = (props: Props) => {
     }
   }, []);
 
-  const { _id: questionId, key, question, choices, type } = questions[currentQuestion];
+  const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
   
   const handleChoiceSelection = (chosenAnswer: string) => {
     setResult((prevResult) => {
@@ -260,22 +263,26 @@ const Quizz = (props: Props) => {
               </>
             ) : (
               <Stack align={"center"} gap="0">
-                <h3>Result</h3>
-                <p>
-                  Total Questions: <span>{questions.length}</span>
-                </p>
-                <p>
-                  Total Score: <span>{result.score}</span>
-                </p>
-                <p>
-                  Correct Answers: <span>{result.correctAnswers}</span>
-                </p>
-                <p>
-                  Wrong Answers: <span>{result.wrongAnswers}</span>
-                </p>
+                  {isAutomatic && 
+                    <>
+                      <h3>Result</h3>
+                      <p>
+                        Total Questions: <span>{questions.length}</span>
+                      </p>
+                      <p>
+                        Total Score: <span>{result.score}</span>
+                      </p>
+                      <p>
+                        Correct Answers: <span>{result.correctAnswers}</span>
+                      </p>
+                      <p>
+                        Wrong Answers: <span>{result.wrongAnswers}</span>
+                      </p>
+                    </>
+                }
                 {preview && (
                   <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
-                    Try again
+                    Review the quiz once more
                   </Button>
                 )}
               </Stack>

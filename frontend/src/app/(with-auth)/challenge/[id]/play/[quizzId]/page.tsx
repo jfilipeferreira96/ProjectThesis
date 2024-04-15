@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import { getSingleQuizz } from "@/services/quizz.service";
 
-interface RandomProps {
-  params: {
-    id: string;
-  };
+interface PlayPageProps{
+  id: string;
+  quizzId: string;
+  isAutomatic?: boolean
 }
 
-const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: string } }) => {
+const PlayPage = (props: PlayPageProps) => {
+  const { id, quizzId, isAutomatic } = props;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -65,4 +66,4 @@ const Random = ({ params: { id, quizzId } }: { params: { id: string; quizzId: st
   );
 };
 
-export default Random;
+export default PlayPage;

@@ -179,7 +179,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       <title>Add Challenge</title>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
-        <Quizz questions={form.values.questions} preview />
+        <Quizz questions={form.values.questions} preview isAutomatic={form.values.evaluation === EvalutionType.Automatic} />
       </Modal>
 
       <Flex justify="space-between">
@@ -295,7 +295,6 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       </Group>
                     </Radio.Group>
 
-                    
                     <NumberInput
                       label="Pontuation"
                       className="specialinput"
