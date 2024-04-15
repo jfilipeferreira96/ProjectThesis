@@ -37,7 +37,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
-          pontuation: 10
+          pontuation: 10,
+          file: ""
         },
       ],
     },
@@ -86,6 +87,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
         type: QuestionType.MultipleQuestions,
         choices: ["", "", "", ""],
         correctAnswer: "",
+        pontuation: 10,
+        file: ""
       });
     }
     setActive((current) => {
@@ -138,6 +141,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
        choices: ["", "", "", ""],
        correctAnswer: "",
        pontuation: 10,
+       file: ""
      },
    ]);
 
@@ -291,19 +295,19 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       </Group>
                     </Radio.Group>
 
-                    {!isManualEvaluation && (
-                      <NumberInput
-                        label="Pontuation"
-                        className="specialinput"
-                        description="Select the points awarded for this question when answered correctly"
-                        mt={10}
-                        withAsterisk
-                        placeholder="Enter the points (e.g., 10)"
-                        defaultValue={item.pontuation}
-                        {...form.getInputProps(`questions.${index}.pontuation`)}
-                      />
-                    )}
+                    
+                    <NumberInput
+                      label="Pontuation"
+                      className="specialinput"
+                      description="Select the points awarded for this question when answered correctly"
+                      mt={10}
+                      withAsterisk
+                      placeholder="Enter the points (e.g., 10)"
+                      defaultValue={item.pontuation}
+                      {...form.getInputProps(`questions.${index}.pontuation`)}
+                    />
                   </Group>
+
                   <TextInput
                     className="specialinput"
                     label={"Question"}
@@ -360,6 +364,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       rightSectionPointerEvents="none"
                       mt={10}
                       radius="lg"
+                      onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
+                      clearable
                     />
                   )}
 
