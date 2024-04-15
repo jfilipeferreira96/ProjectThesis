@@ -106,15 +106,9 @@ export const deleteQuizz = async (id: string) => {
 export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: { _id: number | string; answer: string }[] }) => {
   try
   {
-    console.log(data)
     const formData = new FormData();
     addToFormData(data, formData);
-    console.log(formData)
-    for (var pair of formData.entries())
-    {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
-    
+
     const response = await api.post(endpoints.saveQuizAnswerRoute, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
