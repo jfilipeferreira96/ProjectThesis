@@ -1,5 +1,6 @@
 import api from "@/config/api";
 import { endpoints } from "@/config/routes";
+import { addToFormData } from "@/utils/formData";
 
 export enum QuestionType {
   FillInBlank = "FillInBlank",
@@ -103,8 +104,23 @@ export const deleteQuizz = async (id: string) => {
 };
 
 export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: { _id: number | string; answer: string }[] }) => {
-  try {
-    const response = await api.post(endpoints.saveQuizAnswerRoute, data);
+  try
+  {
+    console.log(data)
+    const formData = new FormData();
+    addToFormData(data, formData);
+    console.log(formData)
+    for (var pair of formData.entries())
+    {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+    
+    const response = await api.post(endpoints.saveQuizAnswerRoute, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
     return response.data;
   } catch (error) {
     throw error;

@@ -248,7 +248,8 @@ class QuizzController {
     try{
       const { quizId, userAnswers } = req.body;
       const user: any = req.user;
-
+      console.log(req.files)
+      console.log(req.file)
       // Check if the quiz exists
       const quiz = await Quizz.findById(quizId);
       if (!quiz)

@@ -74,7 +74,6 @@ const Quizz = (props: Props) => {
       };
     });
   };
-  console.log(result.userAnswers)
 
   const handleFile = (file: File | null | string) => {
     setResult((prevResult) =>
@@ -103,7 +102,6 @@ const Quizz = (props: Props) => {
 
   const SendAndSaveAnswer = async (userAnswers: {_id: number | string; answer: string;}[]) => {
     setIsLoading(true);
-    console.log(userAnswers)
     
     try {
       const response = await SaveQuizAnswer({ userAnswers, quizId });
