@@ -306,29 +306,43 @@ const Quizz = (props: Props) => {
               </>
             ) : (
               <Stack align={"center"} gap="0">
-                  {isAutomatic && 
-                    <>
-                      <h3>Result</h3>
-                      <p>
+                {isAutomatic && (
+                  <>
+                    <Title ta="center" size={"h3"}>
+                      Result
+                    </Title>
+                    <p>
+                      <Text size="md" ta="center" mt={5}>
                         Total Questions: <span>{questions.length}</span>
-                      </p>
-                      <p>
+                      </Text>
+                    </p>
+                    <p>
+                      <Text size="md" ta="center" mt={5}>
                         Total Score: <span>{result.score}</span>
-                      </p>
-                      <p>
+                      </Text>
+                    </p>
+                    <p>
+                      <Text size="md" ta="center" mt={5}>
                         Correct Answers: <span>{result.correctAnswers}</span>
-                      </p>
-                      <p>
+                      </Text>
+                    </p>
+                    <p>
+                      <Text size="md" ta="center" mt={5}>
                         Wrong Answers: <span>{result.wrongAnswers}</span>
-                      </p>
-                    </>
-                  }
-                  {!isAutomatic &&
-                    <>
-                      <h3>Sit tight!</h3>
-                      <h5>Your answer will be analyzed</h5>
-                    </>
-                  }
+                      </Text>
+                    </p>
+                  </>
+                )}
+                {!isAutomatic && (
+                  <>
+                    <Title ta="center" size={"h3"}>
+                      Sit tight!
+                    </Title>
+                    <Title ta="center" size={"h3"}>
+                      Your response is about to undergo some serious scrutiny.
+                    </Title>
+                  </>
+                )}
                 {preview && (
                   <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
                     Review the quiz once more

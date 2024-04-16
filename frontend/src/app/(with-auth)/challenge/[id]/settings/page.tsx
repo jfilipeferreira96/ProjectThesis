@@ -73,7 +73,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const [activeTab, setActiveTab] = useState<"Quizzes" | "settings">("Quizzes");
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
-
+  const ativeQuizz = state.rows.filter((quiz:any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
+  
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
     try {
@@ -163,9 +164,20 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     }
   };
 
-  const EditQuizzStatus = async (quizId: string, state: QuizzStatus) => {
+  const EditQuizzStatus = async (quizId: string, status: QuizzStatus) => {
     try {
-      const response = await editQuizzStatus(quizId, state);
+      // Se já houver um quiz em andamento, exiba uma mensagem ou impeça a alteração do status
+      if (ativeQuizz.length > 0) {
+        console.log("entrei");
+        notifications.show({
+          title: "Oops",
+          message: "Only one quiz can be active at a time.",
+          color: "red",
+        });
+        return;
+      }
+      
+      const response = await editQuizzStatus(quizId, status);
       if (response.status) {
         notifications.show({
           title: "Success",
