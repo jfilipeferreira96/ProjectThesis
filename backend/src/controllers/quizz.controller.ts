@@ -4,7 +4,7 @@ import Quizz, { EvalutionType, Status } from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
-import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model"
+import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model";
 import User from "../models/user.model";
 import fs from "fs";
 import path from "path";
@@ -14,7 +14,7 @@ class QuizzController {
     try {
       const quizId = req.params.id;
       const quiz = await Quizz.findById(quizId);
-      const user:any = req.user;
+      const user: any = req.user;
 
       if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -24,28 +24,24 @@ class QuizzController {
       }
 
       const challenge = await Challenge.findById(quiz.challenge);
-      if (!challenge){
+      if (!challenge) {
         return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Challenge not found" });
       }
 
-      const userIsAdmin =  challenge.admins.some(admin => admin._id.toString() === user._id);
+      const userIsAdmin = challenge.admins.some((admin) => admin._id.toString() === user._id);
 
-      if (userIsAdmin)
-      {
+      if (userIsAdmin) {
         //Sends the quiz to edit
         return res.status(StatusCodes.OK).json({
           status: true,
           quiz,
         });
       } else {
-      
-        if (quiz.status === Status.Completed)
-        {
+        if (quiz.status === Status.Completed) {
           return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is completed" });
         }
 
-        if (quiz.status === Status.PendingStart)
-        {
+        if (quiz.status === Status.PendingStart) {
           return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Quiz is yet to be started" });
         }
 
@@ -56,7 +52,7 @@ class QuizzController {
         } */
 
         // Sends the user the quiz without the correct awnsers in the form
-        const questionsWithoutCorrectAnswer = quiz.questions.map(question => {
+        const questionsWithoutCorrectAnswer = quiz.questions.map((question) => {
           return {
             _id: question._id,
             question: question.question,
@@ -64,13 +60,12 @@ class QuizzController {
             choices: question.choices,
           };
         });
-        
+
         return res.status(StatusCodes.OK).json({
           status: true,
           questions: questionsWithoutCorrectAnswer,
         });
-      } 
-
+      }
     } catch (error) {
       next(error);
     }
@@ -80,7 +75,7 @@ class QuizzController {
     try {
       const { questions, challengeId, name, startdate, enddate, evaluation } = req.body;
       const user = req.user;
-      
+
       const quiz = await Quizz.create({
         user,
         name,
@@ -90,9 +85,9 @@ class QuizzController {
         questions,
         challenge: challengeId,
       });
-      
+
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });
-      
+
       return res.status(StatusCodes.OK).json({
         status: true,
         id: quiz._id,
@@ -125,7 +120,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
+      const isAdmin = challenge.admins.some((admin) => admin._id.toString() === user._id);
 
       if (isAdmin) {
         const updatedQuiz = await Quizz.findByIdAndUpdate(
@@ -178,11 +173,11 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
+      const isAdmin = challenge.admins.some((admin) => admin._id.toString() === user._id);
 
       if (isAdmin) {
         quiz.status = newStatus;
-        const updatedQuiz = await quiz.save(); 
+        const updatedQuiz = await quiz.save();
 
         return res.status(StatusCodes.OK).json({
           status: true,
@@ -223,7 +218,7 @@ class QuizzController {
         });
       }
 
-      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
+      const isAdmin = challenge.admins.some((admin) => admin._id.toString() === user._id);
       if (isAdmin) {
         const deletedQuiz = await Quizz.findByIdAndDelete(quizId);
 
@@ -244,16 +239,14 @@ class QuizzController {
     }
   }
 
-  static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction){
-    try{
+  static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction) {
+    try {
       const { quizId, userAnswers } = req.body;
       const user: any = req.user;
-      console.log(req.files)
-      console.log(req.file)
+
       // Check if the quiz exists
       const quiz = await Quizz.findById(quizId);
-      if (!quiz)
-      {
+      if (!quiz) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
           message: "Quiz not found",
@@ -262,15 +255,15 @@ class QuizzController {
 
       // Check if the user is not an admin
       const challenge = await Challenge.findOne({ quizzes: quiz._id });
-      if (!challenge){
+      if (!challenge) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
           message: "Challenge not found",
         });
       }
 
-      const isAdmin = challenge.admins.some(admin => admin._id.toString() === user._id);
-      if (isAdmin){
+      const isAdmin = challenge.admins.some((admin) => admin._id.toString() === user._id);
+      if (isAdmin) {
         return res.status(StatusCodes.FORBIDDEN).json({
           status: false,
           message: "Permission denied. Admins cannot answer quizzes.",
@@ -278,27 +271,28 @@ class QuizzController {
       }
 
       // Check if the quiz status is InProgress
-      if (quiz.status !== Status.InProgress){
+      if (quiz.status !== Status.InProgress) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
           message: "Quiz is not in progress",
         });
       }
 
-      const storagePath = `src/storage/${quizId}`;
-      //Tratamento de ficheiros
-      if (!fs.existsSync(storagePath))
-      {
-        fs.mkdirSync(storagePath, { recursive: true });
-      }
-      console.log(req.files)
-      // Loop dos arquivos enviados 
+      // Loop dos arquivos enviados
       // Verifica se req.files é um array de arquivos
-      if (Array.isArray(req.files))
-      {
+      if (Array.isArray(req.files) && req.files.length > 0) {
         // Loop através dos arquivos enviados e mova-os para a pasta de armazenamento
-        (req.files).forEach((file) => {
-          const filePath = path.join(storagePath, file.originalname);
+        req.files.forEach((file) => {
+          const [questionId, fileName] = file.originalname.split("#");
+
+          //const storagePath = `src/storage/${quizId}/${challenge._id}/${questionId}`;
+          const storagePath = `src/storage/${questionId}`;
+          //Tratamento de ficheiros
+          if (!fs.existsSync(storagePath)) {
+            fs.mkdirSync(storagePath, { recursive: true });
+          }
+
+          const filePath = path.join(storagePath, fileName);
           fs.writeFileSync(filePath, file.buffer);
         });
       }
@@ -306,7 +300,7 @@ class QuizzController {
       let score = 0;
       let correctAnswers = 0;
       let wrongAnswers = 0;
-      
+
       if (quiz.evaluation === EvalutionType.Automatic) {
         userAnswers.forEach((userAnswer: { _id: number | string; answer: string }) => {
           const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
@@ -332,7 +326,7 @@ class QuizzController {
           }
         });
       }
-      
+
       // Create and save quiz response
       const quizResponseData = {
         quiz: quizId,
@@ -343,7 +337,7 @@ class QuizzController {
 
       const quizResponse = await QuizResponse.create(quizResponseData);
       const UserModel = await User.findById(user._id);
-      
+
       if (UserModel && quiz.evaluation === EvalutionType.Automatic) {
         const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
         if (existingChallengeScore) {
@@ -357,9 +351,8 @@ class QuizzController {
         }
 
         await UserModel.save();
-      } 
+      }
 
-      
       let sendObj: any = {
         status: true,
         message: "Quiz response saved successfully",
@@ -378,11 +371,55 @@ class QuizzController {
       }
 
       return res.status(StatusCodes.OK).json(sendObj);
-
-    } catch (error)
-    {
+    } catch (error) {
       next(error);
     }
+  }
+
+  static async GetQuestionFile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { questionId } = req.body;
+
+      if (!questionId) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          status: false,
+          message: "Missing questionId in request body",
+        });
+      }
+
+      const filePath = await QuizzController.findQuestionFile(questionId);
+
+      if (!filePath) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "No file found for the given questionId",
+        });
+      }
+
+      // Retorna o ficheiro encontrado
+      return res.status(StatusCodes.OK).json({
+        status: true,
+        message: "Question file retrieved successfully",
+        data: filePath,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findQuestionFile(questionId: string): Promise<string | null> {
+    // Lógica para encontrar o ficheiro com base no questionId
+    const storagePath = `src/storage/${questionId}`; // Substituir por seu próprio caminho de armazenamento
+
+    // Se o ficheiro existir, retorna o caminho completo do ficheiro
+    if (fs.existsSync(storagePath)) {
+      const files = fs.readdirSync(storagePath);
+      if (files.length > 0) {
+        return path.join(storagePath, files[0]); // Retorna apenas o primeiro ficheiro encontrado
+      }
+    }
+
+    return null; // Retorna null se nenhum ficheiro for encontrado
   }
 }
 

@@ -10,8 +10,9 @@ export function addToFormData(obj: any, formData:FormData, parentKey = "") {
             }
             if (value instanceof File)
             {
-                //formData.append(key, value);
-                formData.append('files', value);
+                console.log(value)
+                const extendedFile = new File([value], `${obj._id}#${value.name}`, { type: value.type, lastModified: value.lastModified });
+                formData.append("files", extendedFile);
             } else if (Array.isArray(value))
             {
                 value.forEach((item, index) =>
