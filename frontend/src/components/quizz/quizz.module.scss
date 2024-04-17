@@ -73,17 +73,28 @@ $disabled: #9c9c9c;
     margin-top: 50px;
   }
 
+  .header {
+   margin-bottom: 1rem;
+   div{
+    height: 15px;
+   }
+  }
+
+  .body{
+
+  }
+
   .footer {
     display: flex;
     justify-content: flex-end;
+    border-top: calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-gray-3);
+    padding: 1rem;
     
     @media (min-width: 1200px) {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      margin-left: -1.875rem;
-      margin-bottom: 1.875rem;
     }
   }
 
