@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput, NumberInput } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput, NumberInput, Checkbox } from "@mantine/core";
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
@@ -232,6 +232,25 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                 <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="md" />
               </Group>
             </Radio.Group>
+
+            <Checkbox
+              defaultChecked
+              label="Randomize question order"
+              description="Prevent questions from following a specific sequence"
+              mt="md"
+              name="shuffle"
+            />
+
+            {form.values.evaluation === EvalutionType.Automatic &&
+              <Checkbox
+                defaultChecked
+                label="Enable sounds and animations"
+              description="Audio and visual effects are only available in Automatic evaluation mode"
+                mt="md"
+                name="sounds"
+              />
+            }
+
           </Paper>
         </Grid.Col>
 
