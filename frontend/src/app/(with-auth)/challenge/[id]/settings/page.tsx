@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import classes from "./settings.module.css";
-import { IconPhoto, IconSettings } from "@tabler/icons-react";
+import { IconPhoto, IconSettings, IconChecklist } from "@tabler/icons-react";
 import { routes } from "@/config/routes";
 import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select } from "@mantine/core";
 import { IconPencil, IconTrash, IconPlayerPlay, IconPlayerStopFilled, IconFileDatabase, IconDatabaseOff } from "@tabler/icons-react";
@@ -16,6 +16,7 @@ import { useForm, zodResolver } from "@mantine/form";
 import { useMediaQuery } from "@mantine/hooks";
 import { useSession } from "@/providers/SessionProvider";
 import ThreeDButton from "@/components/3dbutton";
+import Answers from "@/components/settings-page/answers-page";
 
 type DataItem = {
   _id: string;
@@ -70,7 +71,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const iconStyle = { width: rem(12), height: rem(12) };
   const isScreenXL = useMediaQuery("(min-width: 1200px)");
   const { user } = useSession();
-  const [activeTab, setActiveTab] = useState<"Quizzes" | "settings">("Quizzes");
+  const [activeTab, setActiveTab] = useState<"Quizzes" | "Answers" | "settings">("Quizzes");
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
   const ativeQuizz = state.rows.filter((quiz:any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
@@ -391,6 +392,9 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
               <Tabs.Tab value="Quizzes" leftSection={<IconPhoto style={iconStyle} />} onClick={(tab) => setActiveTab("Quizzes")}>
                 Quizzes
               </Tabs.Tab>
+              <Tabs.Tab value="Answers" leftSection={<IconChecklist style={iconStyle} />} onClick={(tab) => setActiveTab("Answers")}>
+                Answers
+              </Tabs.Tab>
               <Tabs.Tab value="settings" leftSection={<IconSettings style={iconStyle} />} onClick={(tab) => setActiveTab("settings")}>
                 Settings
               </Tabs.Tab>
@@ -404,8 +408,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                     <Text c="dimmed" fw={500}>
                       To get started, add a
                       <Text span c="red" fw={700} inherit>
-                        {" "}
-                        quizz{" "}
+                        quizz
                       </Text>
                       so your students can participate
                     </Text>
@@ -450,6 +453,10 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                   )}
                 </Paper>
               </Grid.Col>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="Answers">
+              <Answers />
             </Tabs.Panel>
 
             <Tabs.Panel value="settings">
