@@ -73,7 +73,7 @@ class QuizzController {
 
   static async AddQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { questions, challengeId, name, startdate, enddate, evaluation } = req.body;
+      const { questions, challengeId, name, startdate, enddate, evaluation, shuffle, sounds } = req.body;
       const user = req.user;
 
       const quiz = await Quizz.create({
@@ -84,6 +84,8 @@ class QuizzController {
         endDate: enddate,
         questions,
         challenge: challengeId,
+        shuffle,
+        sounds,
       });
 
       const challenge = await Challenge.findByIdAndUpdate(challengeId, { $push: { quizzes: quiz._id } }, { new: true });
@@ -99,7 +101,7 @@ class QuizzController {
 
   static async EditQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { quizzId, questions, challengeId, name, startdate, enddate } = req.body;
+      const { quizzId, questions, challengeId, name, startdate, enddate, shuffle, sounds } = req.body;
       const user: any = req.user;
 
       const quiz = await Quizz.findById(quizzId);

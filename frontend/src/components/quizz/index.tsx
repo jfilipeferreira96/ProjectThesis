@@ -27,17 +27,16 @@ interface Result
   userAnswers: { _id: number | string; answer: string | File | any }[];
 }
 
-interface Props
-{
+interface Props {
   questions: Question[];
   preview?: boolean;
   quizId?: string;
   isAutomatic?: boolean;
+  sounds?: boolean;
 }
 
-const Quizz = (props: Props) =>
-{
-  const { questions, preview, quizId, isAutomatic } = props;
+const Quizz = (props: Props) => {
+  const { questions, preview, quizId, isAutomatic, sounds } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -52,8 +51,7 @@ const Quizz = (props: Props) =>
 
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     if (!preview)
     {
 

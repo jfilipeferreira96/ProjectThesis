@@ -15,18 +15,41 @@ interface PlayPageProps {
   };
 }
 
+const shuffleArray = (array: any[]) => {
+  const newArray = [...array]; 
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
+
 const PlayPage = (props: PlayPageProps) => {
   const { id, quizzId, isAutomatic } = props.params;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [shouldShuffle, setShouldShuffle] = useState(true);
+  const [sounds, setSounds] = useState(true);
 
   const getQuestions = async (id: string) => {
     try {
-      
+    
       const response = await getSingleQuizz(quizzId);
+      
       if (response.status) {
+         let questions = response.questions;
+        
+        if (response.shuffle) {
+          questions = shuffleArray(response.questions);
+        }
+
         setQuestions(response.questions);
+
+        setShouldShuffle(response.shuffle);
+        setSounds(response.sounds);
+
         setLoading(false);
       }
       if (response.status === false) {
@@ -63,7 +86,11 @@ const PlayPage = (props: PlayPageProps) => {
 
   return (
     <>
-      <Quizz questions={questions} quizId={quizzId} />
+      <Quizz
+        questions={questions}
+        quizId={quizzId}
+        sounds={sounds}
+      />
     </>
   );
 };

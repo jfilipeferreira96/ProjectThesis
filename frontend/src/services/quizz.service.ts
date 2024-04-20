@@ -36,6 +36,8 @@ export interface QuizzData {
   quizzId?: string;
   challengeId?: string;
   evaluation?: EvalutionType;
+  shuffle?: boolean;
+  sounds?: boolean;
   questions: {
     question: string;
     _id?: string;
@@ -44,7 +46,7 @@ export interface QuizzData {
     choices: string[];
     correctAnswer: string;
     pontuation?: number;
-    file?: File | any | string
+    file?: File | any | string;
   }[];
 }
 export const createQuizz = async (data: QuizzData) => {

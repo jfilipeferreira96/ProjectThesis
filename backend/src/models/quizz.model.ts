@@ -27,6 +27,8 @@ interface IQuiz extends Document {
   challenge: Schema.Types.ObjectId;
   questions: IQuestion[];
   status: Status;
+  shuffle?: boolean;
+  sounds?: boolean;
 }
 
 interface IQuestion {
@@ -69,6 +71,14 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
     ref: "Challenge",
     required: true,
   },
+  shuffle: {
+    type: Boolean,
+    default: false, 
+  },
+  sounds: {
+    type: Boolean,
+    default: true, 
+  },
   questions: [
     {
       question: String,
@@ -79,7 +89,7 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
       },
       choices: [String],
       correctAnswer: String,
-      pontuation: Number
+      pontuation: Number,
     },
   ],
 });
