@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import classes from "./quizz.module.scss";
-import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress } from "@mantine/core";
+import { Card, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
 import { SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 import Image from "next/image";
-/* import clickSound from "/sounds/click.mp3";
-import popclickSound from "./sounds/popclick.mp3";
-import finishSound from "./sounds/finish.mp3"; */
 
 export interface Question
 {
@@ -52,7 +49,7 @@ const Quizz = (props: Props) => {
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
   useEffect(() => {

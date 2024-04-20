@@ -35,20 +35,42 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
   const noActiveQuizz = !state.activeQuizz?.id;
   const [soundPlayed, setSoundPlayed] = useState(false);
+  const audio = new Audio("/sounds/fireworkscut.mp3");
 
   const playFireworks = () => {
-    console.log("fui chamada");
-
     if (!soundPlayed) {
-      const audio = new Audio("/sounds/fireworkscut.mp3");
       audio.play();
       setSoundPlayed(true);
     }
   }
 
-  if (state.status === ChallengeStatus.Completed) {
+  useEffect(() => {
+    if (state.status === ChallengeStatus.Completed) {
       playFireworks();
-  }
+    }
+
+    // Função de limpeza para parar o áudio quando o componente for desmontado
+    return () => {
+      audio.pause();
+      audio.currentTime = 0; 
+      setSoundPlayed(false);
+    };
+  }, [state.status]); 
+
+  // Parar o áudio quando o user sai da página
+  useEffect(() => {
+    const handleUnload = () => {
+      audio.pause();
+      audio.currentTime = 0; 
+      setSoundPlayed(false);
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
   
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
