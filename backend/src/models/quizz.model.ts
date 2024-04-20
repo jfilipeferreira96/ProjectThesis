@@ -73,11 +73,11 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   shuffle: {
     type: Boolean,
-    default: false, 
+    default: true,
   },
   sounds: {
     type: Boolean,
-    default: true, 
+    default: false,
   },
   questions: [
     {

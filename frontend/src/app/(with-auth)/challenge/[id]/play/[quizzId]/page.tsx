@@ -40,12 +40,13 @@ const PlayPage = (props: PlayPageProps) => {
       
       if (response.status) {
          let questions = response.questions;
-        
+        console.log(response)
         if (response.shuffle) {
           questions = shuffleArray(response.questions);
+          console.log(questions)
         }
-
-        setQuestions(response.questions);
+        console.log(questions)
+        setQuestions(questions);
 
         setShouldShuffle(response.shuffle);
         setSounds(response.sounds);

@@ -64,6 +64,9 @@ class QuizzController {
         return res.status(StatusCodes.OK).json({
           status: true,
           questions: questionsWithoutCorrectAnswer,
+          shuffle: quiz.shuffle,
+          sounds: quiz.sounds,
+          evaluation: quiz.evaluation
         });
       }
     } catch (error) {

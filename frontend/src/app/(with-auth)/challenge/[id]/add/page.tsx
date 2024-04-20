@@ -30,6 +30,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       startdate: "",
       enddate: "",
       evaluation: EvalutionType.Automatic,
+      shuffle: true,
+      sounds: false,
       questions: [
         {
           question: "",
@@ -234,10 +236,17 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
               </Group>
             </Radio.Group>
 
-            <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" />
+            <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
 
             {form.values.evaluation === EvalutionType.Automatic && (
-              <Checkbox defaultChecked label="Enable sounds and animations" description="Audio and visual effects are only available in Automatic evaluation mode" mt="lg" name="sounds" />
+              <Checkbox
+                defaultChecked
+                label="Enable sounds and animations"
+                description="Audio and visual effects are only available in Automatic evaluation mode"
+                mt="lg"
+                name="sounds"
+                {...form.getInputProps(`sounds`)}
+              />
             )}
           </Paper>
         </Grid.Col>
