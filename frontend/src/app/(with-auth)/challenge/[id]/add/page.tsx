@@ -204,8 +204,8 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
-            <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
-            <Group grow>
+            <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} mt="lg" />
+            <Group grow mt="lg">
               <DateTimePicker className="specialinput" label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
               <DateTimePicker className="specialinput" label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
@@ -218,6 +218,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
               defaultValue={EvalutionType.Automatic}
               {...form.getInputProps(`evaluation`)}
               onChange={(type) => handleRadioChangeEvalution(type as EvalutionType)}
+              mt="lg"
             >
               <StyledList spacing="xs" size="xs" center icon={<></>}>
                 <List.Item>
@@ -228,29 +229,16 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                 </List.Item>
               </StyledList>
               <Group align="center" justify="center">
-                <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="md" />
-                <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="md" />
+                <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="lg" />
+                <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
               </Group>
             </Radio.Group>
 
-            <Checkbox
-              defaultChecked
-              label="Randomize question order"
-              description="Prevent questions from following a specific sequence"
-              mt="md"
-              name="shuffle"
-            />
+            <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" />
 
-            {form.values.evaluation === EvalutionType.Automatic &&
-              <Checkbox
-                defaultChecked
-                label="Enable sounds and animations"
-              description="Audio and visual effects are only available in Automatic evaluation mode"
-                mt="md"
-                name="sounds"
-              />
-            }
-
+            {form.values.evaluation === EvalutionType.Automatic && (
+              <Checkbox defaultChecked label="Enable sounds and animations" description="Audio and visual effects are only available in Automatic evaluation mode" mt="lg" name="sounds" />
+            )}
           </Paper>
         </Grid.Col>
 
