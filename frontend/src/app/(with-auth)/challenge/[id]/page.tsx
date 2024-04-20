@@ -5,9 +5,11 @@ import { Card, Image, Text, Badge, Group, Center, Title, Loader, Container, Avat
 import { IconPencil, IconTrash, IconCopy, IconCheck } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { usePathname, useRouter } from "next/navigation";
-import { getSingleChallenge, getStatusInfo } from "@/services/challenge.service";
+import { ChallengeStatus, getSingleChallenge, getStatusInfo } from "@/services/challenge.service";
 import ThreeDButton from "@/components/3dbutton";
 import { User, useSession } from "@/providers/SessionProvider";
+import CardFlip from "@/components/card-flip";
+import classes from "./challenge.module.css";
 
 const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
@@ -84,7 +86,23 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
           {state.description && <Text c="dimmed">{state.description}</Text>}
         </Grid.Col>
 
-        {userIsAdmin && (
+        {state.status === ChallengeStatus.Completed && (
+          <div className={classes.container}>
+            <Grid justify="center" mt={10} mb={10} gutter={{ xl: 50 }}>
+              <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
+                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3000} />
+              </Grid.Col>
+              <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
+                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3500} />
+              </Grid.Col>
+              <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
+                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={4000} />
+              </Grid.Col>
+            </Grid>
+          </div>
+        )}
+
+        {userIsAdmin && state.status !== ChallengeStatus.Completed && (
           <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
             <Card withBorder radius="md">
               <Title ta="center" size={"h3"}>
@@ -117,7 +135,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
             </Card>
           </Grid.Col>
         )}
-        {!userIsAdmin && (
+        {!userIsAdmin && state.status !== ChallengeStatus.Completed && (
           <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
             <Card withBorder radius="md">
               <Title ta="center" size={"h3"}>

@@ -1,0 +1,33 @@
+.card {
+  position: relative;
+  width: 245px;
+  height: 330px;
+  color: white;
+  cursor: pointer;
+  transition: 1s ease-in-out;
+  transform-style: preserve-3d;
+  border: 4px solid #DAA520;
+}
+
+.card__face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+
+  @media screen and (min-width: 1200px) {
+    transition: 1s ease-in-out;
+    -webkit-box-reflect: below 0 linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
+  }
+}
+
+
+.card__face--back {
+  transform: rotateY(0.5turn);
+}
+
+.is-flipped {
+  transform: rotateY(0.5turn);
+}
