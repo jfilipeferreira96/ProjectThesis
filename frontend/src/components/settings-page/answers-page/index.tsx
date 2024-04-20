@@ -66,44 +66,39 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   }
 
   return (
-    <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-      <Title order={2}>Quizzes</Title>
-      {rows.length === 0 && (
-        <Text c="dimmed" fw={500}>
-          To get started, add a
-          <Text span c="red" fw={700} inherit>
-            quizz
-          </Text>
-          so your students can participate
-        </Text>
-      )}
-      <StyledTableContainer minWidth={800}>
-        <Table verticalSpacing="sm">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>No. Questions</Table.Th>
-              <Table.Th>Start Date</Table.Th>
-              <Table.Th>End Date</Table.Th>
-              <Table.Th>State</Table.Th>
-              <Table.Th>Actions</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
-        </Table>
-
+    <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
+      <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+        <Title order={2}>Answers</Title>
         {rows.length === 0 && (
-          <Flex justify={"center"} mt="xl" display="block">
-            <ActionIcon size="xl" disabled aria-label="No records found">
-              <IconDatabaseOff />
-            </ActionIcon>
-            <Text c="dimmed" size="sm" ta="center" mt={5}>
-              {"No records found"}
-            </Text>
-          </Flex>
+          <Text c="dimmed" fw={500}>
+            Check your students answers and give them a score
+          </Text>
         )}
-      </StyledTableContainer>
-    </Paper>
+        <StyledTableContainer minWidth={800}>
+          <Table verticalSpacing="sm">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>State</Table.Th>
+                <Table.Th>Actions</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
+          </Table>
+
+          {rows.length === 0 && (
+            <Flex justify={"center"} mt="xl" display="block">
+              <ActionIcon size="xl" disabled aria-label="There are no available answers">
+                <IconDatabaseOff />
+              </ActionIcon>
+              <Text c="dimmed" size="sm" ta="center" mt={5}>
+                {"There are no available answers"}
+              </Text>
+            </Flex>
+          )}
+        </StyledTableContainer>
+      </Paper>
+    </Grid.Col>
   );
 };
 

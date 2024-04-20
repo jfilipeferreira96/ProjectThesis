@@ -68,7 +68,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     },
   });
   const [adminEmail, setAdminEmail] = useState("");
-  const iconStyle = { width: rem(12), height: rem(12) };
+  const iconStyle = { width: rem(20), height: rem(20) };
   const isScreenXL = useMediaQuery("(min-width: 1200px)");
   const { user } = useSession();
   const [activeTab, setActiveTab] = useState<"Quizzes" | "Answers" | "settings">("Quizzes");
@@ -408,7 +408,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                     <Text c="dimmed" fw={500}>
                       To get started, add a
                       <Text span c="red" fw={700} inherit>
-                        quizz
+                        {" "}
+                        quizz{" "}
                       </Text>
                       so your students can participate
                     </Text>
