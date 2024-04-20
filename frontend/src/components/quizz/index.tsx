@@ -6,6 +6,9 @@ import { useInterval } from "@mantine/hooks";
 import { SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
+/* import clickSound from "/sounds/click.mp3";
+import popclickSound from "./sounds/popclick.mp3";
+import finishSound from "./sounds/finish.mp3"; */
 
 export interface Question
 {
@@ -62,10 +65,8 @@ const Quizz = (props: Props) => {
 
   const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
 
-  const handleChoiceSelection = (chosenAnswer: string) =>
-  {
-    setResult((prevResult) =>
-    {
+  const handleChoiceSelection = (chosenAnswer: string) => {
+    setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
@@ -82,6 +83,10 @@ const Quizz = (props: Props) => {
         userAnswers: updatedUserAnswers,
       };
     });
+
+    if (sounds) {
+      new Audio("/sounds/popclick.mp3").play(); 
+    }
   };
 
   const handleFile = (file: File | null | string) =>
@@ -106,8 +111,10 @@ const Quizz = (props: Props) => {
     });
   };
 
-  const onClickNext = (id: number) =>
-  {
+  const onClickNext = (id: number) => {
+    if (sounds) {
+      new Audio("/sounds/click.mp3").play(); 
+    }
     setCurrentQuestion(id);
   };
 
@@ -127,6 +134,10 @@ const Quizz = (props: Props) => {
           wrongAnswers: response.data.wrongAnswers,
           userAnswers: response.data.userAnswers,
         });
+
+        if (sounds) {
+          new Audio("/sounds/finish.mp3").play(); // Som ao finalizar
+        }
       }
     } catch (error)
     {
@@ -141,8 +152,7 @@ const Quizz = (props: Props) => {
     }
   };
 
-  const endChallenge = () =>
-  {
+  const endChallenge = () => {
     let score = 0;
     let correctAnswers = 0;
     let wrongAnswers = 0;
