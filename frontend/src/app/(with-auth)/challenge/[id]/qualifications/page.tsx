@@ -4,7 +4,7 @@ import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, RingProgress } from "@mantine/core";
 import { IconDatabaseOff, IconPencil, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
-
+import SVG from "next/image";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getSingleChallenge } from "@/services/challenge.service";
@@ -133,22 +133,19 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
     {
       label: "First place",
       name: state.rows.length >= 1 ? state.rows[0]?.fullname : "---",
-      color: "teal",
-      icon: <IconPentagonNumber1 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
+      icon: <SVG src="/svgs/medal1.svg" alt="My SVG" width={60} height={60} />,
     },
 
     {
       label: "Second place",
       name: state.rows.length >= 2 ? state.rows[1]?.fullname : "---",
-      color: "blue",
-      icon: <IconPentagonNumber2 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
+      icon: <SVG src="/svgs/medal2.svg" alt="My SVG" width={60} height={60} />,
     },
 
     {
       label: "Third place",
       name: state.rows.length >= 3 ? state.rows[2]?.fullname : "---",
-      color: "red",
-      icon: <IconPentagonNumber3 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />,
+      icon: <SVG src="/svgs/medal3.svg" alt="My SVG" width={60} height={60} />,
     },
   ];
 
@@ -156,8 +153,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
     return (
       <Paper withBorder radius="md" p="xs" key={stat.label}>
         <Group>
-          <RingProgress size={80} roundCaps thickness={8} sections={[{ value: 100, color: stat.color }]} label={<Center>{stat.icon}</Center>} />
-
+          {stat.icon}
           <div>
             <Text c="dimmed" size="xs" tt="uppercase" fw={700}>
               {stat.label}

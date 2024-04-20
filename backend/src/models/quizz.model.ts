@@ -77,7 +77,7 @@ const QuizSchema: Schema<IQuiz> = new mongoose.Schema({
   },
   sounds: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   questions: [
     {

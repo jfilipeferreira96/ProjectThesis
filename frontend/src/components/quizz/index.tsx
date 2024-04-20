@@ -6,6 +6,7 @@ import { useInterval } from "@mantine/hooks";
 import { SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
+import Image from "next/image";
 /* import clickSound from "/sounds/click.mp3";
 import popclickSound from "./sounds/popclick.mp3";
 import finishSound from "./sounds/finish.mp3"; */
@@ -317,7 +318,7 @@ const Quizz = (props: Props) => {
                 {/* Secção Header */}
                 <div className={classes.header}>
                   <Grid>
-                 {/*    <Grid.Col span={{ md: 1, sm: 1, xs: 1, lg: 1 }}>
+                    {/*    <Grid.Col span={{ md: 1, sm: 1, xs: 1, lg: 1 }}>
                       <div className={classes.header}>
                         <Title order={3} mb={20}>
                           <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
@@ -355,12 +356,7 @@ const Quizz = (props: Props) => {
                         Finish
                       </ThreeDButton>
                     ) : (
-                      <ThreeDButton
-                        mt="md"
-                        color="green"
-                        onClick={() => onClickNext(currentQuestion + 1)}
-                        disabled={result.userAnswers[currentQuestion]?.answer ? false : true}
-                      >
+                      <ThreeDButton mt="md" color="green" onClick={() => onClickNext(currentQuestion + 1)} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
                         Next
                       </ThreeDButton>
                     )}
@@ -368,50 +364,57 @@ const Quizz = (props: Props) => {
                 </div>
               </>
             ) : (
-              <Stack align={"center"} gap="0">
-                {isAutomatic && (
-                  <>
-                    <Title ta="center" size={"h3"}>
-                      Result
-                    </Title>
-                    <p>
-                      <Text size="md" ta="center" mt={5}>
-                        Total Questions: <span>{questions.length}</span>
-                      </Text>
-                    </p>
-                    <p>
-                      <Text size="md" ta="center" mt={5}>
-                        Total Score: <span>{result.score}</span>
-                      </Text>
-                    </p>
-                    <p>
-                      <Text size="md" ta="center" mt={5}>
-                        Correct Answers: <span>{result.correctAnswers}</span>
-                      </Text>
-                    </p>
-                    <p>
-                      <Text size="md" ta="center" mt={5}>
-                        Wrong Answers: <span>{result.wrongAnswers}</span>
-                      </Text>
-                    </p>
-                  </>
-                )}
-                {!isAutomatic && (
-                  <>
-                    <Title ta="center" size={"h3"}>
-                      Sit tight!
-                    </Title>
-                    <Title ta="center" size={"h3"}>
-                      Your response is about to undergo some serious scrutiny.
-                    </Title>
-                  </>
-                )}
-                {preview && (
-                  <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
-                    Review the quiz once more
-                  </Button>
-                )}
-              </Stack>
+              <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
+                <Card withBorder radius="md">
+                  <Stack align={"center"} gap="0">
+                    {isAutomatic && (
+                      <>
+                        <Title ta="center" size={"h3"}>
+                          Result
+                        </Title>
+                        <p>
+                          <Text size="md" ta="center" mt={5}>
+                            Total Questions: <span>{questions.length}</span>
+                          </Text>
+                        </p>
+                        <p>
+                          <Text size="md" ta="center" mt={5}>
+                            Total Score: <span>{result.score}</span>
+                          </Text>
+                        </p>
+                        <p>
+                          <Text size="md" ta="center" mt={5}>
+                            Correct Answers: <span>{result.correctAnswers}</span>
+                          </Text>
+                        </p>
+                        <p>
+                          <Text size="md" ta="center" mt={5}>
+                            Wrong Answers: <span>{result.wrongAnswers}</span>
+                          </Text>
+                        </p>
+                      </>
+                    )}
+                    {!isAutomatic && (
+                      <>
+                        <Title ta="center" size={"h2"}>
+                          Sit tight!
+                        </Title>
+                        <Text c="dimmed" size="md" ta="center" mt="sm" mb="sm">
+                          Your response is about to undergo some serious scrutiny.
+                        </Text>
+                        <Flex align={"center"}>
+                          <Image src="/waiting.png" alt="Wait" style={{ marginLeft: "auto", marginRight: "auto", width: "60%" }} />
+                        </Flex>
+                      </>
+                    )}
+                    {preview && (
+                      <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
+                        Review the quiz once more
+                      </Button>
+                    )}
+                  </Stack>
+                </Card>
+              </Grid.Col>
             )}
           </>
         </Paper>

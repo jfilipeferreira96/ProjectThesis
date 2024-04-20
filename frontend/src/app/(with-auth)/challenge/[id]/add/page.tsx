@@ -235,19 +235,11 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                 <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
               </Group>
             </Radio.Group>
+            
+            <Checkbox defaultChecked label="Enable sounds" mt="lg" name="sounds" {...form.getInputProps(`sounds`)} />
 
             <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
 
-            {form.values.evaluation === EvalutionType.Automatic && (
-              <Checkbox
-                defaultChecked
-                label="Enable sounds and animations"
-                description="Audio and visual effects are only available in Automatic evaluation mode"
-                mt="lg"
-                name="sounds"
-                {...form.getInputProps(`sounds`)}
-              />
-            )}
           </Paper>
         </Grid.Col>
 
