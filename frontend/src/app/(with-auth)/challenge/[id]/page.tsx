@@ -34,12 +34,21 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
   const activeAndCompleted = state.activeQuizz?.id && state.activeQuizz?.completed;
   const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
   const noActiveQuizz = !state.activeQuizz?.id;
+  const [soundPlayed, setSoundPlayed] = useState(false);
 
   const playFireworks = () => {
-    console.log('fui chamada')
-    const audio = new Audio("/sounds/fireworks1.mp3");
-    audio.play();
-  };
+    console.log("fui chamada");
+
+    if (!soundPlayed) {
+      const audio = new Audio("/sounds/fireworkscut.mp3");
+      audio.play();
+      setSoundPlayed(true);
+    }
+  }
+
+  if (state.status === ChallengeStatus.Completed) {
+      playFireworks();
+  }
   
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
@@ -95,13 +104,14 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
         {state.status === ChallengeStatus.Completed && (
           <div className={classes.container}>
+            
             <Fireworks />
             <Title ta="center" mt={10} mb={60}>
               Check out the winners
             </Title>
             <Grid justify="center" mt={10} mb={10} gutter={{ xl: 50 }}>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3000} playSound={playFireworks} />
+                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3000} />
               </Grid.Col>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
                 <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3500} />
