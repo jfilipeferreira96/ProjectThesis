@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useSession } from "@/providers/SessionProvider";
+import { User, useSession } from "@/providers/SessionProvider";
 import { useRouter } from "next/navigation";
-import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select } from "@mantine/core";
-import { IconDatabaseOff } from "@tabler/icons-react";
-import { getAnswers } from "@/services/quizz.service";
+import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select, Avatar } from "@mantine/core";
+import { IconDatabaseOff, IconEye, IconEyeCheck } from "@tabler/icons-react";
+import { getAnswers, IAnswer } from "@/services/quizz.service";
 import { notifications } from "@mantine/notifications";
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
@@ -16,12 +16,10 @@ const StyledTableContainer = styled(Table.ScrollContainer)`
 `;
 
 type DataItem = {
-  _id: string;
-  name: string;
-  questions: string[];
-  status: number;
-  startDate: string;
-  endDate: string;
+  score: number;
+  user: User;
+  answers: IAnswer
+  reviewed: boolean
 };
 
 interface AnswersProps {
@@ -32,15 +30,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   const { quizzes } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [selectedQuizz, setSelectedQuizz] = useState<string | null>(quizzes && quizzes.length > 0 ? quizzes[0].value : "");
-  console.log("selected", selectedQuizz);
-  const [state, setState] = useState({
-    id: "",
-    rows: [],
-    type: undefined,
-    title: "",
-    description: "",
-    status: 0,
-  });
+  const [state, setState] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchAnswers = async (quizId: string) => {
@@ -48,7 +38,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
         const response = await getAnswers(quizId);
         console.log(response);
         if (response.status === true) {
-          //setQuizzData(response.quiz.questions);
+          setState(response.data);
         }
 
         if (response.status === false) {
@@ -77,21 +67,59 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
 
   const createRows = (data: DataItem[]) => {
     return data.map((item: DataItem) => (
-      <Table.Tr key={item.name}>
+      <Table.Tr key={item.user._id}>
+        <Table.Td>
+          <Group gap="sm" justify="center">
+            <Avatar size={30} src={item.user.avatar} radius={30} />
+            <Text fz="sm" fw={500}>
+              {item.user.fullname}
+            </Text>
+          </Group>
+        </Table.Td>
+
         <Table.Td>
           <Text fz="sm" fw={500}>
-            {item.name}
+            {item.user.email}
+          </Text>
+        </Table.Td>
+        <Table.Td>
+          <Text fz="sm" fw={500}>
+            {item.user.studentId ? item.user.studentId : "-"}
           </Text>
         </Table.Td>
 
         <Table.Td>
-          <Group gap={0} justify="center"></Group>
+          <Text fz="sm" fw={500}>
+            {item.score}
+          </Text>
+        </Table.Td>
+
+        <Table.Td>
+          <Text fz="sm" fw={500}>
+            {item.reviewed === true ? (
+              <Badge variant="filled" size="md" color={"green"} style={{ minWidth: "110px" }}>
+                Already reviewed
+              </Badge>
+            ) : (
+              <Badge variant="filled" size="md" color={"red"} style={{ minWidth: "110px" }}>
+                Pending review
+              </Badge>
+            )}
+          </Text>
+        </Table.Td>
+
+        <Table.Td>
+          <Tooltip label={"Check and review answers"} withArrow position="top">
+            <ActionIcon variant="subtle" color={item.reviewed === true ? "green" : "red"} onClick={() => null}>
+              <IconEye style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+            </ActionIcon>
+          </Tooltip>
         </Table.Td>
       </Table.Tr>
     ));
   };
 
-  const rows = createRows(state.rows);
+  const rows = createRows(state);
 
   if (isLoading) {
     return (
@@ -110,13 +138,26 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
           Check your students answers and give them a score
         </Text>
 
-        <Select checkIconPosition="left" data={quizzes} pb={20} c="dimmed" label="Selected Quizz" placeholder="Pick quizz" defaultValue={selectedQuizz} onChange={(value: string | null) => setSelectedQuizz(value)} />
+        <Select
+          checkIconPosition="left"
+          data={quizzes}
+          pb={20}
+          c="dimmed"
+          label="Selected Quizz"
+          placeholder="Pick quizz"
+          defaultValue={selectedQuizz}
+          onChange={(value: string | null) => setSelectedQuizz(value)}
+          allowDeselect={false}
+        />
 
         <StyledTableContainer minWidth={800}>
           <Table verticalSpacing="sm">
             <Table.Thead>
               <Table.Tr>
                 <Table.Th>Name</Table.Th>
+                <Table.Th>Email</Table.Th>
+                <Table.Th>Student ID</Table.Th>
+                <Table.Th>Score</Table.Th>
                 <Table.Th>State</Table.Th>
                 <Table.Th>Actions</Table.Th>
               </Table.Tr>
