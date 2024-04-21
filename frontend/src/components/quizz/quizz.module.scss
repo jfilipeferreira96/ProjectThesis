@@ -6,6 +6,8 @@ $disabled: #9c9c9c;
   padding: 30px 60px;
   box-sizing: border-box;
   position: relative;
+  align-items: center;
+  justify-content: center;
 
   @media (min-width: 1200px) {
     min-height: 600px;
@@ -107,5 +109,10 @@ $disabled: #9c9c9c;
     box-sizing: border-box;
   }
 
+}
 
+.centered{
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

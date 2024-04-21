@@ -169,7 +169,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     try {
       // Se já houver um quiz em andamento, exiba uma mensagem ou impeça a alteração do status
       if (ativeQuizz.length > 0) {
-        console.log("entrei");
+        
         notifications.show({
           title: "Oops",
           message: "Only one quiz can be active at a time.",

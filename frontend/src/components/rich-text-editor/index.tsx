@@ -20,9 +20,7 @@ const RichTextEditor = () =>
         ]
     };
 
-    // Função para atualizar o conteúdo do editor
-    const handleChange = (html: any) =>
-    {
+    const handleChange = (html: any) =>{
         setEditorHtml(html);
     };
 
@@ -30,7 +28,6 @@ const RichTextEditor = () =>
     const saveContent = () =>
     {
         console.log('Conteúdo salvo:', editorHtml);
-        // Aqui você pode enviar o conteúdo para onde desejar, como um servidor, um banco de dados, etc.
     };
 
     return (

@@ -5,7 +5,7 @@ import Quizz, { Question } from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
-import { getSingleQuizz } from "@/services/quizz.service";
+import { EvalutionType, getSingleQuizz } from "@/services/quizz.service";
 
 interface PlayPageProps {
   params: {
@@ -31,25 +31,27 @@ const PlayPage = (props: PlayPageProps) => {
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [shouldShuffle, setShouldShuffle] = useState(true);
+  const [evaluationType, setEvaluationType] = useState("");
   const [sounds, setSounds] = useState(true);
 
   const getQuestions = async (id: string) => {
     try {
     
       const response = await getSingleQuizz(quizzId);
-      
+      console.log(response)
       if (response.status) {
-         let questions = response.questions;
-        console.log(response)
+        let questions = response.questions;
+        
         if (response.shuffle) {
           questions = shuffleArray(response.questions);
-          console.log(questions)
+          
         }
-        console.log(questions)
+        
         setQuestions(questions);
 
         setShouldShuffle(response.shuffle);
         setSounds(response.sounds);
+        setEvaluationType(response.evaluation);
 
         setLoading(false);
       }
@@ -87,11 +89,7 @@ const PlayPage = (props: PlayPageProps) => {
 
   return (
     <>
-      <Quizz
-        questions={questions}
-        quizId={quizzId}
-        sounds={sounds}
-      />
+      <Quizz questions={questions} quizId={quizzId} sounds={sounds} isAutomatic={evaluationType === EvalutionType.Automatic} />
     </>
   );
 };
