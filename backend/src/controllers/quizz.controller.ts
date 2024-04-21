@@ -443,7 +443,7 @@ class QuizzController {
       const quiz = await Quizz.findById(quizId);
 
       if (!quiz) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return res.status(StatusCodes.OK).json({
           status: false,
           message: "Quizz not found",
         });
@@ -451,7 +451,7 @@ class QuizzController {
 
       const challenge = await Challenge.findById(quiz.challenge);
       if (!challenge) {
-        return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Challenge not found" });
+        return res.status(StatusCodes.OK).json({ status: false, message: "Challenge not found" });
       }
 
       if (!challenge.admins.some((admin) => admin._id.toString() === userId.toString())) {

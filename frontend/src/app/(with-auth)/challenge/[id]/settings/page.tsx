@@ -75,6 +75,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
   const ativeQuizz = state.rows.filter((quiz:any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
+  const [quizzes, setQuizzes] = useState([]);
   
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
@@ -117,6 +118,10 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       const response = await getAllChallengeQuizzes(id);
       if (response.status) {
         setState((prevState) => ({ ...prevState, rows: response.quizzes, type: response.type }));
+        if (response.quizzes.length > 0) {
+          let quizzes = response.quizzes.map((quizz: any) => ({ label: quizz.name, value: quizz._id })); 
+          setQuizzes(quizzes)
+        } 
       }
       if (response.status === false) {
         notifications.show({
@@ -456,9 +461,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
               </Grid.Col>
             </Tabs.Panel>
 
-            <Tabs.Panel value="Answers">
-              { activeTab === "Answers" && <Answers quizzId="6624f651100d01f7a42c98eb" />}
-            </Tabs.Panel>
+            <Tabs.Panel value="Answers">{activeTab === "Answers" && <Answers quizzes={quizzes} />}</Tabs.Panel>
 
             <Tabs.Panel value="settings">
               <Flex display={isScreenXL ? "flex" : "block"}>

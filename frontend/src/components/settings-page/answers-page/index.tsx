@@ -25,12 +25,14 @@ type DataItem = {
 };
 
 interface AnswersProps {
-  quizzId: string;
+  quizzes?: {label: string, value: string}[];
 }
 
 const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
-  const { quizzId } = props;
+  const { quizzes } = props;
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedQuizz, setSelectedQuizz] = useState<string | null>(quizzes && quizzes.length > 0 ? quizzes[0].value : "");
+  console.log("selected", selectedQuizz);
   const [state, setState] = useState({
     id: "",
     rows: [],
@@ -41,16 +43,18 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   });
 
   useEffect(() => {
-    const fetchAnswers = async () => {
+    const fetchAnswers = async (quizId: string) => {
       try {
-        const response = await getAnswers(quizzId);
-        console.log(response)
-        if (response.status) {
+        const response = await getAnswers(quizId);
+        console.log(response);
+        if (response.status === true) {
           //setQuizzData(response.quiz.questions);
-        } else {
+        }
+
+        if (response.status === false) {
           notifications.show({
             title: "Error",
-            message: "Failed to fetch answers data",
+            message: response.message,
             color: "red",
           });
         }
@@ -61,14 +65,15 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
           message: "Something went wrong",
           color: "red",
         });
-      }
-      finally {
-        setIsLoading(false)
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchAnswers();
-  }, [quizzId]);
+    if (quizzes && quizzes?.length > 0 && selectedQuizz) {
+      fetchAnswers(selectedQuizz);
+    }
+  }, [selectedQuizz]);
 
   const createRows = (data: DataItem[]) => {
     return data.map((item: DataItem) => (
@@ -100,11 +105,13 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
     <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
       <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
         <Title order={2}>Answers</Title>
-        {rows.length === 0 && (
-          <Text c="dimmed" fw={500}>
-            Check your students answers and give them a score
-          </Text>
-        )}
+
+        <Text c="dimmed" fw={500}>
+          Check your students answers and give them a score
+        </Text>
+
+        <Select checkIconPosition="left" data={quizzes} pb={20} c="dimmed" label="Selected Quizz" placeholder="Pick quizz" defaultValue={selectedQuizz} onChange={(value: string | null) => setSelectedQuizz(value)} />
+
         <StyledTableContainer minWidth={800}>
           <Table verticalSpacing="sm">
             <Table.Thead>
