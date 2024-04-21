@@ -4,6 +4,8 @@ import { useSession } from "@/providers/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select } from "@mantine/core";
 import { IconDatabaseOff } from "@tabler/icons-react";
+import { getAnswers } from "@/services/quizz.service";
+import { notifications } from "@mantine/notifications";
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
   text-align: center;
@@ -22,12 +24,13 @@ type DataItem = {
   endDate: string;
 };
 
-interface AnswersProps {}
+interface AnswersProps {
+  quizzId: string;
+}
 
 const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
-  const {} = props;
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { quizzId } = props;
+  const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState({
     id: "",
     rows: [],
@@ -36,6 +39,36 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
     description: "",
     status: 0,
   });
+
+  useEffect(() => {
+    const fetchAnswers = async () => {
+      try {
+        const response = await getAnswers(quizzId);
+        console.log(response)
+        if (response.status) {
+          //setQuizzData(response.quiz.questions);
+        } else {
+          notifications.show({
+            title: "Error",
+            message: "Failed to fetch answers data",
+            color: "red",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching quizz data:", error);
+        notifications.show({
+          title: "Error",
+          message: "Something went wrong",
+          color: "red",
+        });
+      }
+      finally {
+        setIsLoading(false)
+      }
+    };
+
+    fetchAnswers();
+  }, [quizzId]);
 
   const createRows = (data: DataItem[]) => {
     return data.map((item: DataItem) => (
@@ -47,9 +80,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
         </Table.Td>
 
         <Table.Td>
-          <Group gap={0} justify="center">
-         
-          </Group>
+          <Group gap={0} justify="center"></Group>
         </Table.Td>
       </Table.Tr>
     ));

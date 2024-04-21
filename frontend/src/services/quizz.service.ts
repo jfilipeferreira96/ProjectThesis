@@ -5,7 +5,7 @@ import { addToFormData } from "@/utils/formData";
 export enum QuestionType {
   FillInBlank = "FillInBlank",
   MultipleQuestions = "MultipleQuestions",
-  FileUpload = "FileUpload"
+  FileUpload = "FileUpload",
 }
 
 export enum EvalutionType {
@@ -49,6 +49,13 @@ export interface QuizzData {
     file?: File | any | string;
   }[];
 }
+
+export interface IAnswer {
+  answer: string | File | any;
+  pontuation?: number;
+  _id: string;
+}[]
+
 export const createQuizz = async (data: QuizzData) => {
   try {
     const response = await api.post(endpoints.createQuizzRoute, data);
@@ -96,7 +103,6 @@ export const editQuizzStatus = async (id: string, status: QuizzStatus) => {
 };
 
 export const deleteQuizz = async (id: string) => {
-  
   try {
     const response = await api.post(endpoints.deleteQuizzRoute, { quizId: id });
     return response.data;
@@ -105,18 +111,26 @@ export const deleteQuizz = async (id: string) => {
   }
 };
 
-export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: { _id: number | string; answer: string }[] }) => {
-  try
-  {
+export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnswer }) => {
+  try {
     const formData = new FormData();
     addToFormData(data, formData);
-    
+
     const response = await api.post(endpoints.saveQuizAnswerRoute, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     });
 
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAnswers = async (id: string) => {
+  try {
+    const response = await api.get(endpoints.getAnswers + id);
     return response.data;
   } catch (error) {
     throw error;

@@ -20,4 +20,6 @@ quizzRoutes.post("/quizz/editStatus", authenticateToken, QuizzController.EditQui
 
 quizzRoutes.post("/quizz/answer", authenticateToken, upload.array("files"), QuizzController.SaveQuizAnswer);
 
+quizzRoutes.get("/quizz/answers/:id", authenticateToken, QuizzController.GetListOfUserAnswersPerQuizz);
+
 export default quizzRoutes;

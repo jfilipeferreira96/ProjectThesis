@@ -3,7 +3,7 @@ import classes from "./quizz.module.scss";
 import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
-import { SaveQuizAnswer } from "@/services/quizz.service";
+import { IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 
@@ -105,11 +105,13 @@ const Quizz = (props: Props) => {
     setCurrentQuestion(id);
   };
 
-  const SendAndSaveAnswer = async (userAnswers: { _id: number | string; answer: string }[]) => {
+  const SendAndSaveAnswer = async (userAnswers: IAnswer | any) => {
     setIsLoading(true);
+      
+    const answers: IAnswer = userAnswers.map((ans: IAnswer) => ({ ...ans, pontuation: 0 }));
 
     try {
-      const response = await SaveQuizAnswer({ userAnswers, quizId });
+      const response = await SaveQuizAnswer({ userAnswers: answers, quizId });
 
       if (response.status && response?.data) {
         setResult({

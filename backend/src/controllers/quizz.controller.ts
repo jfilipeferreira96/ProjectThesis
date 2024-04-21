@@ -4,7 +4,7 @@ import Quizz, { EvalutionType, Status } from "../models/quizz.model";
 import { ObjectId } from "mongodb";
 import Challenge from "../models/challenge.model";
 import Logger from "../utils/logger";
-import QuizResponse, { IQuizResponse } from "../models/quizzResponse.model";
+import QuizResponse, { IAnswer, IQuizResponse } from "../models/quizzResponse.model";
 import User from "../models/user.model";
 import fs from "fs";
 import path from "path";
@@ -66,7 +66,7 @@ class QuizzController {
           questions: questionsWithoutCorrectAnswer,
           shuffle: quiz.shuffle,
           sounds: quiz.sounds,
-          evaluation: quiz.evaluation
+          evaluation: quiz.evaluation,
         });
       }
     } catch (error) {
@@ -247,6 +247,9 @@ class QuizzController {
   static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction) {
     try {
       const { quizId, userAnswers } = req.body;
+      console.log(quizId)
+      console.log(userAnswers)
+      
       const user: any = req.user;
 
       // Check if the quiz exists
@@ -306,24 +309,27 @@ class QuizzController {
       let correctAnswers = 0;
       let wrongAnswers = 0;
 
+      let answersToSave: IAnswer[] = userAnswers;
       if (quiz.evaluation === EvalutionType.Automatic) {
-        userAnswers.forEach((userAnswer: { _id: number | string; answer: string }) => {
+        userAnswers.forEach((userAnswer: IAnswer, index: number) => {
           const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
           const answer = userAnswer.answer;
 
           if (question) {
-            let questionScore = question.pontuation || 5; // Use question.pontuation if available, otherwise default to 5
+            let questionScore = question.pontuation || 5;
             if (question.type === "FillInBlank") {
               if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
-                score += questionScore; // Use questionScore instead of fixed 5
+                score += questionScore;
                 correctAnswers += 1;
+                answersToSave[index].pontuation = questionScore;
               } else {
                 wrongAnswers += 1;
               }
             } else {
               if (answer === question.correctAnswer) {
-                score += questionScore; // Use questionScore instead of fixed 5
+                score += questionScore;
                 correctAnswers += 1;
+                answersToSave[index].pontuation = questionScore;
               } else {
                 wrongAnswers += 1;
               }
@@ -336,7 +342,7 @@ class QuizzController {
       const quizResponseData = {
         quiz: quizId,
         user: user._id,
-        answers: userAnswers,
+        answers: answersToSave,
         score: score,
       };
 
@@ -370,7 +376,7 @@ class QuizzController {
             score: score,
             correctAnswers: correctAnswers,
             wrongAnswers: wrongAnswers,
-            userAnswers: userAnswers,
+            userAnswers: answersToSave,
           },
         };
       }
@@ -426,6 +432,66 @@ class QuizzController {
 
     return null; // Retorna null se nenhum ficheiro for encontrado
   }
+
+  static async GetListOfUserAnswersPerQuizz(req: Request, res: Response, next: NextFunction) {
+    console.log(req.params)
+
+    try {
+      const quizId = req.params.id;
+      const userId: any = req.user._id;
+
+      const quiz = await Quizz.findById(quizId);
+
+      if (!quiz) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quizz not found",
+        });
+      }
+
+      const challenge = await Challenge.findById(quiz.challenge);
+      if (!challenge) {
+        return res.status(StatusCodes.NOT_FOUND).json({ status: false, message: "Challenge not found" });
+      }
+
+      if (!challenge.admins.some((admin) => admin._id.toString() === userId.toString())) {
+        Logger.error("No permissions");
+        return res.status(StatusCodes.OK).json({
+          status: false,
+          message: "No permissions",
+        });
+      }
+
+      const quizResponses: IQuizResponse[] = await QuizResponse.find({ quiz: quizId }).populate("user").exec();
+      console.log("quizRes")
+      console.log(quizResponses);
+
+      if (!quizResponses || quizResponses.length === 0) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: true,
+          message: "No responses found for this quiz",
+        });
+      }
+
+      const responsesWithUserInfo = quizResponses.map((response) => ({
+        user: response.user,
+        answers: response.answers,
+        score: response.score,
+        lastUpdate: response.lastUpdate,
+        filename: response.filename,
+        reviewed: response.reviewed,
+      }));
+
+      return res.status(StatusCodes.OK).json({
+        status: true,
+        data: responsesWithUserInfo,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async UpdateUserPontuationOfQuizz(req: Request, res: Response, next: NextFunction) {}
 }
 
 export default QuizzController;

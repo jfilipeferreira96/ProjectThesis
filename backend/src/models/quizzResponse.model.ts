@@ -1,13 +1,35 @@
 import mongoose, { Document, Model, Schema } from "mongoose";
 
+export interface IAnswer {
+  answer: string | File | any;
+  pontuation?: number;
+  _id: Schema.Types.ObjectId | string;
+}
+
 export interface IQuizResponse extends Document {
   quiz: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
-  answers: string[];
-  score: number; 
+  answers: IAnswer;
+  score: number;
   lastUpdate?: Date;
   filename?: string | any;
+  reviewed?: boolean;
 }
+
+const AnswerSchema: Schema<IAnswer> = new mongoose.Schema({
+  answer: {
+    type: String,
+    required: true,
+  },
+  pontuation: {
+    type: Number,
+    default: 0,
+  },
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+});
 
 const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
   quiz: {
@@ -20,7 +42,7 @@ const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  answers: [String],
+  answers: [AnswerSchema],
   score: {
     type: Number,
     required: true,
@@ -28,6 +50,10 @@ const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
   lastUpdate: {
     type: Date,
     default: Date.now,
+  },
+  reviewed: {
+    type: Boolean,
+    default: false,
   },
 });
 

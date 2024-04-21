@@ -457,7 +457,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
             </Tabs.Panel>
 
             <Tabs.Panel value="Answers">
-              <Answers />
+              { activeTab === "Answers" && <Answers quizzId="6624f651100d01f7a42c98eb" />}
             </Tabs.Panel>
 
             <Tabs.Panel value="settings">
