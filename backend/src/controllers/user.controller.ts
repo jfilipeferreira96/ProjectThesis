@@ -11,6 +11,7 @@ export interface User {
   email: string;
   avatar?: string;
   adminChallenges?: string[];
+  type?: string;
 }
 
 interface RefreshToken {
@@ -62,7 +63,8 @@ class UserController {
         fullname: user.fullname,
         studentId: user.studentId,
         email: user.email,
-        adminChallenges: formattedChallengeIds
+        adminChallenges: formattedChallengeIds,
+        type: user.type
       });
 
       const refreshToken = UserController.generateRefreshToken({

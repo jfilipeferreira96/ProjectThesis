@@ -89,6 +89,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             email: decodedToken.email,
             avatar: avatar,
             adminChallenges: decodedToken.adminChallenges,
+            type: decodedToken.type,
           };
           sessionLogin(userData, accessToken, refreshToken, false);
         }

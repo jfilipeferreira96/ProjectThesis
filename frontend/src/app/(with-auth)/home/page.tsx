@@ -33,7 +33,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [showHiddenChallenges, setShowHiddenChallenges] = useState(false);
   const { user } = useSession();
-
+  console.log(user)
   const GetUserChallenges = async () => {
     setIsLoading(true);
     try {
@@ -146,7 +146,7 @@ export default function Home() {
                   Join a challenge
                 </Text>
                 <div className={classes.imageSection}>
-                  <Image className={classes.image} src="./37541671.png" alt="Join image" />
+                  <Image className={user.type === UserType.STUDENT ? classes.fullimage : classes.image} src="./37541671.png" alt="Join image" />
                 </div>
               </div>
             )}
@@ -157,7 +157,7 @@ export default function Home() {
                   Create a challenge
                 </Text>
                 <div className={classes.imageSection}>
-                  <Image className={classes.image} src="./5000_4_07.png" alt="Create image" />
+                  <Image className={user.type === UserType.TEACHER ? classes.fullimage : classes.image} src="./5000_4_07.png" alt="Create image" />
                 </div>
               </Card.Section>
             )}
@@ -202,14 +202,14 @@ export default function Home() {
                     <IconUserCheck size="1.05rem" className={classes.icon} stroke={1.5} />
                     <Text size="xs">{challenge.admins.length} Admins</Text>
                   </Center>
-                  {challenge.user_type !== "Admin" && (
+                  {/* {challenge.user_type !== "Admin" && (
                     <Center>
                       <IconFlag size="1.05rem" className={classes.icon} stroke={1.5} />
                       <Text size="xs">
                         {challenge.participants.length}/{challenge.participants.length} Place
                       </Text>
                     </Center>
-                  )}
+                  )} */}
                 </Group>
               </Card.Section>
             </GiggleCard>

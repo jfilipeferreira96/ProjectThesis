@@ -15,6 +15,14 @@
   justify-content: center;
   height: 180px;
 }
+
+.fullimage{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  margin-top: 5rem;
+}
 .challengeImage{
   display: flex;
   align-items: center;
