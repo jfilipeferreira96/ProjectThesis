@@ -119,7 +119,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
       if (response.status) {
         setState((prevState) => ({ ...prevState, rows: response.quizzes, type: response.type }));
         if (response.quizzes.length > 0) {
-          let quizzes = response.quizzes.map((quizz: any) => ({ label: quizz.name, value: quizz._id })); 
+          let quizzes = response.quizzes.map((quizz: any) => ({ label: quizz.name, value: quizz._id, questions: quizz.questions })); 
           setQuizzes(quizzes)
         } 
       }

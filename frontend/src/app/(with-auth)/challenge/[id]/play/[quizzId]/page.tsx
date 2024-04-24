@@ -38,7 +38,6 @@ const PlayPage = (props: PlayPageProps) => {
     try {
     
       const response = await getSingleQuizz(quizzId);
-      console.log(response)
       if (response.status) {
         let questions = response.questions;
         

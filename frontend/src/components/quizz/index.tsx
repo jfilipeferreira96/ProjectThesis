@@ -7,7 +7,8 @@ import { IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 
-export interface Question {
+export interface Question
+{
   _id?: number | string;
   key: number | string;
   question: string;
@@ -18,23 +19,28 @@ export interface Question {
   file?: File | any | string;
 }
 
-interface Result {
+interface Result
+{
   score: number;
   correctAnswers: number;
   wrongAnswers: number;
   userAnswers: { _id: number | string; answer: string | File | any }[];
 }
 
-interface Props {
+interface Props
+{
   questions: Question[];
   preview?: boolean;
   quizId?: string;
   isAutomatic?: boolean;
   sounds?: boolean;
+  reviewMode?: boolean;
+  questionNumber: { total: number, atual: number}
 }
 
-const Quizz = (props: Props) => {
-  const { questions, preview, quizId, isAutomatic, sounds } = props;
+const Quizz = (props: Props) =>
+{
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -49,8 +55,10 @@ const Quizz = (props: Props) => {
 
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
-  useEffect(() => {
-    if (!preview) {
+  useEffect(() =>
+  {
+    if (!preview)
+    {
       interval.start();
       return interval.stop;
     }
@@ -58,14 +66,18 @@ const Quizz = (props: Props) => {
 
   const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
 
-  const handleChoiceSelection = (chosenAnswer: string) => {
-    setResult((prevResult) => {
+  const handleChoiceSelection = (chosenAnswer: string) =>
+  {
+    setResult((prevResult) =>
+    {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
-      if (existingAnswer) {
+      if (existingAnswer)
+      {
         existingAnswer.answer = chosenAnswer;
-      } else {
+      } else
+      {
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: chosenAnswer } : { _id: key, answer: chosenAnswer });
       }
 
@@ -75,19 +87,24 @@ const Quizz = (props: Props) => {
       };
     });
 
-    if (sounds) {
+    if (sounds)
+    {
       new Audio("/sounds/popclick.mp3").play();
     }
   };
 
-  const handleFile = (file: File | null | string) => {
-    setResult((prevResult) => {
+  const handleFile = (file: File | null | string) =>
+  {
+    setResult((prevResult) =>
+    {
       const updatedUserAnswers = prevResult.userAnswers.slice();
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
-      if (existingAnswer) {
+      if (existingAnswer)
+      {
         existingAnswer.answer = file; // Assuming you want to store the file object
-      } else {
+      } else
+      {
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: file } : { _id: key, answer: file });
       }
 
@@ -98,22 +115,27 @@ const Quizz = (props: Props) => {
     });
   };
 
-  const onClickNext = (id: number) => {
-    if (sounds) {
+  const onClickNext = (id: number) =>
+  {
+    if (sounds)
+    {
       new Audio("/sounds/click.mp3").play();
     }
     setCurrentQuestion(id);
   };
 
-  const SendAndSaveAnswer = async (userAnswers: IAnswer | any) => {
+  const SendAndSaveAnswer = async (userAnswers: IAnswer | any) =>
+  {
     setIsLoading(true);
-      
+
     const answers: IAnswer = userAnswers.map((ans: IAnswer) => ({ ...ans, pontuation: 0 }));
 
-    try {
+    try
+    {
       const response = await SaveQuizAnswer({ userAnswers: answers, quizId });
 
-      if (response.status && response?.data) {
+      if (response.status && response?.data)
+      {
         setResult({
           score: response.data.score,
           correctAnswers: response.data.correctAnswers,
@@ -121,45 +143,58 @@ const Quizz = (props: Props) => {
           userAnswers: response.data.userAnswers,
         });
 
-        if (sounds) {
+        if (sounds)
+        {
           new Audio("/sounds/finish.mp3").play(); // Som ao finalizar
         }
       }
-    } catch (error) {
+    } catch (error)
+    {
       notifications.show({
         title: "Error",
         message: "Something went wrong",
         color: "red",
       });
-    } finally {
+    } finally
+    {
       setIsLoading(false);
     }
   };
 
-  const endChallenge = () => {
+  const endChallenge = () =>
+  {
     let score = 0;
     let correctAnswers = 0;
     let wrongAnswers = 0;
 
     interval.stop();
 
-    if (preview === true) {
-      result.userAnswers.forEach((userAnswer) => {
+    if (preview === true)
+    {
+      result.userAnswers.forEach((userAnswer) =>
+      {
         const question = questions.find((q) => q._id === userAnswer._id);
 
-        if (question) {
-          if (question.type === "FillInBlank") {
-            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
+        if (question)
+        {
+          if (question.type === "FillInBlank")
+          {
+            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase())
+            {
               score += 5;
               correctAnswers += 1;
-            } else {
+            } else
+            {
               wrongAnswers += 1;
             }
-          } else {
-            if (userAnswer.answer === question.correctAnswer) {
+          } else
+          {
+            if (userAnswer.answer === question.correctAnswer)
+            {
               score += 5;
               correctAnswers += 1;
-            } else {
+            } else
+            {
               wrongAnswers += 1;
             }
           }
@@ -172,7 +207,8 @@ const Quizz = (props: Props) => {
         wrongAnswers,
         userAnswers: result.userAnswers,
       });
-    } else {
+    } else
+    {
       //Submete para o backend e seta o resultado
       SendAndSaveAnswer(result.userAnswers);
     }
@@ -180,23 +216,28 @@ const Quizz = (props: Props) => {
     setShowResult(true);
   };
 
-  setTimeout(() => {
+  setTimeout(() =>
+  {
     setShowAnswerTimer(true);
   });
 
-  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) =>
+  {
     const userInput = evt.target.value;
 
-    setResult((prevResult) => {
+    setResult((prevResult) =>
+    {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
 
       // Check if the current question id is already in userAnswers
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
 
-      if (existingAnswer) {
+      if (existingAnswer)
+      {
         // If it exists, update the answer
         existingAnswer.answer = userInput;
-      } else {
+      } else
+      {
         // If it doesn't exist, add a new entry
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: userInput } : { _id: key, answer: userInput });
       }
@@ -208,7 +249,8 @@ const Quizz = (props: Props) => {
     });
   };
 
-  const handleTryAgain = () => {
+  const handleTryAgain = () =>
+  {
     setResult({
       score: 0,
       correctAnswers: 0,
@@ -222,8 +264,10 @@ const Quizz = (props: Props) => {
     interval.start();
   };
 
-  const getAnswerUI = () => {
-    if (type === "FillInBlank") {
+  const getAnswerUI = () =>
+  {
+    if (type === "FillInBlank")
+    {
       return (
         <div className={classes.answerDiv}>
           <Input className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
@@ -231,7 +275,8 @@ const Quizz = (props: Props) => {
       );
     }
 
-    if (type === "FileUpload") {
+    if (type === "FileUpload")
+    {
       return (
         <div className={classes.answerDiv}>
           <FileInput
@@ -254,7 +299,8 @@ const Quizz = (props: Props) => {
     return (
       <div className={classes.answerDiv}>
         <ul>
-          {choices?.map((answer, index) => {
+          {choices?.map((answer, index) =>
+          {
             if (!answer) return <></>;
 
             return (
@@ -274,29 +320,35 @@ const Quizz = (props: Props) => {
     <Grid align="center" justify="center">
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }}>
         {!showResult && (
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md" className={classes.card}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md" className={reviewMode ? classes.card : classes.card + " " + classes.minHeight}>
             <>
               {/* {showAnswerTimer && <AnswerTimer duration={10} onTimeUp={handleTimeUp} />} */}
               {/* Secção Header */}
-              <div className={classes.header}>
-                <Grid>
-                  {/*    <Grid.Col span={{ md: 1, sm: 1, xs: 1, lg: 1 }}>
+              {reviewMode &&
+                
+                  <div className={classes.reviewheader}>
+                    <Title order={3} mb={20}>
+                      <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
+                        {questionNumber.atual + 1}
+                      </Text>
+                        /{questionNumber.total}
+                    </Title>
+                  </div>
+              }
+
+              {!reviewMode &&
+                <div className={classes.header}>
+
+                  <Grid>
+                    <Grid.Col span={{ md: 9, sm: 9, xs: 9, lg: 9 }}>
                       <div className={classes.header}>
-                        <Title order={3} mb={20}>
-                          <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
-                            {currentQuestion + 1}
-                          </Text>
-                          /{questions.length}
-                        </Title>
+                        <Progress radius="md" size="lg" value={((currentQuestion + 1) / questions.length) * 100} />
                       </div>
-                    </Grid.Col> */}
-                  <Grid.Col span={{ md: 9, sm: 9, xs: 9, lg: 9 }}>
-                    <div className={classes.header}>
-                      <Progress radius="md" size="lg" value={((currentQuestion + 1) / questions.length) * 100} />
-                    </div>
-                  </Grid.Col>
-                </Grid>
-              </div>
+                    </Grid.Col>
+                  </Grid>
+
+                </div>
+              }
 
               <div className={classes.body}>
                 {/* Secção Body */}
@@ -306,24 +358,26 @@ const Quizz = (props: Props) => {
               </div>
 
               {/* Secção Footer */}
-              <div className={classes.footer}>
-                <Group justify="center">
-                  {currentQuestion > 0 && (
-                    <ThreeDButton mt="md" color="gray" onClick={() => onClickNext(currentQuestion - 1)}>
-                      Back
-                    </ThreeDButton>
-                  )}
-                  {currentQuestion === questions.length - 1 ? (
-                    <ThreeDButton mt="md" color="blue" onClick={() => endChallenge()} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
-                      Finish
-                    </ThreeDButton>
-                  ) : (
-                    <ThreeDButton mt="md" color="green" onClick={() => onClickNext(currentQuestion + 1)} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
-                      Next
-                    </ThreeDButton>
-                  )}
-                </Group>
-              </div>
+              {!reviewMode &&
+                <div className={classes.footer}>
+                  <Group justify="center">
+                    {currentQuestion > 0 && (
+                      <ThreeDButton mt="md" color="gray" onClick={() => onClickNext(currentQuestion - 1)}>
+                        Back
+                      </ThreeDButton>
+                    )}
+                    {currentQuestion === questions.length - 1 ? (
+                      <ThreeDButton mt="md" color="blue" onClick={() => endChallenge()} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
+                        Finish
+                      </ThreeDButton>
+                    ) : (
+                      <ThreeDButton mt="md" color="green" onClick={() => onClickNext(currentQuestion + 1)} disabled={result.userAnswers[currentQuestion]?.answer ? false : true}>
+                        Next
+                      </ThreeDButton>
+                    )}
+                  </Group>
+                </div>
+              }
             </>
           </Paper>
         )}
@@ -337,7 +391,7 @@ const Quizz = (props: Props) => {
                       <Title ta="center" size={"h1"} mb={5}>
                         Result
                       </Title>
-                    
+
                       <Text size="md" ta="center" mt={10}>
                         Total Questions: <span>{questions.length}</span>
                       </Text>

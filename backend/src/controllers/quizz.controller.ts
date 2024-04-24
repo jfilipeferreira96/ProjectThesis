@@ -247,9 +247,7 @@ class QuizzController {
   static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction) {
     try {
       const { quizId, userAnswers } = req.body;
-      console.log(quizId)
-      console.log(userAnswers)
-      
+
       const user: any = req.user;
 
       // Check if the quiz exists
@@ -434,7 +432,6 @@ class QuizzController {
   }
 
   static async GetListOfUserAnswersPerQuizz(req: Request, res: Response, next: NextFunction) {
-    console.log(req.params)
 
     try {
       const quizId = req.params.id;
@@ -463,8 +460,7 @@ class QuizzController {
       }
 
       const quizResponses: IQuizResponse[] = await QuizResponse.find({ quiz: quizId }).populate("user").exec();
-      console.log("quizRes")
-      console.log(quizResponses);
+
 
       if (!quizResponses || quizResponses.length === 0) {
         return res.status(StatusCodes.NOT_FOUND).json({

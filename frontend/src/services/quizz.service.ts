@@ -2,25 +2,30 @@ import api from "@/config/api";
 import { endpoints } from "@/config/routes";
 import { addToFormData } from "@/utils/formData";
 
-export enum QuestionType {
+export enum QuestionType
+{
   FillInBlank = "FillInBlank",
   MultipleQuestions = "MultipleQuestions",
   FileUpload = "FileUpload",
 }
 
-export enum EvalutionType {
+export enum EvalutionType
+{
   Automatic = "Automatic",
   Manual = "Manual",
 }
 
-export enum QuizzStatus {
+export enum QuizzStatus
+{
   PendingStart = 0,
   InProgress = 1,
   Completed = 2,
 }
 
-export function getQuizzStatusInfo(status: QuizzStatus) {
-  switch (status) {
+export function getQuizzStatusInfo(status: QuizzStatus)
+{
+  switch (status)
+  {
     case QuizzStatus.PendingStart:
       return { name: "Pending Start", color: "blue" };
     case QuizzStatus.InProgress:
@@ -32,87 +37,112 @@ export function getQuizzStatusInfo(status: QuizzStatus) {
   }
 }
 
-export interface QuizzData {
+export interface IQuestion
+{
+  question: string;
+  _id?: string;
+  key: string;
+  type: QuestionType;
+  choices: string[];
+  correctAnswer: string;
+  pontuation?: number;
+  file?: File | any | string;
+}
+
+export interface QuizzData
+{
   quizzId?: string;
   challengeId?: string;
   evaluation?: EvalutionType;
   shuffle?: boolean;
   sounds?: boolean;
-  questions: {
-    question: string;
-    _id?: string;
-    key: string;
-    type: QuestionType;
-    choices: string[];
-    correctAnswer: string;
-    pontuation?: number;
-    file?: File | any | string;
-  }[];
+  questions: IQuestion[];
 }
 
-export interface IAnswer {
+export interface IAnswer
+{
   answer: string | File | any;
   pontuation?: number;
   _id: string;
 }[]
 
-export const createQuizz = async (data: QuizzData) => {
-  try {
+export const createQuizz = async (data: QuizzData) =>
+{
+  try
+  {
     const response = await api.post(endpoints.createQuizzRoute, data);
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const getChallenges = async () => {
-  try {
+export const getChallenges = async () =>
+{
+  try
+  {
     const response = await api.get(endpoints.getChallengesByUserId);
 
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const getSingleQuizz = async (id: string) => {
-  try {
+export const getSingleQuizz = async (id: string) =>
+{
+  try
+  {
     const response = await api.get(endpoints.getSingleQuizz + id);
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const editQuizz = async (data: QuizzData) => {
-  try {
+export const editQuizz = async (data: QuizzData) =>
+{
+  try
+  {
     const response = await api.post(endpoints.editQuizzRoute, data);
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const editQuizzStatus = async (id: string, status: QuizzStatus) => {
-  try {
+export const editQuizzStatus = async (id: string, status: QuizzStatus) =>
+{
+  try
+  {
     const response = await api.post(endpoints.editQuizzStatusRoute, { quizId: id, status: status });
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const deleteQuizz = async (id: string) => {
-  try {
+export const deleteQuizz = async (id: string) =>
+{
+  try
+  {
     const response = await api.post(endpoints.deleteQuizzRoute, { quizId: id });
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnswer }) => {
-  try {
+export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnswer }) =>
+{
+  try
+  {
     const formData = new FormData();
     addToFormData(data, formData);
 
@@ -123,16 +153,20 @@ export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnsw
     });
 
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };
 
-export const getAnswers = async (id: string) => {
-  try {
+export const getAnswers = async (id: string) =>
+{
+  try
+  {
     const response = await api.get(endpoints.getAnswers + id);
     return response.data;
-  } catch (error) {
+  } catch (error)
+  {
     throw error;
   }
 };

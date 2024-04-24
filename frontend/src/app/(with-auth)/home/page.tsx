@@ -33,7 +33,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [showHiddenChallenges, setShowHiddenChallenges] = useState(false);
   const { user } = useSession();
-  console.log(user)
+ 
   const GetUserChallenges = async () => {
     setIsLoading(true);
     try {

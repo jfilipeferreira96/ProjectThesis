@@ -4,8 +4,9 @@ import { User, useSession } from "@/providers/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select, Avatar } from "@mantine/core";
 import { IconDatabaseOff, IconEye, IconEyeCheck } from "@tabler/icons-react";
-import { getAnswers, IAnswer } from "@/services/quizz.service";
+import { getAnswers, IAnswer, IQuestion } from "@/services/quizz.service";
 import { notifications } from "@mantine/notifications";
+import AnswersModal from "./modal-answers";
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
   text-align: center;
@@ -23,20 +24,22 @@ type DataItem = {
 };
 
 interface AnswersProps {
-  quizzes?: {label: string, value: string}[];
+  quizzes?: { label: string, value: string, questions: IQuestion[] }[];
 }
 
 const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   const { quizzes } = props;
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedQuizz, setSelectedQuizz] = useState<string | null>(quizzes && quizzes.length > 0 ? quizzes[0].value : "");
-  const [state, setState] = useState<any[]>([]);
-
+  const [selectedQuizz, setSelectedQuizz] = useState<string | null>(quizzes && quizzes.length > 0 ? quizzes[0].value : null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [state, setState] = useState<DataItem[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  
   useEffect(() => {
     const fetchAnswers = async (quizId: string) => {
       try {
         const response = await getAnswers(quizId);
-        console.log(response);
+        
         if (response.status === true) {
           setState(response.data);
         }
@@ -110,7 +113,14 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
 
         <Table.Td>
           <Tooltip label={"Check and review answers"} withArrow position="top">
-            <ActionIcon variant="subtle" color={item.reviewed === true ? "green" : "red"} onClick={() => null}>
+            <ActionIcon
+              variant="subtle"
+              color={item.reviewed === true ? "green" : "red"}
+              onClick={() => {
+                setSelectedUser(item.user);
+                setIsOpen(true)
+              }}
+            >
               <IconEye style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
             </ActionIcon>
           </Tooltip>
@@ -120,6 +130,11 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   };
 
   const rows = createRows(state);
+
+  const closeModal = () => {
+    setSelectedUser(null);
+    setIsOpen(false)
+  }
 
   if (isLoading) {
     return (
@@ -135,7 +150,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
         <Title order={2}>Answers</Title>
 
         <Text c="dimmed" fw={500}>
-          Check your students answers and give them a score
+          Review your students responses and assign scores accordingly. If the quiz is set to automatic, validation is not required.
         </Text>
 
         <Select
@@ -148,6 +163,14 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
           defaultValue={selectedQuizz}
           onChange={(value: string | null) => setSelectedQuizz(value)}
           allowDeselect={false}
+        />
+
+        <AnswersModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          selectedUser={selectedUser}
+          answers={selectedUser ? state.find(s => s.user._id === selectedUser._id)?.answers : undefined}
+          quizz={quizzes?.find(q => q.value === selectedQuizz)}
         />
 
         <StyledTableContainer minWidth={800}>

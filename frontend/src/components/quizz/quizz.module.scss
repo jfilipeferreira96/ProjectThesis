@@ -9,8 +9,10 @@ $disabled: #9c9c9c;
   align-items: center;
   justify-content: center;
 
-  @media (min-width: 1200px) {
-    min-height: 600px;
+  .minHeight{
+    @media (min-width: 1200px) {
+      min-height: 600px;
+    }
   }
 
   .activeQuestion {
@@ -82,8 +84,8 @@ $disabled: #9c9c9c;
    }
   }
 
-  .body{
-
+  .reviewheader{
+    margin-bottom: 1rem;
   }
 
   .footer {
