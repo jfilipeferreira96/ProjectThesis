@@ -1,5 +1,11 @@
 $disabled: #9c9c9c;
 
+.minHeight{
+  @media (min-width: 1200px) {
+    min-height: 600px;
+  }
+}
+
 .card {
   border-radius: 4px;
   margin-top: 20px;
@@ -8,12 +14,6 @@ $disabled: #9c9c9c;
   position: relative;
   align-items: center;
   justify-content: center;
-
-  .minHeight{
-    @media (min-width: 1200px) {
-      min-height: 600px;
-    }
-  }
 
   .activeQuestion {
     font-size: 32px;

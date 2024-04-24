@@ -35,12 +35,13 @@ interface Props
   isAutomatic?: boolean;
   sounds?: boolean;
   reviewMode?: boolean;
-  questionNumber?: { total: number, atual: number}
+  questionNumber?: { total: number, atual: number }
+  answer?: IAnswer | any | undefined
 }
 
 const Quizz = (props: Props) =>
 {
-  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber } = props;
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -52,11 +53,21 @@ const Quizz = (props: Props) =>
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
+    if (reviewMode && result.userAnswers.length === 0 && answer)
+    {
+      const resultWithAnswer = {
+        ...result,
+        userAnswers: [answer]
+      }
+      setResult(resultWithAnswer)
+    }
+  }, [reviewMode, answer])
+
+  useEffect( () => {
     if (!preview)
     {
       interval.start();
@@ -68,6 +79,8 @@ const Quizz = (props: Props) =>
 
   const handleChoiceSelection = (chosenAnswer: string) =>
   {
+    if (reviewMode) return;
+    
     setResult((prevResult) =>
     {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
@@ -95,6 +108,8 @@ const Quizz = (props: Props) =>
 
   const handleFile = (file: File | null | string) =>
   {
+    if (reviewMode) return;
+
     setResult((prevResult) =>
     {
       const updatedUserAnswers = prevResult.userAnswers.slice();
@@ -126,6 +141,8 @@ const Quizz = (props: Props) =>
 
   const SendAndSaveAnswer = async (userAnswers: IAnswer | any) =>
   {
+    if (reviewMode) return;
+
     setIsLoading(true);
 
     const answers: IAnswer = userAnswers.map((ans: IAnswer) => ({ ...ans, pontuation: 0 }));
@@ -163,6 +180,8 @@ const Quizz = (props: Props) =>
 
   const endChallenge = () =>
   {
+    if (reviewMode) return;
+
     let score = 0;
     let correctAnswers = 0;
     let wrongAnswers = 0;
@@ -216,17 +235,16 @@ const Quizz = (props: Props) =>
     setShowResult(true);
   };
 
-  setTimeout(() =>
-  {
+  setTimeout(() => {
     setShowAnswerTimer(true);
   });
 
-  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) =>
-  {
+  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    if (reviewMode) return;
+
     const userInput = evt.target.value;
 
-    setResult((prevResult) =>
-    {
+    setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
 
       // Check if the current question id is already in userAnswers
@@ -249,8 +267,7 @@ const Quizz = (props: Props) =>
     });
   };
 
-  const handleTryAgain = () =>
-  {
+  const handleTryAgain = () => {
     setResult({
       score: 0,
       correctAnswers: 0,
@@ -270,7 +287,13 @@ const Quizz = (props: Props) =>
     {
       return (
         <div className={classes.answerDiv}>
-          <Input className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} />
+          <Input
+            className="specialinput"
+            size={"lg"}
+            value={result.userAnswers[currentQuestion]?.answer || ""}
+            onChange={handleInputChange} mb={10}
+            disabled={reviewMode ? true : false}
+          />
         </div>
       );
     }
@@ -291,6 +314,7 @@ const Quizz = (props: Props) =>
             name="files"
             onChange={handleFile}
             clearable
+            disabled={reviewMode ? true : false}
           />
         </div>
       );
@@ -320,7 +344,7 @@ const Quizz = (props: Props) =>
     <Grid align="center" justify="center">
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }}>
         {!showResult && (
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md" className={reviewMode ? classes.card : classes.card + " " + classes.minHeight}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md"   className={reviewMode ? classes.card : `${classes.card} ${classes.minHeight}`}>
             <>
               {/* {showAnswerTimer && <AnswerTimer duration={10} onTimeUp={handleTimeUp} />} */}
               {/* Secção Header */}
