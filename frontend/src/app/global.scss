@@ -26,6 +26,10 @@
     font-size: 16px
   }
   
+  input:disabled{
+    opacity: 0.9;
+    color:var(--mantine-color-bright);
+  }
   //password
   .mantine-PasswordInput-input{
     background-color: light-dark(rgb(249 250 251 ), var(--mantine-color-dark-6));

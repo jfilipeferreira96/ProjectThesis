@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button, Group, Text, Badge, Title, Grid } from '@mantine/core';
+import { Modal, Button, Group, Text, Badge, Title, Grid, NumberInput } from '@mantine/core';
 import { useState } from 'react';
 import { IAnswer, IQuestion, QuestionType, QuizzData } from '@/services/quizz.service';
 import Quizz from '@/components/quizz';
@@ -17,9 +17,10 @@ interface ModalProps{
 
 function AnswersModal(props: ModalProps) {
     //const [opened, { close, open }] = useDisclosure(false);
-    const [formattedAnswers, setFormattedAnswers] = useState([]);
     const { quizz, selectedUser, answers, isOpen, onClose } = props;
- 
+    const [intialAnswers, setInitialAnswers] = useState<IAnswer[] | undefined>(Array.isArray(answers) ? answers : undefined);
+    const [modifiedAnswers, setModifiedAnswers] = useState<IAnswer[] | undefined>(Array.isArray(answers) ? answers : undefined);
+
    /*  const checkAllAnswered = () => {
         for (const answer of formattedAnswers)
         {
@@ -31,13 +32,33 @@ function AnswersModal(props: ModalProps) {
         return true; 
     }; */
 
+    const onChangePontuation = (answerId: string, pontuation: number) => {
+        let newAnswers = Array.isArray(modifiedAnswers) ? modifiedAnswers.map((answer: IAnswer) =>
+        {
+            if (answer._id === answerId)
+            {
+                return { ...answer, pontuation: pontuation };
+            }
+            return answer;
+        }) : [];
+
+        setModifiedAnswers(newAnswers);
+    }
+
+
     return (
         <Modal opened={isOpen} onClose={onClose} size="100%" >
             
-            
-            <Title size={"h3"} ml={5}>
-                {`Review Quizz: ${quizz?.label} - Student: ${selectedUser?.fullname} (${selectedUser?.email})`}
-            </Title>
+            <Group justify="space-between" align="end">
+
+                <Title size={"h3"} ml={5}>
+                    {`Review Quizz: ${quizz?.label} - Student: ${selectedUser?.fullname} (${selectedUser?.email})`}
+                </Title>
+                <Title size={"h3"} ml={5}>
+                    Total pontuation: 0
+                </Title>
+                
+            </Group>
             
             {quizz?.questions && quizz?.questions.length > 0 &&
                 quizz?.questions.map((question: IQuestion, index) => {
@@ -46,6 +67,7 @@ function AnswersModal(props: ModalProps) {
                             <Quizz
                                 questions={[question]}
                                 answer={answers && question && Array.isArray(answers) && answers.find(ans => ans._id === question._id)}
+                                setAnswerPontuation={onChangePontuation}
                                 reviewMode
                                 questionNumber={{total: quizz?.questions.length, atual: index}}
                             /> 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./quizz.module.scss";
-import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside } from "@mantine/core";
+import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
 import { IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
@@ -35,13 +35,13 @@ interface Props
   isAutomatic?: boolean;
   sounds?: boolean;
   reviewMode?: boolean;
-  questionNumber?: { total: number, atual: number }
-  answer?: IAnswer | any | undefined
+  questionNumber?: { total: number, atual: number };
+  answer?: IAnswer | any | undefined;
+  setAnswerPontuation?: (answerId: string, pontuation: number) => void
 }
 
-const Quizz = (props: Props) =>
-{
-  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer } = props;
+const Quizz = (props: Props) => {
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -350,13 +350,32 @@ const Quizz = (props: Props) =>
               {/* Secção Header */}
               {reviewMode &&
                 
-                  <div className={classes.reviewheader}>
-                    <Title order={3} mb={20}>
-                      <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
-                      {questionNumber && questionNumber.atual + 1}
-                      </Text>
-                        /{ questionNumber && questionNumber.total}
-                    </Title>
+                <div className={classes.reviewheader}>
+                  <Group justify="space-between" align="center">
+
+                      <Title order={3} mb={20}>
+                        <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
+                        {questionNumber && questionNumber.atual + 1}
+                        </Text>
+                          /{ questionNumber && questionNumber.total}
+                      </Title>
+
+                      <NumberInput
+                        label="Pontuation"
+                        className="specialinput"
+                        mt={10}
+                        withAsterisk
+                        placeholder="Enter the points (e.g., 10)"
+                        defaultValue={answer.pontuation}
+                        min={0}
+                        onChange={(value: string | number) => {
+                          if (typeof value === 'number')
+                          {
+                            setAnswerPontuation && answer && setAnswerPontuation(answer._id, value);
+                          } 
+                        }}
+                      />
+                    </Group>
                   </div>
               }
 
