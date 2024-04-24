@@ -35,7 +35,7 @@ interface Props
   isAutomatic?: boolean;
   sounds?: boolean;
   reviewMode?: boolean;
-  questionNumber: { total: number, atual: number}
+  questionNumber?: { total: number, atual: number}
 }
 
 const Quizz = (props: Props) =>
@@ -329,9 +329,9 @@ const Quizz = (props: Props) =>
                   <div className={classes.reviewheader}>
                     <Title order={3} mb={20}>
                       <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
-                        {questionNumber.atual + 1}
+                      {questionNumber && questionNumber.atual + 1}
                       </Text>
-                        /{questionNumber.total}
+                        /{ questionNumber && questionNumber.total}
                     </Title>
                   </div>
               }
