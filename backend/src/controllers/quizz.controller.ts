@@ -248,6 +248,7 @@ class QuizzController {
     try {
       const { quizId, userAnswers } = req.body;
 
+      let answersArray = userAnswers;
       const user: any = req.user;
 
       // Check if the quiz exists
@@ -300,16 +301,29 @@ class QuizzController {
 
           const filePath = path.join(storagePath, fileName);
           fs.writeFileSync(filePath, file.buffer);
+
+          //fix: adiciona ao userAnswers o path como string
+          answersArray = answersArray.map((ans:IAnswer) => {
+            if (ans._id === questionId && ans.answer === undefined) {
+              return {
+                ...ans,
+                answer: `${storagePath}/${fileName}`,
+              };
+            } else {
+              return ans;
+            }
+          });
+
         });
       }
-
+  
       let score = 0;
       let correctAnswers = 0;
       let wrongAnswers = 0;
 
-      let answersToSave: IAnswer[] = userAnswers;
+      let answersToSave: IAnswer[] = answersArray;
       if (quiz.evaluation === EvalutionType.Automatic) {
-        userAnswers.forEach((userAnswer: IAnswer, index: number) => {
+        answersArray.forEach((userAnswer: IAnswer, index: number) => {
           const question = quiz.questions.find((q) => q._id && q._id.toString() === userAnswer._id);
           const answer = userAnswer.answer;
 
@@ -346,7 +360,7 @@ class QuizzController {
 
       const quizResponse = await QuizResponse.create(quizResponseData);
       const UserModel = await User.findById(user._id);
-
+ 
       if (UserModel && quiz.evaluation === EvalutionType.Automatic) {
         const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
         if (existingChallengeScore) {
