@@ -16,6 +16,14 @@ const StyledTableContainer = styled(Table.ScrollContainer)`
   }
 `;
 
+const CenteredDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const ContentContainer = styled.div`
+  text-align: center;
+`;
 type DataItem = {
   score: number;
   user: User;
@@ -70,6 +78,10 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
 
     if (quizzes && quizzes?.length > 0 && selectedQuizz) {
       fetchAnswers(selectedQuizz);
+    }
+
+    if (selectedQuizz === null) {
+      setIsLoading(false);
     }
   }, [selectedQuizz, fetchFlag]);
 
@@ -158,56 +170,73 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
       <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
         <Title order={2}>Answers</Title>
 
-        <Text c="dimmed" fw={500}>
-          Review your students responses and assign scores accordingly. If the quiz is set to automatic, validation is not required.
-        </Text>
-
-        <Select
-          checkIconPosition="left"
-          data={quizzes}
-          pb={20}
-          c="dimmed"
-          label="Selected Quizz"
-          placeholder="Pick quizz"
-          defaultValue={selectedQuizz}
-          onChange={(value: string | null) => setSelectedQuizz(value)}
-          allowDeselect={false}
-        />
-
-        <AnswersModal
-          isOpen={isOpen}
-          onClose={closeModal}
-          selectedUser={selectedUser}
-          answers={selectedUser ? state.find((s) => s.user._id === selectedUser._id)?.answers : undefined}
-          quizz={quizzes?.find((q) => q.value === selectedQuizz)}
-        />
-
-        <StyledTableContainer minWidth={800}>
-          <Table verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Email</Table.Th>
-                <Table.Th>Student ID</Table.Th>
-                <Table.Th>Score</Table.Th>
-                <Table.Th>State</Table.Th>
-                <Table.Th>Actions</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
-          </Table>
-
-          {rows.length === 0 && (
-            <Flex justify={"center"} mt="xl" display="block">
-              <ActionIcon size="xl" disabled aria-label="There are no available answers">
-                <IconDatabaseOff />
-              </ActionIcon>
+        {selectedQuizz === null && (
+          <CenteredDiv>
+            <ContentContainer>
+                <ActionIcon size="xl" disabled aria-label="There are no available quizzes">
+                  <IconDatabaseOff />
+                </ActionIcon>
               <Text c="dimmed" size="sm" ta="center" mt={5}>
-                {"There are no available answers"}
+                {"There are no available quizzes"}
               </Text>
-            </Flex>
-          )}
-        </StyledTableContainer>
+            </ContentContainer>
+          </CenteredDiv>
+        )}
+        
+        {selectedQuizz !== null && (
+          <>
+            <Text c="dimmed" fw={500}>
+              Review your students responses and assign scores accordingly. If the quiz is set to automatic, validation is not required.
+            </Text>
+
+            <Select
+              checkIconPosition="left"
+              data={quizzes}
+              pb={20}
+              c="dimmed"
+              label="Selected Quizz"
+              placeholder="Pick quizz"
+              defaultValue={selectedQuizz}
+              onChange={(value: string | null) => setSelectedQuizz(value)}
+              allowDeselect={false}
+            />
+
+            <AnswersModal
+              isOpen={isOpen}
+              onClose={closeModal}
+              selectedUser={selectedUser}
+              answers={selectedUser ? state.find((s) => s.user._id === selectedUser._id)?.answers : undefined}
+              quizz={quizzes?.find((q) => q.value === selectedQuizz)}
+            />
+
+            <StyledTableContainer minWidth={800}>
+              <Table verticalSpacing="sm">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Name</Table.Th>
+                    <Table.Th>Email</Table.Th>
+                    <Table.Th>Student ID</Table.Th>
+                    <Table.Th>Score</Table.Th>
+                    <Table.Th>State</Table.Th>
+                    <Table.Th>Actions</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                {rows.length > 0 && <Table.Tbody>{rows}</Table.Tbody>}
+              </Table>
+
+              {rows.length === 0 && (
+                <Flex justify={"center"} mt="xl" display="block">
+                  <ActionIcon size="xl" disabled aria-label="There are no available answers">
+                    <IconDatabaseOff />
+                  </ActionIcon>
+                  <Text c="dimmed" size="sm" ta="center" mt={5}>
+                    {"There are no available answers"}
+                  </Text>
+                </Flex>
+              )}
+            </StyledTableContainer>
+          </>
+        )}
       </Paper>
     </Grid.Col>
   );
