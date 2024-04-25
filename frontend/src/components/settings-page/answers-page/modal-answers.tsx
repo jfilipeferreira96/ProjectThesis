@@ -37,7 +37,22 @@ function AnswersModal(props: ModalProps) {
       const response = await editQuizzPontuation(selectedUser?._id, quizz?.value, modifiedAnswers);
       console.log(response)
       if (response.status) {
+      //mesagem de sucesso
+        notifications.show({
+          title: "Success",
+          message: "",
+          color: "green",
+        });
+        
         onClose(true);
+      }
+      //apresentaçao da mensagem de erro
+      else {
+        notifications.show({
+          title: "Success",
+          message: response.message,
+          color: "red",
+        });
       }
     } catch (error) {
       notifications.show({

@@ -487,11 +487,11 @@ class QuizzController {
 
   static async UpdateUserPontuationOfQuizz(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId, quizId, newAnswers } = req.body;
-
+      const { userId, quizzId, newAnswers } = req.body;
+      
       // Check if the required fields are present in the request body
-      if (!userId || !quizId || !newAnswers) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
+      if (!userId || !quizzId || !newAnswers) {
+        return res.status(StatusCodes.OK).json({
           status: false,
           message: "Missing required fields in the request body",
         });
@@ -506,7 +506,7 @@ class QuizzController {
         });
       }
 
-      const quizExists = await Quizz.exists({ _id: quizId });
+      const quizExists = await Quizz.exists({ _id: quizzId });
       if (!quizExists) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
@@ -515,7 +515,7 @@ class QuizzController {
       }
 
       // Get the user's response for the quiz
-      let quizResponse: IQuizResponse | null = await QuizResponse.findOne({ quiz: quizId, user: userId });
+      let quizResponse: IQuizResponse | null = await QuizResponse.findOne({ quiz: quizzId, user: userId });
 
       if (!quizResponse) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -536,6 +536,7 @@ class QuizzController {
 
       // Update the response's score
       quizResponse.score = totalScore;
+      quizResponse.reviewed = true;
 
       // Save the updated response to the database
       await quizResponse.save();
