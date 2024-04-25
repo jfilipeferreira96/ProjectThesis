@@ -19,12 +19,12 @@ const StyledTableContainer = styled(Table.ScrollContainer)`
 type DataItem = {
   score: number;
   user: User;
-  answers: IAnswer
-  reviewed: boolean
+  answers: IAnswer;
+  reviewed: boolean;
 };
 
 interface AnswersProps {
-  quizzes?: { label: string, value: string, questions: IQuestion[] }[];
+  quizzes?: { label: string; value: string; questions: IQuestion[] }[];
 }
 
 const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
@@ -33,13 +33,18 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
   const [selectedQuizz, setSelectedQuizz] = useState<string | null>(quizzes && quizzes.length > 0 ? quizzes[0].value : null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [state, setState] = useState<DataItem[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [fetchFlag, setFetchFlag] = useState<number>(0);
+
+  const refreshTable = () => {
+    setFetchFlag(fetchFlag + 1);
+  };
+
   useEffect(() => {
     const fetchAnswers = async (quizId: string) => {
       try {
         const response = await getAnswers(quizId);
-        
+
         if (response.status === true) {
           setState(response.data);
         }
@@ -66,7 +71,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
     if (quizzes && quizzes?.length > 0 && selectedQuizz) {
       fetchAnswers(selectedQuizz);
     }
-  }, [selectedQuizz]);
+  }, [selectedQuizz, fetchFlag]);
 
   const createRows = (data: DataItem[]) => {
     return data.map((item: DataItem) => (
@@ -118,7 +123,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
               color={item.reviewed === true ? "green" : "red"}
               onClick={() => {
                 setSelectedUser(item.user);
-                setIsOpen(true)
+                setIsOpen(true);
               }}
             >
               <IconEye style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
@@ -131,10 +136,14 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
 
   const rows = createRows(state);
 
-  const closeModal = () => {
+  const closeModal = (shouldRefreshTable: boolean = false) => {
     setSelectedUser(null);
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+
+    if (shouldRefreshTable) {
+      refreshTable();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -169,8 +178,8 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
           isOpen={isOpen}
           onClose={closeModal}
           selectedUser={selectedUser}
-          answers={selectedUser ? state.find(s => s.user._id === selectedUser._id)?.answers : undefined}
-          quizz={quizzes?.find(q => q.value === selectedQuizz)}
+          answers={selectedUser ? state.find((s) => s.user._id === selectedUser._id)?.answers : undefined}
+          quizz={quizzes?.find((q) => q.value === selectedQuizz)}
         />
 
         <StyledTableContainer minWidth={800}>

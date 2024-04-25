@@ -432,7 +432,6 @@ class QuizzController {
   }
 
   static async GetListOfUserAnswersPerQuizz(req: Request, res: Response, next: NextFunction) {
-
     try {
       const quizId = req.params.id;
       const userId: any = req.user._id;
@@ -461,7 +460,6 @@ class QuizzController {
 
       const quizResponses: IQuizResponse[] = await QuizResponse.find({ quiz: quizId }).populate("user").exec();
 
-
       if (!quizResponses || quizResponses.length === 0) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: true,
@@ -487,7 +485,70 @@ class QuizzController {
     }
   }
 
-  static async UpdateUserPontuationOfQuizz(req: Request, res: Response, next: NextFunction) {}
+  static async UpdateUserPontuationOfQuizz(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId, quizId, newAnswers } = req.body;
+
+      // Check if the required fields are present in the request body
+      if (!userId || !quizId || !newAnswers) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          status: false,
+          message: "Missing required fields in the request body",
+        });
+      }
+
+      // Check if the user and quiz exist
+      const userExists = await User.exists({ _id: userId });
+      if (!userExists) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "User not found",
+        });
+      }
+
+      const quizExists = await Quizz.exists({ _id: quizId });
+      if (!quizExists) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quiz not found",
+        });
+      }
+
+      // Get the user's response for the quiz
+      let quizResponse: IQuizResponse | null = await QuizResponse.findOne({ quiz: quizId, user: userId });
+
+      if (!quizResponse) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: true,
+          message: "No response found for this quiz and user",
+        });
+      }
+
+      // Replace the current answers with the new ones
+      quizResponse.answers = newAnswers;
+
+      let totalScore = 0;
+
+      // Calculate the new score and update the pontuations of each answer
+      for (const answer of newAnswers) {
+        totalScore += answer.pontuation;
+      }
+
+      // Update the response's score
+      quizResponse.score = totalScore;
+
+      // Save the updated response to the database
+      await quizResponse.save();
+
+      return res.status(StatusCodes.OK).json({
+        status: true,
+        message: "Quizz updated successfully",
+        score: totalScore,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default QuizzController;

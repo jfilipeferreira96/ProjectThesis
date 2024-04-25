@@ -37,7 +37,7 @@ interface Props
   reviewMode?: boolean;
   questionNumber?: { total: number, atual: number };
   answer?: IAnswer | any | undefined;
-  setAnswerPontuation?: (answerId: string, pontuation: number) => void
+  setAnswerPontuation?: (answerId: string, pontuation: number | undefined) => void
 }
 
 const Quizz = (props: Props) => {
@@ -139,8 +139,7 @@ const Quizz = (props: Props) => {
     setCurrentQuestion(id);
   };
 
-  const SendAndSaveAnswer = async (userAnswers: IAnswer | any) =>
-  {
+  const SendAndSaveAnswer = async (userAnswers: IAnswer | any) => {
     if (reviewMode) return;
 
     setIsLoading(true);
@@ -344,44 +343,46 @@ const Quizz = (props: Props) => {
     <Grid align="center" justify="center">
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }}>
         {!showResult && (
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md"   className={reviewMode ? classes.card : `${classes.card} ${classes.minHeight}`}>
+          <Paper withBorder shadow="md" p={30} mt={10} radius="md" className={reviewMode ? classes.card : `${classes.card} ${classes.minHeight}`}>
             <>
               {/* {showAnswerTimer && <AnswerTimer duration={10} onTimeUp={handleTimeUp} />} */}
               {/* Secção Header */}
-              {reviewMode &&
-                
+              {reviewMode && (
                 <div className={classes.reviewheader}>
                   <Group justify="space-between" align="center">
-
-                      <Title order={3} mb={20}>
-                        <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
+                    <Title order={3} mb={20}>
+                      <Text span fw={900} variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} className={classes.activeQuestion}>
                         {questionNumber && questionNumber.atual + 1}
-                        </Text>
-                          /{ questionNumber && questionNumber.total}
-                      </Title>
+                      </Text>
+                      /{questionNumber && questionNumber.total}
+                    </Title>
 
-                      <NumberInput
-                        label="Pontuation"
-                        className="specialinput"
-                        mt={10}
-                        withAsterisk
-                        placeholder="Enter the points (e.g., 10)"
-                        defaultValue={answer.pontuation}
-                        min={0}
-                        onChange={(value: string | number) => {
-                          if (typeof value === 'number')
-                          {
+                    <NumberInput
+                      label="Pontuation"
+                      className="specialinput"
+                      mt={10}
+                      withAsterisk
+                      placeholder="Points (e.g., 10)"
+                      defaultValue={answer?.pontuation}
+                      min={0}
+                      error={answer && answer?.pontuation === undefined}
+                      onChange={(value: string | number) => {
+                          if (typeof value === "string") {
+                            // Convert string to number
+                            const numericValue = parseFloat(value); 
+                            setAnswerPontuation && answer && setAnswerPontuation(answer._id, undefined);
+                          } else {
+                            // Value is already a number
                             setAnswerPontuation && answer && setAnswerPontuation(answer._id, value);
-                          } 
-                        }}
-                      />
-                    </Group>
-                  </div>
-              }
+                          }
+                      }}
+                    />
+                  </Group>
+                </div>
+              )}
 
-              {!reviewMode &&
+              {!reviewMode && (
                 <div className={classes.header}>
-
                   <Grid>
                     <Grid.Col span={{ md: 9, sm: 9, xs: 9, lg: 9 }}>
                       <div className={classes.header}>
@@ -389,9 +390,8 @@ const Quizz = (props: Props) => {
                       </div>
                     </Grid.Col>
                   </Grid>
-
                 </div>
-              }
+              )}
 
               <div className={classes.body}>
                 {/* Secção Body */}
@@ -401,7 +401,7 @@ const Quizz = (props: Props) => {
               </div>
 
               {/* Secção Footer */}
-              {!reviewMode &&
+              {!reviewMode && (
                 <div className={classes.footer}>
                   <Group justify="center">
                     {currentQuestion > 0 && (
@@ -420,7 +420,7 @@ const Quizz = (props: Props) => {
                     )}
                   </Group>
                 </div>
-              }
+              )}
             </>
           </Paper>
         )}

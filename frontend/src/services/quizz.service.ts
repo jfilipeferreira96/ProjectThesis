@@ -170,3 +170,12 @@ export const getAnswers = async (id: string) =>
     throw error;
   }
 };
+
+export const editQuizzPontuation = async (userId: string, quizzId: string, newAnswers: IAnswer[]) => {
+  try {
+    const response = await api.post(endpoints.editQuizzPontuationRoute, { userId, quizzId, newAnswers });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

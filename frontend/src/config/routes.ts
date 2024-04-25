@@ -23,6 +23,7 @@ export const endpoints = {
   getSingleQuizz: `${host}/api/quizz/`,
   saveQuizAnswerRoute: `${host}/api/quizz/answer`,
   getAnswers: `${host}/api/quizz/answers/`,
+  editQuizzPontuationRoute: `${host}/api/quizz/updateUserPontuation/`,
 };
 
 export const routes = {

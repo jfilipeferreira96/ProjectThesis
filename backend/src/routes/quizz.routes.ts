@@ -22,4 +22,6 @@ quizzRoutes.post("/quizz/answer", authenticateToken, upload.array("files"), Quiz
 
 quizzRoutes.get("/quizz/answers/:id", authenticateToken, QuizzController.GetListOfUserAnswersPerQuizz);
 
+quizzRoutes.post("/quizz/updateUserPontuation", authenticateToken, QuizzController.UpdateUserPontuationOfQuizz);
+
 export default quizzRoutes;
