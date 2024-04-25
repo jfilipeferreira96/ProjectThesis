@@ -13,6 +13,7 @@ import { EvalutionType, QuestionType, QuizzData, createQuizz } from "@/services/
 import { useRouter } from "next/navigation";
 import '@mantine/dates/styles.css';
 import styled from "styled-components";
+import ThreeDButton from "@/components/3dbutton";
 
 const StyledList = styled(List)`
   color: var(--mantine-color-dimmed);
@@ -185,17 +186,17 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       </Modal>
 
       <Flex justify="space-between">
-        <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} color="gray" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
+        <ThreeDButton color="gray" evensmaller mt="sm" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
           Back
-        </Button>
-        <div>
-          <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} mr={5} color="gray" onClick={open}>
+        </ThreeDButton>
+        <Flex>
+          <ThreeDButton color="gray" evensmaller mt="sm" onClick={open} mr="sm">
             Preview
-          </Button>
-          <Button type="submit" size={isMdScreen ? "md" : "lg"} p={isMdScreen ? 0 : undefined} variant={isMdScreen ? "transparent" : "filled"}>
+          </ThreeDButton>
+          <ThreeDButton color="blue" evensmaller mt="sm" type="submit">
             Save Quizz
-          </Button>
-        </div>
+          </ThreeDButton>
+        </Flex>
       </Flex>
 
       <Title>Create Quizz</Title>
@@ -235,11 +236,10 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                 <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
               </Group>
             </Radio.Group>
-            
+
             <Checkbox defaultChecked label="Enable sounds" mt="lg" name="sounds" {...form.getInputProps(`sounds`)} />
 
             <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
-
           </Paper>
         </Grid.Col>
 

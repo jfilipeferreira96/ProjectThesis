@@ -29,7 +29,7 @@ const Pushable = styled.button<{ width?: number }>`
   }
 `;
 
-const Shadow = styled.span<{ rounded?: boolean }>`
+const Shadow = styled.span<{ rounded?: number }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -42,7 +42,7 @@ const Shadow = styled.span<{ rounded?: boolean }>`
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
 `;
 
-const Edge = styled.span<{ rounded?: boolean }>`
+const Edge = styled.span<{ rounded?: number }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -52,10 +52,10 @@ const Edge = styled.span<{ rounded?: boolean }>`
   background: ${(props) => props.color};
 `;
 
-const Front = styled.span<{ disabled?: boolean; rounded?: boolean; smaller?: boolean; color?: string; textColor?: string; animationOnHover?: boolean }>`
+const Front = styled.span<{ disabled?: boolean; rounded?: number; smaller?: number; evensmaller?: number; color?: string; textColor?: string; animationonhover?: number }>`
   display: block;
   position: relative;
-  padding: ${(props) => (props.smaller ? "6px 42px" : "12px 42px")};
+  padding: ${(props) => (props.smaller == 1 ? "6px 42px" : props.evensmaller == 1 ? "8px 10px" : "12px 42px")};
   border-radius: ${(props) => (props.rounded ? "2rem" : "12px ")};
   font-size: 1.25rem;
   font-weight: 700;
@@ -65,14 +65,18 @@ const Front = styled.span<{ disabled?: boolean; rounded?: boolean; smaller?: boo
   will-change: transform;
   transform: translateY(-4px);
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-  min-width: 230px;
+  min-width: ${(props) => (props.evensmaller == 1 ? "130px" : "230px")};
+
+  @media (max-width: 600px) {
+    min-width: ${(props) => (props.evensmaller ? "100px" : "230px")}; 
+  }
 
   ${(props) =>
     props.disabled
       ? css`
           filter: brightness(80%);
         `
-      : props.animationOnHover
+      : props.animationonhover
       ? css`
           &:hover {
             transform: translateY(-6px);
@@ -99,9 +103,11 @@ type Props = {
   onClick?: () => void;
   disabled?: boolean;
   smaller?: boolean;
+  evensmaller?: boolean;
   rounded?: boolean;
   animationOnHover?: boolean;
   mt?: "sm" | "md" | "lg" | "xl";
+  mr?: "sm" | "md" | "lg" | "xl";
   type?: any;
   width?: number;
   textColor?: string;
@@ -109,7 +115,7 @@ type Props = {
 };
 
 function ThreeDButton(props:Props) {
-  const { children, color, onClick, disabled, mt, smaller, textColor, animationOnHover = true, rounded } = props;
+  const { children, color, onClick, disabled, mt, mr, smaller, textColor, animationOnHover = true, rounded, evensmaller } = props;
   const { colorScheme } = useMantineColorScheme();
   
   const colorStyles: Record<string, string> = {
@@ -124,11 +130,11 @@ function ThreeDButton(props:Props) {
   const bgColor = color ? colorStyles[color] : colorStyles.blue;
    
   return (
-    <Box mt={mt}>
+    <Box mt={mt} mr={mr}>
       <Pushable onClick={onClick} disabled={disabled}>
-        <Shadow rounded={rounded} />
-        <Edge color={bgColor} rounded={rounded} />
-        <Front color={color} textColor={textColor} disabled={disabled} smaller={smaller} animationOnHover={animationOnHover} rounded={rounded}>
+        <Shadow rounded={rounded ? 1 : 0} />
+        <Edge color={bgColor} rounded={rounded ? 1 : 0} />
+        <Front color={color} textColor={textColor} disabled={disabled} smaller={smaller ? 1 : 0} evensmaller={evensmaller ? 1 : 0} animationonhover={animationOnHover ? 1 : 0} rounded={rounded ? 1 : 0}>
           {children}
         </Front>
       </Pushable>

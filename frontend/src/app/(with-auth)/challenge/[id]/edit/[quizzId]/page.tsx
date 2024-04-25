@@ -40,6 +40,7 @@ import { EvalutionType, QuestionType, QuizzData, createQuizz, editQuizz, getSing
 import { useRouter } from "next/navigation";
 import "@mantine/dates/styles.css";
 import styled from "styled-components";
+import ThreeDButton from "@/components/3dbutton";
 
 const StyledList = styled(List)`
   color: var(--mantine-color-dimmed);
@@ -250,17 +251,17 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       </Modal>
 
       <Flex justify="space-between">
-        <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} color="gray" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
+        <ThreeDButton color="gray" evensmaller mt="sm" onClick={() => router.push(`${routes.challenge.url}/${id}/settings`)}>
           Back
-        </Button>
-        <div>
-          <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} mr={5} color="gray" onClick={open}>
+        </ThreeDButton>
+        <Flex>
+          <ThreeDButton color="gray" evensmaller mt="sm" onClick={open} mr="sm">
             Preview
-          </Button>
-          <Button type="submit" size={isMdScreen ? "md" : "lg"} p={isMdScreen ? 0 : undefined} variant={isMdScreen ? "transparent" : "filled"}>
+          </ThreeDButton>
+          <ThreeDButton color="blue" evensmaller mt="sm" type="submit">
             Save Quizz
-          </Button>
-        </div>
+          </ThreeDButton>
+        </Flex>
       </Flex>
 
       <Title>Edit Quizz</Title>
