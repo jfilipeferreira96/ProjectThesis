@@ -409,7 +409,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
               <Grid.Col span={{ md: 10.5, sm: 10, xs: 12, lg: 11 }}>
                 <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
                   <Title order={2}>Quizzes</Title>
-                  {rows.length === 0 && (
+                  {rows && rows.length === 0 ? (
                     <Text c="dimmed" fw={500}>
                       To get started, add a
                       <Text span c="red" fw={700} inherit>
@@ -417,6 +417,10 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                         quizz{" "}
                       </Text>
                       so your students can participate
+                    </Text>
+                  ) : (
+                    <Text c="dimmed" fw={500}>
+                      Check out the list below to see each quiz alongside its status.
                     </Text>
                   )}
                   <StyledTableContainer minWidth={800}>

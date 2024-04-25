@@ -1,17 +1,49 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Text,
+  Badge,
+  Modal,
+  Button,
+  Group,
+  Center,
+  SimpleGrid,
+  Grid,
+  Title,
+  TextInput,
+  Flex,
+  Loader,
+  Container,
+  Radio,
+  List,
+  CheckIcon,
+  Input,
+  Tooltip,
+  rem,
+  Paper,
+  Select,
+  FileInput,
+  NumberInput,
+  Checkbox,
+} from "@mantine/core";
+import { DateInput, DateTimePicker } from "@mantine/dates";
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
 import { randomId, useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconPlus, IconTrash, IconFile } from "@tabler/icons-react";
 import Quizz from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
+import { EvalutionType, QuestionType, QuizzData, createQuizz, editQuizz, getSingleQuizz } from "@/services/quizz.service";
 import { useRouter } from "next/navigation";
-import { QuestionType, QuizzData, getSingleQuizz, editQuizz } from "@/services/quizz.service";
-import { DateInput, DateTimePicker } from "@mantine/dates";
 import "@mantine/dates/styles.css";
+import styled from "styled-components";
+
+const StyledList = styled(List)`
+  color: var(--mantine-color-dimmed);
+`;
 
 const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: string } }) => {
   const router = useRouter();
@@ -28,7 +60,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
           setQuizzData(response.quiz.questions);
           // Assuming response.quiz.questions is an array of questions
           const initialQuestions = response.quiz.questions || [];
-          
+
           form.setValues({
             name: response.quiz.name,
             startdate: response.quiz.startDate ? (new Date(response.quiz.startDate) as unknown as string) : "",
@@ -63,14 +95,18 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       name: "",
       startdate: "",
       enddate: "",
+      evaluation: EvalutionType.Automatic,
+      shuffle: true,
+      sounds: false,
       questions: [
         {
           question: "",
-          _id: randomId(),
           key: randomId(),
           type: QuestionType.MultipleQuestions,
           choices: ["", "", "", ""],
           correctAnswer: "",
+          pontuation: 10,
+          file: "",
         },
       ],
     },
@@ -86,7 +122,10 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         if (!item.question) {
           errors.question = `Please fill in the question in question ${index + 1}.`;
         }
-        if (item.type === QuestionType.MultipleQuestions && !item.correctAnswer) {
+        if (!item.pontuation) {
+          errors.question = `Please fill in the pontuation in question ${index + 1}.`;
+        }
+        if (item.type === QuestionType.FillInBlank && !item.correctAnswer) {
           errors.correctAnswer = `Please fill in the correct answer field in question ${index + 1}.`;
         }
 
@@ -116,6 +155,8 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
         type: QuestionType.MultipleQuestions,
         choices: ["", "", "", ""],
         correctAnswer: "",
+        pontuation: 10,
+        file: "",
       });
     }
     setActive((current) => {
@@ -155,13 +196,32 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
     }
   };
 
-  const onSubmitHandler = useCallback(async (data: QuizzData) => {
-    
-    try {
+  const handleRadioChangeEvalution = (type: EvalutionType) => {
+    // Atualiza o valor do tipo de avaliação
+    form.setFieldValue(`evaluation`, type);
 
+    // Reset das perguntas para o estado inicial
+    form.setFieldValue(`questions`, [
+      {
+        question: "",
+        key: randomId(),
+        type: QuestionType.MultipleQuestions,
+        choices: ["", "", "", ""],
+        correctAnswer: "",
+        pontuation: 10,
+        file: "",
+      },
+    ]);
+
+    // Volta para a questão 1
+    setActive(0);
+  };
+
+  const onSubmitHandler = useCallback(async (data: QuizzData) => {
+    try {
       const sendObject = { ...data, quizzId: quizzId };
       const response = await editQuizz(sendObject);
-      
+
       if (response.status) {
         notifications.show({
           title: "Success",
@@ -186,7 +246,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       <title>Edit Challenge</title>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
-        <Quizz questions={form.values.questions} preview />
+        <Quizz questions={form.values.questions} preview isAutomatic={form.values.evaluation === EvalutionType.Automatic} />
       </Modal>
 
       <Flex justify="space-between">
@@ -197,40 +257,70 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
           <Button size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined} mr={5} color="gray" onClick={open}>
             Preview
           </Button>
-          <Button type="submit" size={isMdScreen ? "md" : "lg"} variant={isMdScreen ? "transparent" : "filled"} p={isMdScreen ? 0 : undefined}>
+          <Button type="submit" size={isMdScreen ? "md" : "lg"} p={isMdScreen ? 0 : undefined} variant={isMdScreen ? "transparent" : "filled"}>
             Save Quizz
           </Button>
         </div>
       </Flex>
 
       <Title>Edit Quizz</Title>
-      <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
+      <Text c="dimmed">Edit a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-      <Grid style={{marginBottom:"3rem"}}>
+      <Grid style={{ marginBottom: "3rem" }}>
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
             <Title order={3}>Configurations</Title>
 
-            <TextInput label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} />
-            <Group grow>
+            <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} mt="lg" />
+            <Group grow mt="lg">
               <DateTimePicker className="specialinput" label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
               <DateTimePicker className="specialinput" label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
             </Group>
+
+            <Radio.Group
+              name="evaluation"
+              label="Evaluation type"
+              withAsterisk
+              defaultValue={EvalutionType.Automatic}
+              {...form.getInputProps(`evaluation`)}
+              onChange={(type) => handleRadioChangeEvalution(type as EvalutionType)}
+              mt="lg"
+            >
+              <StyledList spacing="xs" size="xs" center icon={<></>}>
+                <List.Item>
+                  <b>Automatic:</b> Multiple questions and Fill in the blank
+                </List.Item>
+                <List.Item>
+                  <b>Manual:</b> Multiple questions, Fill in the blank and File Upload
+                </List.Item>
+              </StyledList>
+              <Group align="center" justify="center">
+                <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="lg" />
+                <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
+              </Group>
+            </Radio.Group>
+
+            <Checkbox defaultChecked label="Enable sounds" mt="lg" name="sounds" {...form.getInputProps(`sounds`)} />
+
+            <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
           </Paper>
         </Grid.Col>
 
         <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
           <Paper withBorder shadow="md" p={30} mt={10} radius="md">
             {form.values.questions.map((item, index) => {
+              const isManualEvaluation = form.values.evaluation === EvalutionType.Manual;
+
               if (index !== active) {
                 return;
               }
 
               return (
-                <div key={index}>
-                  <Group mt="xs" justify="space-between" align="center" mb={10}>
+                <div key={item.key}>
+                  <Group justify="space-between" align="center" mb={10}>
                     <Title order={3}>Question {index + 1}</Title>
+
                     <div>
                       {index !== 0 && (
                         <Tooltip label={"Delete question"} withArrow position="right">
@@ -261,24 +351,38 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                     </div>
                   </Group>
 
-                  <Radio.Group
-                    name="type"
-                    label="Select the question type"
-                    withAsterisk
-                    defaultValue={item.type}
-                    {...form.getInputProps(`questions.${index}.type`)}
-                    onChange={(type) => handleRadioChange(index, type as QuestionType)}
-                  >
-                    <Group align="center" justify="center">
-                      <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
-                      <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
-                    </Group>
-                  </Radio.Group>
+                  <Group grow mb={40}>
+                    <Radio.Group
+                      name="type"
+                      label="Select the question type"
+                      withAsterisk
+                      defaultValue={item.type}
+                      {...form.getInputProps(`questions.${index}.type`)}
+                      onChange={(type) => handleRadioChange(index, type as QuestionType)}
+                    >
+                      <Group align="center" justify="center">
+                        <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
+                        <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
+                        {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
+                      </Group>
+                    </Radio.Group>
+
+                    <NumberInput
+                      label="Pontuation"
+                      className="specialinput"
+                      description="Select the points awarded for this question when answered correctly"
+                      mt={10}
+                      withAsterisk
+                      placeholder="Enter the points (e.g., 10)"
+                      defaultValue={item.pontuation}
+                      {...form.getInputProps(`questions.${index}.pontuation`)}
+                    />
+                  </Group>
 
                   <TextInput
                     className="specialinput"
                     label={"Question"}
-                    placeholder={item.type === QuestionType.MultipleQuestions ? "Enter a question" : "What's the _ _ _ _ ?"}
+                    placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
                     withAsterisk
                     style={{ flex: 1 }}
                     {...form.getInputProps(`questions.${index}.question`)}
@@ -310,7 +414,30 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput className="specialinput" label={"Correct answer"} withAsterisk placeholder={"Correct answer"} style={{ flex: 1 }} {...form.getInputProps(`questions.${index}.correctAnswer`)} mt={10} />
+                    <TextInput
+                      className="specialinput"
+                      label={isManualEvaluation ? "Answer" : "Correct answer"}
+                      withAsterisk={isManualEvaluation ? false : true}
+                      placeholder={isManualEvaluation ? "Answer" : "Correct answer"}
+                      style={{ flex: 1 }}
+                      {...form.getInputProps(`questions.${index}.correctAnswer`)}
+                      mt={10}
+                    />
+                  )}
+
+                  {item.type === QuestionType.FileUpload && (
+                    <FileInput
+                      className="specialinput"
+                      rightSection={<IconFile />}
+                      label="Upload your file"
+                      placeholder="Your file"
+                      withAsterisk={isManualEvaluation ? false : true}
+                      rightSectionPointerEvents="none"
+                      mt={10}
+                      radius="lg"
+                      onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
+                      clearable
+                    />
                   )}
 
                   <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
