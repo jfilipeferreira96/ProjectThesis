@@ -118,3 +118,10 @@ $disabled: #9c9c9c;
   justify-content: center;
   display: flex;
 }
+
+.hoverDownload{
+  cursor: pointer;
+  &:hover{
+    color: var(--mantine-color-blue-filled);
+  }
+}

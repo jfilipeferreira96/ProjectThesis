@@ -437,6 +437,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                       radius="lg"
                       onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
                       clearable
+                      disabled
                     />
                   )}
 

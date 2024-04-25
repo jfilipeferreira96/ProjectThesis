@@ -3,9 +3,10 @@ import classes from "./quizz.module.scss";
 import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
-import { IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
-import { IconFile } from "@tabler/icons-react";
+import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
+import { IconFile, IconDownload } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
+import { User } from "@/providers/SessionProvider";
 
 export interface Question
 {
@@ -27,21 +28,21 @@ interface Result
   userAnswers: { _id: number | string; answer: string | File | any }[];
 }
 
-interface Props
-{
+interface Props {
   questions: Question[];
   preview?: boolean;
   quizId?: string;
   isAutomatic?: boolean;
   sounds?: boolean;
   reviewMode?: boolean;
-  questionNumber?: { total: number, atual: number };
+  questionNumber?: { total: number; atual: number };
   answer?: IAnswer | any | undefined;
-  setAnswerPontuation?: (answerId: string, pontuation: number | undefined) => void
+  setAnswerPontuation?: (answerId: string, pontuation: number | undefined) => void;
+  user?: User | null | undefined;
 }
 
 const Quizz = (props: Props) => {
-  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation } = props;
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation, user } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     score: 0,
@@ -301,20 +302,36 @@ const Quizz = (props: Props) => {
     {
       return (
         <div className={classes.answerDiv}>
-          <FileInput
-            className="specialinput"
-            rightSection={<IconFile />}
-            label="Upload your file"
-            placeholder="Your file"
-            withAsterisk={true}
-            rightSectionPointerEvents="none"
-            mt={10}
-            radius="lg"
-            name="files"
-            onChange={handleFile}
-            clearable
-            disabled={reviewMode ? true : false}
-          />
+          {reviewMode ? (
+            <TextInput
+              className="specialinput"
+              rightSection={<IconDownload className={classes.hoverDownload} onClick={() => getFileForDownload(questionId as string, user?._id as string, result?.userAnswers[0]?.answer)} />}
+              placeholder="Your file"
+              label="Upload your file"
+              radius="lg"
+              name="files"
+              withAsterisk={true}
+              disabled={reviewMode ? true : false}
+              rightSectionPointerEvents="all"
+              mt="md"
+              defaultValue={result?.userAnswers[0]?.answer}
+            />
+          ) : (
+            <FileInput
+              className="specialinput"
+              rightSection={<IconFile />}
+              label="Upload your file"
+              placeholder="Your file"
+              withAsterisk={true}
+              rightSectionPointerEvents="none"
+              mt={10}
+              radius="lg"
+              name="files"
+              onChange={handleFile}
+              clearable
+              disabled={reviewMode ? true : false}
+            />
+          )}
         </div>
       );
     }

@@ -292,8 +292,7 @@ class QuizzController {
         req.files.forEach((file) => {
           const [questionId, fileName] = file.originalname.split("#");
 
-          //const storagePath = `src/storage/${quizId}/${challenge._id}/${questionId}`;
-          const storagePath = `src/storage/${questionId}`;
+          const storagePath = `src/storage/${questionId}/${user._id}`;
           //Tratamento de ficheiros
           if (!fs.existsSync(storagePath)) {
             fs.mkdirSync(storagePath, { recursive: true });
@@ -303,20 +302,19 @@ class QuizzController {
           fs.writeFileSync(filePath, file.buffer);
 
           //fix: adiciona ao userAnswers o path como string
-          answersArray = answersArray.map((ans:IAnswer) => {
+          answersArray = answersArray.map((ans: IAnswer) => {
             if (ans._id === questionId && ans.answer === undefined) {
               return {
                 ...ans,
-                answer: `${storagePath}/${fileName}`,
+                answer: fileName,
               };
             } else {
               return ans;
             }
           });
-
         });
       }
-  
+
       let score = 0;
       let correctAnswers = 0;
       let wrongAnswers = 0;
@@ -360,7 +358,7 @@ class QuizzController {
 
       const quizResponse = await QuizResponse.create(quizResponseData);
       const UserModel = await User.findById(user._id);
- 
+
       if (UserModel && quiz.evaluation === EvalutionType.Automatic) {
         const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
         if (existingChallengeScore) {
@@ -399,50 +397,59 @@ class QuizzController {
     }
   }
 
-  static async GetQuestionFile(req: Request, res: Response, next: NextFunction) {
+  static async DownloadAnswerFile(req: Request, res: Response, next: NextFunction) {
     try {
-      const { questionId } = req.body;
+      const questionId = req.params.questionId;
+      const userId = req.params.userId;
 
-      if (!questionId) {
+      if (!questionId || !userId) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           status: false,
-          message: "Missing questionId in request body",
+          message: "Missing params",
         });
       }
 
-      const filePath = await QuizzController.findQuestionFile(questionId);
-
-      if (!filePath) {
+      const answerFilePath = await QuizzController.findQuestionFile(questionId, userId);
+      if (!answerFilePath) {
         return res.status(StatusCodes.NOT_FOUND).json({
           status: false,
-          message: "No file found for the given questionId",
+          message: "File not found",
         });
       }
 
-      // Retorna o ficheiro encontrado
-      return res.status(StatusCodes.OK).json({
-        status: true,
-        message: "Question file retrieved successfully",
-        data: filePath,
+      const fileInfo = path.parse(answerFilePath);
+      
+      res.download(answerFilePath, `${fileInfo.name}${fileInfo.ext}`, (err) => {
+        if (err) {
+          console.error("Error downloading file:", err);
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: "Internal server error",
+          });
+        }
       });
     } catch (error) {
-      next(error);
+      console.error("Error downloading file:", error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        status: false,
+        message: "Internal server error",
+      });
     }
   }
 
-  static async findQuestionFile(questionId: string): Promise<string | null> {
-    // Lógica para encontrar o ficheiro com base no questionId
-    const storagePath = `src/storage/${questionId}`; // Substituir por seu próprio caminho de armazenamento
+  static async findQuestionFile(questionId: string, userId: string): Promise<string | null> {
+    const storagePath = `src/storage/${questionId}/${userId}`;
 
-    // Se o ficheiro existir, retorna o caminho completo do ficheiro
     if (fs.existsSync(storagePath)) {
       const files = fs.readdirSync(storagePath);
+
       if (files.length > 0) {
-        return path.join(storagePath, files[0]); // Retorna apenas o primeiro ficheiro encontrado
+        const filePath = path.join(storagePath, files[0]);
+        return filePath;
       }
     }
 
-    return null; // Retorna null se nenhum ficheiro for encontrado
+    return null;
   }
 
   static async GetListOfUserAnswersPerQuizz(req: Request, res: Response, next: NextFunction) {
@@ -502,7 +509,7 @@ class QuizzController {
   static async UpdateUserPontuationOfQuizz(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId, quizzId, newAnswers } = req.body;
-      
+
       // Check if the required fields are present in the request body
       if (!userId || !quizzId || !newAnswers) {
         return res.status(StatusCodes.OK).json({

@@ -24,6 +24,7 @@ export const endpoints = {
   saveQuizAnswerRoute: `${host}/api/quizz/answer`,
   getAnswers: `${host}/api/quizz/answers/`,
   editQuizzPontuationRoute: `${host}/api/quizz/updateUserPontuation/`,
+  downloadFile: `${host}/api/quizz/download/`,
 };
 
 export const routes = {

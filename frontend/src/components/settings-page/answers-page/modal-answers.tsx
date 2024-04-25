@@ -35,7 +35,6 @@ function AnswersModal(props: ModalProps) {
 
     try {
       const response = await editQuizzPontuation(selectedUser?._id, quizz?.value, modifiedAnswers);
-      console.log(response)
       if (response.status) {
       //mesagem de sucesso
         notifications.show({
@@ -128,6 +127,7 @@ function AnswersModal(props: ModalProps) {
                 setAnswerPontuation={onChangePontuation}
                 reviewMode
                 questionNumber={{ total: quizz?.questions.length, atual: index }}
+                user={selectedUser}
               />
             </div>
           );

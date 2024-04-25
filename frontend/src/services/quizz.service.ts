@@ -159,8 +159,7 @@ export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnsw
   }
 };
 
-export const getAnswers = async (id: string) =>
-{
+export const getAnswers = async (id: string) => {
   try
   {
     const response = await api.get(endpoints.getAnswers + id);
@@ -174,6 +173,31 @@ export const getAnswers = async (id: string) =>
 export const editQuizzPontuation = async (userId: string, quizzId: string, newAnswers: IAnswer[]) => {
   try {
     const response = await api.post(endpoints.editQuizzPontuationRoute, { userId, quizzId, newAnswers });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+function getFileType(response: any) {
+  const contentType = response.headers["content-type"];
+  return contentType.substring(contentType.lastIndexOf("/") + 1);
+}
+
+
+export const getFileForDownload = async (questionId: string, userId: string, filename:string) => {
+  try {
+    const response = await api.get(endpoints.downloadFile + questionId + "/" + userId, {
+      responseType: "blob",
+    });
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${filename}`);
+    document.body.appendChild(link);
+    link.click();
+
     return response.data;
   } catch (error) {
     throw error;

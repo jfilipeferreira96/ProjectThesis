@@ -24,4 +24,6 @@ quizzRoutes.get("/quizz/answers/:id", authenticateToken, QuizzController.GetList
 
 quizzRoutes.post("/quizz/updateUserPontuation", authenticateToken, QuizzController.UpdateUserPontuationOfQuizz);
 
+quizzRoutes.get("/quizz/download/:questionId/:userId", authenticateToken, QuizzController.DownloadAnswerFile);
+
 export default quizzRoutes;

@@ -373,6 +373,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                       radius="lg"
                       onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
                       clearable
+                      disabled
                     />
                   )}
 
