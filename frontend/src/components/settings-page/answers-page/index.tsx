@@ -103,7 +103,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
         </Table.Td>
 
         <Table.Td>
-          <Text fz="sm" fw={500}>
+          <>
             {item.reviewed === true ? (
               <Badge variant="filled" size="md" color={"green"} style={{ minWidth: "110px" }}>
                 Already reviewed
@@ -113,7 +113,7 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
                 Pending review
               </Badge>
             )}
-          </Text>
+          </>
         </Table.Td>
 
         <Table.Td>
