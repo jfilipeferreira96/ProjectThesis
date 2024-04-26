@@ -109,7 +109,6 @@ class ChallengeController {
 
         // Loop through quizzes of the challenge
         for (const quiz of challenge.quizzes) {
-          console.log({ quiz: quiz, user: participant._id });
           const quizResponse = await QuizResponse.findOne({ quiz: quiz, user: participant._id });
 
           if (quizResponse) {

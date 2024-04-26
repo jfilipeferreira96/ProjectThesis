@@ -25,8 +25,7 @@ const RichTextEditor = () =>
     };
 
     // Função para salvar o conteúdo do editor
-    const saveContent = () =>
-    {
+    const saveContent = () => {
         console.log('Conteúdo salvo:', editorHtml);
     };
 
