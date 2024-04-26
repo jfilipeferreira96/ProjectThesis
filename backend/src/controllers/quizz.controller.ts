@@ -418,7 +418,7 @@ class QuizzController {
       }
 
       const fileInfo = path.parse(answerFilePath);
-      
+
       res.download(answerFilePath, `${fileInfo.name}${fileInfo.ext}`, (err) => {
         if (err) {
           console.error("Error downloading file:", err);
@@ -496,6 +496,11 @@ class QuizzController {
         filename: response.filename,
         reviewed: response.reviewed,
       }));
+
+      if (responsesWithUserInfo.some((response) => response.reviewed === false)) {
+        // Order responses by 'reviewed' with false values first
+        responsesWithUserInfo.sort((a, b) => (a.reviewed === false ? -1 : b.reviewed === false ? 1 : 0));
+      }
 
       return res.status(StatusCodes.OK).json({
         status: true,
