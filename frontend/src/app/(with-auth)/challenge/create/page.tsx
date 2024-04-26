@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center, Textarea, Radio, CheckIcon, List, ThemeIcon } from "@mantine/core";
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Input, Center, Textarea, Radio, CheckIcon, List, ThemeIcon, Box } from "@mantine/core";
 import { useForm, zodResolver, UseFormReturnType } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { routes } from "@/config/routes";
 import { ChallengeType, CreateChallengeData, createChallenge } from "@/services/challenge.service";
 import { useSession } from "@/providers/SessionProvider";
 import ThreeDButton from "@/components/3dbutton";
+import RichTextEditor from "@/components/rich-text-editor";
 
 const StyledPaper = styled(Paper)`
   width: 800px;
@@ -94,6 +95,10 @@ function CreateChallengePage() {
               <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
             </Group>
           </Radio.Group>
+
+          <Box mt={"lg"} mb={"lg"}>
+            <RichTextEditor />
+          </Box>
 
           <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} type="submit">
             Create

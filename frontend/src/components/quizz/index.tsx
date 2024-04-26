@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./quizz.module.scss";
-import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput } from "@mantine/core";
+import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput, Box } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
 import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
@@ -54,17 +54,15 @@ const Quizz = (props: Props) => {
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
   useEffect(() => {
-    if (reviewMode && result.userAnswers.length === 0 && answer)
-    {
+    if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
         ...result,
-        userAnswers: [answer]
-      }
-      setResult(resultWithAnswer)
+        userAnswers: [answer],
+      };
+      setResult(resultWithAnswer);
     }
   }, [reviewMode, answer])
 
@@ -78,9 +76,8 @@ const Quizz = (props: Props) => {
 
   const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
 
-  const handleChoiceSelection = (chosenAnswer: string) =>
-  {
-    if (reviewMode) return;
+  const handleChoiceSelection = (chosenAnswer: string) => {
+    if (reviewMode && !preview) return;
     
     setResult((prevResult) =>
     {
@@ -141,7 +138,7 @@ const Quizz = (props: Props) => {
   };
 
   const SendAndSaveAnswer = async (userAnswers: IAnswer | any) => {
-    if (reviewMode) return;
+    if (reviewMode && !preview) return;
 
     setIsLoading(true);
 
@@ -178,9 +175,8 @@ const Quizz = (props: Props) => {
     }
   };
 
-  const endChallenge = () =>
-  {
-    if (reviewMode) return;
+  const endChallenge = () => {
+    if (reviewMode && !preview) return;
 
     let score = 0;
     let correctAnswers = 0;
@@ -240,7 +236,7 @@ const Quizz = (props: Props) => {
   });
 
   const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (reviewMode) return;
+    if (reviewMode && !preview) return;
 
     const userInput = evt.target.value;
 
@@ -384,14 +380,14 @@ const Quizz = (props: Props) => {
                       min={0}
                       error={answer && answer?.pontuation === undefined}
                       onChange={(value: string | number) => {
-                          if (typeof value === "string") {
-                            // Convert string to number
-                            const numericValue = parseFloat(value); 
-                            setAnswerPontuation && answer && setAnswerPontuation(answer._id, undefined);
-                          } else {
-                            // Value is already a number
-                            setAnswerPontuation && answer && setAnswerPontuation(answer._id, value);
-                          }
+                        if (typeof value === "string") {
+                          // Convert string to number
+                          const numericValue = parseFloat(value);
+                          setAnswerPontuation && answer && setAnswerPontuation(answer._id, undefined);
+                        } else {
+                          // Value is already a number
+                          setAnswerPontuation && answer && setAnswerPontuation(answer._id, value);
+                        }
                       }}
                     />
                   </Group>
@@ -412,7 +408,8 @@ const Quizz = (props: Props) => {
 
               <div className={classes.body}>
                 {/* Secção Body */}
-                <Title order={2}>{question}</Title>
+                
+                <div dangerouslySetInnerHTML={{ __html: question }} />
 
                 {getAnswerUI()}
               </div>
@@ -487,7 +484,7 @@ const Quizz = (props: Props) => {
                   )}
                   {preview && (
                     <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
-                      Review the quiz once more
+                      Preview the quiz once more
                     </Button>
                   )}
                 </Stack>

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import '@mantine/dates/styles.css';
 import styled from "styled-components";
 import ThreeDButton from "@/components/3dbutton";
+import RichTextEditor from "@/components/rich-text-editor";
 
 const StyledList = styled(List)`
   color: var(--mantine-color-dimmed);
@@ -315,15 +316,15 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     />
                   </Group>
 
-                  <TextInput
-                    className="specialinput"
-                    label={"Question"}
-                    placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
-                    withAsterisk
-                    style={{ flex: 1 }}
-                    {...form.getInputProps(`questions.${index}.question`)}
-                    mt={10}
-                  />
+                  <Box mt={10}>
+                    <RichTextEditor
+                      label={"Question"}
+                      placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
+                      {...form.getInputProps(`questions.${index}.question`)}
+                      value={form.values.questions[index].question}
+                      onChange={(value) => form.setFieldValue(`questions.${index}.question`, value)}
+                    />
+                  </Box>
 
                   {item.type === QuestionType.MultipleQuestions &&
                     item.choices.map((choice, choiceIndex) => {

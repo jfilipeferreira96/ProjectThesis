@@ -19,13 +19,10 @@ $disabled: #9c9c9c;
     font-size: 32px;
   }
 
-  h2 {
-    font-size: 20px;
-    font-weight: 500;
-    margin: 0;
-  }
 
-  ul {
+  .answerDiv {
+    margin-top: 50px;
+      ul {
     margin-top: 20px;
     margin-left: -40px;
 
@@ -72,9 +69,6 @@ $disabled: #9c9c9c;
       transition: filter 0.2s ease; 
     }
   }
-
-  .answerDiv {
-    margin-top: 50px;
   }
 
   .header {
