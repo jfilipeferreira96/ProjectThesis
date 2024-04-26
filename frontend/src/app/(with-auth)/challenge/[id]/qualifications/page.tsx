@@ -8,7 +8,6 @@ import SVG from "next/image";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { getSingleChallenge } from "@/services/challenge.service";
-import { IconPentagonNumber1, IconPentagonNumber2, IconPentagonNumber3 } from "@tabler/icons-react";
 
 const StyledTableContainer = styled(Table.ScrollContainer)`
   text-align: center;
@@ -24,7 +23,6 @@ type DataItem = {
   studentId: string;
   email: string;
   avatar: string;
-  challengeScores: { challenge: string; score: number }[];
   score: number;
   position: number;
 };
@@ -45,7 +43,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
       if (response.status) {
 
         const sortedParticipants = response.challenge.participants.sort((a: DataItem, b: DataItem) => {
-          return b.challengeScores[0].score - a.challengeScores[0].score;
+          return b.score - a.score;
         });
 
         const mappedParticipants = sortedParticipants.map((participant: DataItem, index: number) => {
@@ -55,7 +53,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
             studentId: participant.studentId,
             email: participant.email,
             avatar: participant.avatar,
-            score: participant.challengeScores[0].score,
+            score: participant.score,
             position: index + 1,
           };
         });

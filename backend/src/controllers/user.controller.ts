@@ -12,6 +12,7 @@ export interface User {
   avatar?: string;
   adminChallenges?: string[];
   type?: string;
+  score?: number;
 }
 
 interface RefreshToken {

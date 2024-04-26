@@ -97,22 +97,37 @@ class ChallengeController {
       let challenge = await Challenge.findOne({ _id: id })
         .populate({
           path: "participants",
-          select: "fullname email avatar studentId challengeScores",
-          populate: {
-            path: "challengeScores",
-            match: { challenge: id },
-            select: "score",
-          },
+          select: "fullname email avatar studentId",
         })
-        .populate('admins', 'fullname email avatar');
-      
+        .populate("admins", "fullname email avatar");
+
+      challenge = challenge.toObject();
+
+      // Loop through participants
+      for (const participant of challenge.participants) {
+        let totalScore = 0;
+
+        // Loop through quizzes of the challenge
+        for (const quiz of challenge.quizzes) {
+          console.log({ quiz: quiz, user: participant._id });
+          const quizResponse = await QuizResponse.findOne({ quiz: quiz, user: participant._id });
+
+          if (quizResponse) {
+            totalScore += quizResponse.score;
+          }
+        }
+
+        // Add the total score to the participant object
+        participant.score = totalScore;
+      }
+
       if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
         return res.status(200).json(response);
       }
 
-      const isUserInChallenge = challenge.participants.some((participant) => participant._id.toString() === user._id) || challenge.admins.some(admin => admin._id.toString() === user._id.toString());
+      const isUserInChallenge = challenge.participants.some((participant) => participant._id.toString() === user._id) || challenge.admins.some((admin) => admin._id.toString() === user._id.toString());
       if (!isUserInChallenge) {
         Logger.error("You don't have access to this challenge.");
         response = { status: false, message: "You don't have access to this challenge." };
@@ -179,10 +194,6 @@ class ChallengeController {
         response = { status: false, message: "You are an admin of this challenge." };
         return res.status(200).json(response);
       }
-
-      // Updates the user model with score = 0
-      user.challengeScores.push({ challenge: challenge._id, score: 0 });
-      const userUpdated = await user.save();
 
       // Updates the challenge model with the new participant
       challenge.participants.push(userId);

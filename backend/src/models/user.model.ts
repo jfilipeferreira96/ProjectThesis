@@ -11,12 +11,9 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   studentId?: number | string;
-  challengeScores: {
-    challenge: Schema.Types.ObjectId;
-    score: number;
-  }[];
   type: UserType | null; 
   createdAt: Date;
+  score?: number
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -49,19 +46,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     type: String,
     required: true,
   },
-  challengeScores: [
-    {
-      challenge: {
-        type: Schema.Types.ObjectId,
-        ref: "Challenge",
-        required: true,
-      },
-      score: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
   type: {
     type: String,
     enum: [null, ...Object.values(UserType)],

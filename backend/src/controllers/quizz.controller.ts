@@ -357,22 +357,6 @@ class QuizzController {
       };
 
       const quizResponse = await QuizResponse.create(quizResponseData);
-      const UserModel = await User.findById(user._id);
-
-      if (UserModel && quiz.evaluation === EvalutionType.Automatic) {
-        const existingChallengeScore = UserModel.challengeScores.find((c) => c.challenge.toString() === challenge._id.toString());
-        if (existingChallengeScore) {
-          existingChallengeScore.score += score; // Update the score
-        } else {
-          // If the user doesn't have a score for this challenge, add it
-          UserModel.challengeScores.push({
-            challenge: challenge._id,
-            score: score,
-          });
-        }
-
-        await UserModel.save();
-      }
 
       let sendObj: any = {
         status: true,
