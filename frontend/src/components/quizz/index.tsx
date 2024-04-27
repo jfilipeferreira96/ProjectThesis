@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from "./quizz.module.scss";
-import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput, Box } from "@mantine/core";
+import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput, Box, Textarea } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
 import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
@@ -55,7 +55,7 @@ const Quizz = (props: Props) => {
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-console.log(result.userAnswers);
+
   useEffect(() => {
     if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
@@ -235,10 +235,10 @@ console.log(result.userAnswers);
     setShowAnswerTimer(true);
   });
 
-  const handleInputChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (reviewMode && !preview) return;
 
-    const userInput = evt.target.value;
+    const userInput = event.currentTarget.value;
 
     setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
@@ -283,11 +283,12 @@ console.log(result.userAnswers);
     {
       return (
         <div className={classes.answerDiv}>
-          <Input
+          <Textarea
             className="specialinput"
             size={"lg"}
             value={result.userAnswers[currentQuestion]?.answer || ""}
-            onChange={handleInputChange} mb={10}
+            onChange={handleInputChange}
+            mb={10}
             disabled={reviewMode ? true : false}
           />
         </div>

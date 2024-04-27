@@ -28,6 +28,7 @@ import {
   FileInput,
   NumberInput,
   Checkbox,
+  Textarea,
 } from "@mantine/core";
 import { DateInput, DateTimePicker } from "@mantine/dates";
 import { FormErrors, useForm } from "@mantine/form";
@@ -416,7 +417,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput
+                    <Textarea
                       className="specialinput"
                       label={isManualEvaluation ? "Answer" : "Correct answer"}
                       withAsterisk={isManualEvaluation ? false : true}

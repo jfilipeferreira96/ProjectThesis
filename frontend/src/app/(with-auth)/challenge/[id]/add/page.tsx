@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput, NumberInput, Checkbox } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Radio, List, CheckIcon, Input, Tooltip, rem, Paper, Select, FileInput, NumberInput, Checkbox, Textarea } from "@mantine/core";
 import { DateInput, DateTimePicker } from '@mantine/dates';
 import { FormErrors, useForm } from "@mantine/form";
 import { Switch, ActionIcon, Box, Code } from "@mantine/core";
@@ -351,7 +351,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
                     })}
 
                   {item.type === QuestionType.FillInBlank && (
-                    <TextInput
+                    <Textarea
                       className="specialinput"
                       label={isManualEvaluation ? "Answer" : "Correct answer"}
                       withAsterisk={isManualEvaluation ? false : true}
