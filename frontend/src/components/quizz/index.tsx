@@ -55,7 +55,7 @@ const Quizz = (props: Props) => {
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-
+console.log(result.userAnswers);
   useEffect(() => {
     if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
@@ -75,15 +75,15 @@ const Quizz = (props: Props) => {
   }, []);
 
   const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
-
+  
   const handleChoiceSelection = (chosenAnswer: string) => {
-    if (reviewMode && !preview) return;
-    
+    if (reviewMode) return;
+
     setResult((prevResult) =>
     {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
-      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
-
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
+      
       if (existingAnswer)
       {
         existingAnswer.answer = chosenAnswer;
@@ -111,7 +111,7 @@ const Quizz = (props: Props) => {
     setResult((prevResult) =>
     {
       const updatedUserAnswers = prevResult.userAnswers.slice();
-      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
 
       if (existingAnswer)
       {
@@ -244,7 +244,7 @@ const Quizz = (props: Props) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
 
       // Check if the current question id is already in userAnswers
-      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId);
+      const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
 
       if (existingAnswer)
       {
@@ -335,8 +335,7 @@ const Quizz = (props: Props) => {
     return (
       <div className={classes.answerDiv}>
         <ul>
-          {choices?.map((answer, index) =>
-          {
+          {choices?.map((answer, index) => {
             if (!answer) return <></>;
 
             return (

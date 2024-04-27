@@ -1,6 +1,6 @@
 import { InputLabel } from "@mantine/core";
-import React, { useCallback, useRef, useState } from "react";
-import ReactQuill from "react-quill";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import styled from "styled-components";
 
@@ -75,11 +75,23 @@ const RichTextEditor = (props: Props) => {
     }
   };
   
+  const ReactQuill = useMemo(() => dynamic(() => import("react-quill"), { ssr: false }), []);
+
   return (
     <PlaceholderText>
       <InputLabel required>{label}</InputLabel>
 
-      <ReactQuill defaultValue={placeholder} ref={handleRef} placeholder={placeholder} theme="snow" value={value} onChange={handleChange} modules={modules} />
+      <ReactQuill
+        defaultValue={placeholder}
+        // @ts-ignore
+        ref={handleRef}
+        placeholder={placeholder}
+        theme="snow"
+        value={value}
+        onChange={handleChange}
+        modules={modules}
+      />
+      
     </PlaceholderText>
   );
 };
