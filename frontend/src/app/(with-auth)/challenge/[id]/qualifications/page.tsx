@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, RingProgress } from "@mantine/core";
+import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, RingProgress, Tooltip } from "@mantine/core";
 import { IconDatabaseOff, IconPencil, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
 import SVG from "next/image";
@@ -117,6 +117,24 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
           </Text>
         </Table.Td>
         <Table.Td>
+          {/* <Text fz="sm" fw={500}>
+            {item.studentId ? item.studentId : "-"}
+          </Text> */}
+          <Center>
+            <Tooltip.Group openDelay={300} closeDelay={100}>
+                <Tooltip label="Salazar Troop" withArrow>
+                  <Avatar src="/badges/flash.png" radius="xl" size={"md"} />
+                </Tooltip>
+                <Tooltip label="Bandit Crimes" withArrow>
+                  <Avatar src="/badges/sloth.png" radius="xl" size={"md"} />
+                </Tooltip>
+                <Tooltip label="Jane Rata" withArrow>
+                  <Avatar src="/badges/superstar.png" radius="xl" size={"md"} />
+                </Tooltip>
+            </Tooltip.Group>
+          </Center>
+        </Table.Td>
+        <Table.Td>
           <Text fz="sm" fw={500}>
             {item.score}
           </Text>
@@ -174,8 +192,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   return (
-    <Grid justify="center" align="stretch" mt={10} mb={10} style={{marginBottom:"3rem"}}>
-
+    <Grid justify="center" align="stretch" mt={10} mb={10} style={{ marginBottom: "3rem" }}>
       <title>Qualifications</title>
       <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 12 }} ml={{ md: 200, lg: 200, sm: 200 }}>
         <Title order={1}>Qualifications</Title>
@@ -197,6 +214,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
                   <Table.Th>Name</Table.Th>
                   <Table.Th>Email</Table.Th>
                   <Table.Th>Student Id</Table.Th>
+                  <Table.Th>Badges</Table.Th>
                   <Table.Th>Score</Table.Th>
                 </Table.Tr>
               </Table.Thead>

@@ -6,6 +6,12 @@ export interface IAnswer {
   _id: Schema.Types.ObjectId | string;
 }
 
+export interface IBadge {
+  badge?: string;
+  img?: string;
+  description?: string;
+}
+
 export interface IQuizResponse extends Document {
   quiz: Schema.Types.ObjectId;
   user: Schema.Types.ObjectId;
@@ -14,6 +20,8 @@ export interface IQuizResponse extends Document {
   lastUpdate?: Date;
   filename?: string | any;
   reviewed?: boolean;
+  seconds?: number;
+  badges?: IBadge[];
 }
 
 const AnswerSchema: Schema<IAnswer> = new mongoose.Schema({
@@ -31,6 +39,7 @@ const AnswerSchema: Schema<IAnswer> = new mongoose.Schema({
   },
 });
 
+
 const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
   quiz: {
     type: Schema.Types.ObjectId,
@@ -43,9 +52,30 @@ const QuizResponseSchema: Schema<IQuizResponse> = new mongoose.Schema({
     required: true,
   },
   answers: [AnswerSchema],
+  badges: [
+    {
+      badge: {
+        type: String,
+        required: true,
+      },
+      img: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+        required: false,
+      },
+    },
+  ],
   score: {
     type: Number,
     required: true,
+  },
+  seconds: {
+    type: Number,
+    required: true,
+    default: 0,
   },
   lastUpdate: {
     type: Date,

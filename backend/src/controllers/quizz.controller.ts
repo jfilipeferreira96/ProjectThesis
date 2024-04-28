@@ -560,6 +560,58 @@ class QuizzController {
       next(error);
     }
   }
+
+  static async QuizzEndCalculateBadges(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { quizzId } = req.body;
+
+      // Check if the required fields are present in the request body
+      if (!quizzId) {
+        return res.status(StatusCodes.OK).json({
+          status: false,
+          message: "The following fields are missing: quizzId ",
+        });
+      }
+
+      const quizExists = await Quizz.exists({ _id: quizzId });
+      if (!quizExists) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: false,
+          message: "Quiz not found",
+        });
+      }
+
+      // Get the every quizz response
+      let quizResponse: IQuizResponse | null = await QuizResponse.findById({ quiz: quizzId });
+
+      if (!quizResponse) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          status: true,
+          message: "No responses found for this quizz",
+        });
+      }
+
+      //Para todos os QuizResponses encontrar o UserId com maior tempo da variavel seconds
+      // adicionar ao quizResponse.badge correspondente {badge: "The Sloth", img: "/badges/sloth.png"}
+
+      //Para todos os QuizResponses encontrar o UserId com o menor tempo da variavel seconds
+      // adicionar ao quizResponse.badge correspondente {badge: "The Flash", img: "/badges/flash.png"}
+
+      //Para todos os QuizResponses entrar na variavel answers verificar se existe e se tem length > 0
+      // Cria uma variavel Superstart = true;
+      //Para as answers devo efetuar um loop e para cada answer verificar a pontuation atribuida e verificar se a pontuanção é igual ou maior à da Quizz.question._id correspondente. Caso alguma comparação seja false entao coloca a variavel superstar = false.
+      //Ou seja para cada aluno, vamos verificar se este aluno acertou em todas as questões caso tenha acertado entao recebe -> quizResponse.badge correspondente {badge: "Superstar", img: "/badges/superstar.png"}
+
+      //gravar todos os encontrados acima e returnar status ok
+      return res.status(StatusCodes.OK).json({
+        status: true,
+        message: "Badges Updated",
+      });
+      
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default QuizzController;

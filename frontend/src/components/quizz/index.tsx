@@ -55,7 +55,7 @@ const Quizz = (props: Props) => {
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-
+  
   useEffect(() => {
     if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
