@@ -12,6 +12,7 @@ export interface User {
   email: string;
   avatar: string;
   adminChallenges?: string[];
+  score?: number
 }
 
 interface DecodedToken extends JwtPayload {

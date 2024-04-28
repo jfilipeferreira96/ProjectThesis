@@ -21,6 +21,13 @@
     transition: 1s ease-in-out;
     -webkit-box-reflect: below 0 linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
   }
+
+  span{
+    background: var(--avatar-bg, hsl(0deg 0% 0% / 15%))!important;
+  }
+  .mantine-Avatar-root{
+     background: var(--avatar-bg, hsl(0deg 0% 0% / 15%))!important;
+  }
 }
 
 
@@ -30,4 +37,27 @@
 
 .is-flipped {
   transform: rotateY(0.5turn);
+}
+
+.relative{
+  position: relative;
+}
+
+.opacity{
+  opacity: 0.6;
+}
+
+.AvatarPlaceholder{
+  background: var(--avatar-bg, hsl(0deg 0% 0% / 15%));
+  align-items: center;
+  border: var(--avatar-bd, calc(.0625rem* var(--mantine-scale)) solid transparent);
+  border-radius: var(--avatar-radius);
+  color: var(--avatar-color, var(--mantine-color-gray-light-color));
+  display: flex;
+  font-size: calc(var(--_avatar-size)/2.5);
+  font-weight: 700;
+  height: 100%;
+  justify-content: center;
+  user-select: none;
+  width: 100%;
 }

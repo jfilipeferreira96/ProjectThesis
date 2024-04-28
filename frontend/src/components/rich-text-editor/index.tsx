@@ -41,6 +41,8 @@ interface Props {
   onChange?: (value: string) => void;
 }
 
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
 const RichTextEditor = (props: Props) => {
   const { value, onChange, label, placeholder } = props;
   const quillRef = useRef(null);
@@ -75,7 +77,6 @@ const RichTextEditor = (props: Props) => {
     }
   };
   
-  const ReactQuill = useMemo(() => dynamic(() => import("react-quill"), { ssr: false }), []);
 
   return (
     <PlaceholderText>

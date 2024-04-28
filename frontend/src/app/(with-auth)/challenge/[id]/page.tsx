@@ -25,12 +25,13 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     status: 0,
     activeQuizz: {
       id: null,
-      completed: false
-    }
+      completed: false,
+    },
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [winners, setWinners] = useState<User[] | undefined>(undefined);
   const { user } = useSession();
-  const userIsAdmin = user ? state.admins.some(admin => admin._id.toString() === user?._id) : false;
+  const userIsAdmin = user ? state.admins.some((admin) => admin._id.toString() === user?._id) : false;
   const activeAndCompleted = state.activeQuizz?.id && state.activeQuizz?.completed;
   const activeAndNotCompleted = state.activeQuizz?.id && !state.activeQuizz?.completed;
   const noActiveQuizz = !state.activeQuizz?.id;
@@ -42,7 +43,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
       audio.play();
       setSoundPlayed(true);
     }
-  }
+  };
 
   useEffect(() => {
     if (state.status === ChallengeStatus.Completed) {
@@ -52,16 +53,16 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     // Função de limpeza para parar o áudio quando o componente for desmontado
     return () => {
       audio.pause();
-      audio.currentTime = 0; 
+      audio.currentTime = 0;
       setSoundPlayed(false);
     };
-  }, [state.status]); 
+  }, [state.status]);
 
   // Parar o áudio quando o user sai da página
   useEffect(() => {
     const handleUnload = () => {
       audio.pause();
-      audio.currentTime = 0; 
+      audio.currentTime = 0;
       setSoundPlayed(false);
     };
 
@@ -71,14 +72,39 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
       window.removeEventListener("beforeunload", handleUnload);
     };
   }, []);
-  
+
   const GetSingleChallenge = async (id: string) => {
     setIsLoading(true);
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
-        
+        console.log(response);
         setState(response.challenge);
+
+        const sortedParticipants = response.challenge.participants.sort((a: User, b: User) => {
+          if (a.score === undefined || b.score === undefined) {
+            return 0;
+          }
+          return b.score - a.score;
+        });
+
+        const mappedParticipants = sortedParticipants.map((participant: User, index: number) => {
+          return {
+            _id: participant._id,
+            fullname: participant.fullname,
+            studentId: participant.studentId,
+            email: participant.email,
+            avatar: participant.avatar,
+            score: participant.score,
+            position: index + 1,
+          };
+        });
+
+        // Get top 3 winners if they exist
+        const winners = mappedParticipants.slice(0, 3);
+
+        // Set winners to your state or wherever needed
+        setWinners(winners);
       }
       if (response.status === false) {
         notifications.show({
@@ -126,20 +152,19 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
 
         {state.status === ChallengeStatus.Completed && (
           <div className={classes.container}>
-            
             <Fireworks />
             <Title ta="center" mt={10} mb={60}>
               Check out the winners
             </Title>
             <Grid justify="center" mt={10} mb={10} gutter={{ xl: 50 }}>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3000} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={3000} winner={winners && winners.length > 0 ? winners[0] : undefined} />
               </Grid.Col>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={3500} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={3500} winner={winners && winners.length >= 2 ? winners[1] : undefined} />
               </Grid.Col>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/qmark1.png" backImage="/qmark1.png" flipDelay={4000} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={4000} winner={winners && winners.length >= 3 ? winners[2] : undefined} />
               </Grid.Col>
             </Grid>
           </div>
