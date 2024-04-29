@@ -9,6 +9,7 @@ export interface LoginData {
 export enum UserType {
   STUDENT = "Student",
   TEACHER = "Teacher",
+  ADMIN = "Admin"
 }
 
 export interface RegisterData {
