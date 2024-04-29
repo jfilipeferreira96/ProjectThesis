@@ -96,10 +96,6 @@ function CreateChallengePage() {
             </Group>
           </Radio.Group>
 
-          <Box mt={"lg"} mb={"lg"}>
-            <RichTextEditor />
-          </Box>
-
           <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} type="submit">
             Create
           </ThreeDButton>
