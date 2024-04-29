@@ -184,8 +184,7 @@ class QuizzController {
         quiz.status = newStatus;
         const updatedQuiz = await quiz.save();
 
-        if (newStatus === Status.Completed)
-        {
+        if (newStatus === Status.Completed) {
           QuizzController.QuizzEndCalculateBadges(quizId);
         }
 
@@ -585,32 +584,72 @@ class QuizzController {
       }
 
       // Get the every quizz response
-      let quizResponse: IQuizResponse | null = await QuizResponse.findById({ quiz: quizzId });
+      const quizResponses: IQuizResponse[] = await QuizResponse.find({ quiz: quizzId });
 
-      if (!quizResponse) {
+      if (quizResponses.length === 0) {
         return {
           status: true,
           message: "No responses found for this quizz",
         };
       }
 
-      //Para todos os QuizResponses encontrar o UserId com maior tempo da variavel seconds
-      // adicionar ao quizResponse.badge correspondente {badge: "The Sloth", img: "/badges/sloth.png"}
+      let bestTimeUser: IQuizResponse | null = null;
+      let worstTimeUser: IQuizResponse | null = null;
+      let superstars: IQuizResponse[] = [];
 
-      //Para todos os QuizResponses encontrar o UserId com o menor tempo da variavel seconds
-      // adicionar ao quizResponse.badge correspondente {badge: "The Flash", img: "/badges/flash.png"}
+      const quiz = await Quizz.findById(quizzId);
 
-      //Para todos os QuizResponses entrar na variavel answers verificar se existe e se tem length > 0
-      // Cria uma variavel Superstart = true;
-      //Para as answers devo efetuar um loop e para cada answer verificar a pontuation atribuida e verificar se a pontuanção é igual ou maior à da Quizz.question._id correspondente. Caso alguma comparação seja false entao coloca a variavel superstar = false.
-      //Ou seja para cada aluno, vamos verificar se este aluno acertou em todas as questões caso tenha acertado entao recebe -> quizResponse.badge correspondente {badge: "Superstar", img: "/badges/superstar.png"}
+      for (const response of quizResponses) {
+        // Find user with best time
+        if (!bestTimeUser || response.seconds! < bestTimeUser.seconds!) {
+          bestTimeUser = response;
+        }
 
-      //gravar todos os encontrados acima e returnar status ok
+        // Find user with worst time
+        if (!worstTimeUser || response.seconds! > worstTimeUser.seconds!) {
+          worstTimeUser = response;
+        }
+
+        // Check for superstars
+        let superstar = true;
+        
+        if (Array.isArray(response.answers)) {
+          for (const answer of response.answers) {
+            const question = quiz.questions.find((q) => q._id === answer._id);
+            if (!question || answer.pontuation! < question.pontuation!) {
+              superstar = false;
+              break;
+            }
+          }
+        }
+
+        if (superstar) {
+          superstars.push(response);
+        }
+      }
+
+      // Update badge for best time user
+      if (bestTimeUser) {
+        bestTimeUser.badges.push({ badge: "The Flash", img: "/badges/flash.png" });
+        await bestTimeUser.save();
+      }
+
+      // Update badge for worst time user
+      if (worstTimeUser) {
+        worstTimeUser.badges.push({ badge: "The Sloth", img: "/badges/sloth.png" });
+        await worstTimeUser.save();
+      }
+
+      // Update badge for superstars
+      for (const superstar of superstars) {
+        superstar.badges.push({ badge: "Superstar", img: "/badges/superstar.png" });
+        await superstar.save();
+      }
+
       return {
         status: true,
         message: "Badges Updated",
       };
-      
     } catch (error) {
       Logger.error(error);
     }
