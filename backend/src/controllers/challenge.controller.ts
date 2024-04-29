@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import Challenge from "../models/challenge.model";
+import Challenge, { ChallengeStatus } from "../models/challenge.model";
 import User from "../models/user.model";
 import { ObjectId } from "mongodb";
 import Logger from "../utils/logger";
 import Quizz, { Status } from "../models/quizz.model";
 import QuizResponse from "../models/quizzResponse.model";
+import QuizzController from "./quizz.controller";
 
 class ChallengeController {
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
@@ -52,6 +53,26 @@ class ChallengeController {
       challenge.status = status || challenge.status;
 
       const updatedChallenge = await challenge.save();
+
+      if (status === ChallengeStatus.Completed)
+      {
+        // Verificar se existem quizzes associados ao desafio que não estão fechados
+        const openQuizzes = await Quizz.find({ challenge: id, status: { $ne: Status.Completed } });
+
+        // Se existirem quizzes não fechados
+        if (openQuizzes.length > 0)
+        {
+          // Percorre os quizzes e para os fechar
+          for (const quiz of openQuizzes)
+          {
+            quiz.status = Status.Completed;
+            await quiz.save();
+
+            // Chamar o método para calcular os badges
+            await QuizzController.QuizzEndCalculateBadges(quiz._id);
+          }
+        }
+      }
 
       return res.status(200).json({
         status: true,
