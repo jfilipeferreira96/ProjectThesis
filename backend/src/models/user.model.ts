@@ -12,7 +12,7 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   studentId?: number | string;
-  type: UserType | null; 
+  type: UserType; 
   createdAt: Date;
   score?: number
 }
@@ -49,7 +49,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: [null, ...Object.values(UserType)],
+    enum: UserType,
     required: false,
   },
   createdAt: {

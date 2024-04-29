@@ -17,7 +17,7 @@ export interface RegisterData {
   fullname: string;
   password: string;
   avatar: string;
-  type: UserType | null;
+  type: UserType;
   studentId?: number | string;
 }
 

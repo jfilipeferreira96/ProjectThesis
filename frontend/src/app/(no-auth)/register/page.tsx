@@ -30,7 +30,7 @@ export default function Register() {
   const router = useRouter();
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const { sessionLogin } = useSession();
-  const [userType, setUserType] = useState<string[]>(["Admin"]);
+  const [userType, setUserType] = useState<string[]>([UserType.ADMIN]);
 
   const form = useForm({
     initialValues: {
@@ -38,7 +38,7 @@ export default function Register() {
       email: "",
       studentId: "",
       password: "",
-      type: "Admin",
+      type: UserType.ADMIN,
       avatar: "",
     },
     validate: zodResolver(schema), 
@@ -54,7 +54,7 @@ export default function Register() {
   }, [selectedAvatar]);
 
   const onSubmitHandler = useCallback(async (data: RegisterData) => {
-    data.type = userType.length > 0 ? userType[0] as UserType : null;
+    data.type = userType[0] as UserType;
     
     try
     {
@@ -120,11 +120,11 @@ export default function Register() {
           <TextInput className="specialinput" label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
           <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
 
-          <Checkbox.Group required label="User type" mb="xs" value={userType} onChange={handleCheckboxChange}>
+          <Checkbox.Group label="User type" mb="xs" value={userType} onChange={handleCheckboxChange}>
             <Group mb="xs" align="center" justify="center">
-              <Checkbox value={UserType.ADMIN} label={UserType.ADMIN} defaultChecked mt={"xs"} />
-              <Checkbox value={UserType.TEACHER} label={UserType.TEACHER} mt={"xs"} />
-              <Checkbox value={UserType.STUDENT} label={UserType.STUDENT} mt={"xs"} />
+              <Checkbox value={UserType.ADMIN} label={UserType.ADMIN} defaultChecked />
+              <Checkbox value={UserType.TEACHER} label={UserType.TEACHER} />
+              <Checkbox value={UserType.STUDENT} label={UserType.STUDENT} />
             </Group>
           </Checkbox.Group>
 

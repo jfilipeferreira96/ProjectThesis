@@ -152,7 +152,7 @@ export default function Home() {
             )}
 
             {(user.type === UserType.TEACHER || user.type === UserType.ADMIN) && (
-              <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
+              <Card.Section className={`${classes.section} ${user.type === UserType.ADMIN ? classes.bordertop : ""}`} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
                 <Text fz="sm" c="dimmed" className={classes.label}>
                   Create a challenge
                 </Text>
