@@ -140,7 +140,7 @@ export default function Home() {
 
         <Grid.Col span={{ md: 6, sm: 6, xs: 12, lg: 3 }}>
           <GiggleCard>
-            {(user.type === UserType.STUDENT || !user.type) && (
+            {(user.type === UserType.STUDENT || user.type === UserType.ADMIN) && (
               <div onClick={open} className={classes.pointer}>
                 <Text fz="sm" c="dimmed" className={classes.label}>
                   Join a challenge
@@ -151,7 +151,7 @@ export default function Home() {
               </div>
             )}
 
-            {(user.type === UserType.TEACHER || !user.type) && (
+            {(user.type === UserType.TEACHER || user.type === UserType.ADMIN) && (
               <Card.Section className={classes.section} mt="md" onClick={() => router.push(routes.challenge.create.url)}>
                 <Text fz="sm" c="dimmed" className={classes.label}>
                   Create a challenge

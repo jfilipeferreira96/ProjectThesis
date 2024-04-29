@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { Card, Image, Text, Badge, Modal, Button, Group, Center, SimpleGrid, Grid, Title, TextInput, Flex, Loader, Container, Avatar, Table, ActionIcon, Anchor, rem, Stack, Paper, RingProgress, Tooltip } from "@mantine/core";
-import { IconDatabaseOff, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconBadges, IconDatabaseOff, IconPencil, IconTrash } from "@tabler/icons-react";
 import styled from "styled-components";
 import SVG from "next/image";
 import { notifications } from "@mantine/notifications";
@@ -25,6 +25,7 @@ type DataItem = {
   avatar: string;
   score: number;
   position: number;
+  badges?: { badge: string, img: string }[]
 };
 
 const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
@@ -54,6 +55,7 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
             email: participant.email,
             avatar: participant.avatar,
             score: participant.score,
+            badges: participant.badges,
             position: index + 1,
           };
         });
@@ -72,12 +74,11 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
         router.push(routes.home.url);
       }
     } catch (error) {
-      /* notifications.show({
+      notifications.show({
         title: "Error",
         message: "Something went wrong",
         color: "red",
-      });
-      router.push(routes.home.url); */
+      }); 
     } finally {
       setIsLoading(false);
     }
@@ -117,21 +118,16 @@ const Qualifications = ({ params: { id } }: { params: { id: string } }) => {
           </Text>
         </Table.Td>
         <Table.Td>
-          {/* <Text fz="sm" fw={500}>
-            {item.studentId ? item.studentId : "-"}
-          </Text> */}
           <Center>
-            <Tooltip.Group openDelay={300} closeDelay={100}>
-                <Tooltip label="Salazar Troop" withArrow>
-                  <Avatar src="/badges/flash.png" radius="xl" size={"md"} />
-                </Tooltip>
-                <Tooltip label="Bandit Crimes" withArrow>
-                  <Avatar src="/badges/sloth.png" radius="xl" size={"md"} />
-                </Tooltip>
-                <Tooltip label="Jane Rata" withArrow>
-                  <Avatar src="/badges/superstar.png" radius="xl" size={"md"} />
-                </Tooltip>
-            </Tooltip.Group>
+            {item.badges && item.badges.length > 0 ? (
+              <Tooltip.Group openDelay={300} closeDelay={100}>
+                {item.badges.map((badge, index) => (
+                  <Tooltip key={index} label={badge.badge} withArrow>
+                    <Avatar src={badge.img} radius="xl" size={"md"} />
+                  </Tooltip>
+                ))}
+              </Tooltip.Group>
+            ) : "-"}
           </Center>
         </Table.Td>
         <Table.Td>

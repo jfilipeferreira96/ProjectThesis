@@ -184,6 +184,11 @@ class QuizzController {
         quiz.status = newStatus;
         const updatedQuiz = await quiz.save();
 
+        if (newStatus === Status.Completed)
+        {
+          QuizzController.QuizzEndCalculateBadges(quizId);
+        }
+
         return res.status(StatusCodes.OK).json({
           status: true,
           message: "Quiz updated successfully",
@@ -561,34 +566,32 @@ class QuizzController {
     }
   }
 
-  static async QuizzEndCalculateBadges(req: Request, res: Response, next: NextFunction) {
+  static async QuizzEndCalculateBadges(quizzId: string) {
     try {
-      const { quizzId } = req.body;
-
       // Check if the required fields are present in the request body
       if (!quizzId) {
-        return res.status(StatusCodes.OK).json({
+        return {
           status: false,
           message: "The following fields are missing: quizzId ",
-        });
+        };
       }
 
       const quizExists = await Quizz.exists({ _id: quizzId });
       if (!quizExists) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return {
           status: false,
           message: "Quiz not found",
-        });
+        };
       }
 
       // Get the every quizz response
       let quizResponse: IQuizResponse | null = await QuizResponse.findById({ quiz: quizzId });
 
       if (!quizResponse) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return {
           status: true,
           message: "No responses found for this quizz",
-        });
+        };
       }
 
       //Para todos os QuizResponses encontrar o UserId com maior tempo da variavel seconds
@@ -603,13 +606,13 @@ class QuizzController {
       //Ou seja para cada aluno, vamos verificar se este aluno acertou em todas as questões caso tenha acertado entao recebe -> quizResponse.badge correspondente {badge: "Superstar", img: "/badges/superstar.png"}
 
       //gravar todos os encontrados acima e returnar status ok
-      return res.status(StatusCodes.OK).json({
+      return {
         status: true,
         message: "Badges Updated",
-      });
+      };
       
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 }
