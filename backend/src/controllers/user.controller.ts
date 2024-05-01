@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import User from "../models/user.model";
+import User, { UserType } from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Challenge from "../models/challenge.model";
@@ -11,7 +11,7 @@ export interface User {
   email: string;
   avatar?: string;
   adminChallenges?: string[];
-  type?: string;
+  type?: UserType;
   score?: number;
 }
 
@@ -146,7 +146,7 @@ class UserController {
 
   static async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await User.find({ _id: { $ne: req.params.id } }).select(["email", "username", "avatar", "_id"]);
+      const users = await User.find({ _id: { $ne: req.params.id } }).select(["email", "username", "avatar", "_id", "type"]);
 
       return res.status(200).json(users);
     } catch (ex) {

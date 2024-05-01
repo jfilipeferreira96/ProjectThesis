@@ -7,6 +7,7 @@ import Logger from "../utils/logger";
 import Quizz, { Status } from "../models/quizz.model";
 import QuizResponse from "../models/quizzResponse.model";
 import QuizzController from "./quizz.controller";
+import mongoose from "mongoose";
 
 class ChallengeController {
   static async CreateChallenge(req: Request, res: Response, next: NextFunction) {
@@ -42,7 +43,7 @@ class ChallengeController {
       }
 
       // Verificar se o user é um administrador do desafio
-      if (!challenge.admins.some(admin => admin._id.toString() === user._id.toString())) {
+      if (!challenge.admins.some((admin) => admin._id.toString() === user._id.toString())) {
         return res.status(401).json({ status: false, message: "You are not authorized to edit this challenge" });
       }
 
@@ -54,17 +55,14 @@ class ChallengeController {
 
       const updatedChallenge = await challenge.save();
 
-      if (status === ChallengeStatus.Completed)
-      {
+      if (status === ChallengeStatus.Completed) {
         // Verificar se existem quizzes associados ao desafio que não estão fechados
         const openQuizzes = await Quizz.find({ challenge: id, status: { $ne: Status.Completed } });
 
         // Se existirem quizzes não fechados
-        if (openQuizzes.length > 0)
-        {
+        if (openQuizzes.length > 0) {
           // Percorre os quizzes e para os fechar
-          for (const quiz of openQuizzes)
-          {
+          for (const quiz of openQuizzes) {
             quiz.status = Status.Completed;
             await quiz.save();
 
@@ -95,7 +93,7 @@ class ChallengeController {
       const sendObj = challenges.map((challenge) => {
         return {
           ...challenge.toObject(),
-          user_type: challenge.admins.some(admin => admin._id.toString() === user._id.toString()) ? "Admin" : "User",
+          user_type: challenge.admins.some((admin) => admin._id.toString() === user._id.toString()) ? "Admin" : "User",
         };
       });
 
@@ -194,12 +192,24 @@ class ChallengeController {
       const userId: any = req.user._id;
       const token: string = req.body.token;
 
+      if (!mongoose.Types.ObjectId.isValid(token)) {
+        Logger.error("Invalid token");
+        response = { status: false, message: "Invalid token" };
+        return res.status(200).json(response);
+      }
+
       const user = await User.findById(userId);
       const challenge = await Challenge.findById(token);
 
-      if (!user || !challenge) {
+      if (!challenge) {
         Logger.error("Challenge not found");
         response = { status: false, message: "Challenge not found" };
+        return res.status(200).json(response);
+      }
+
+      if (!user) {
+        Logger.error("User not found");
+        response = { status: false, message: "User not found" };
         return res.status(200).json(response);
       }
 
@@ -209,7 +219,7 @@ class ChallengeController {
         return res.status(200).json(response);
       }
 
-      if (challenge.admins.some(admin => admin._id.toString() === user._id.toString())) {
+      if (challenge.admins && challenge.admins.some((admin) => admin._id.toString() === user._id.toString())) {
         Logger.error("You are an admin of this challenge.");
         response = { status: false, message: "You are an admin of this challenge." };
         return res.status(200).json(response);
@@ -222,6 +232,7 @@ class ChallengeController {
       return res.status(200).json({ status: true, challenge: challengeUpdated });
     } catch (error) {
       Logger.error("Error adding user to challenge: " + error);
+      next(error);
     }
   }
 
@@ -239,7 +250,7 @@ class ChallengeController {
         return res.status(200).json(response);
       }
 
-      if (!challenge.admins.some(admin => admin._id.toString() === userId.toString())) {
+      if (!challenge.admins.some((admin) => admin._id.toString() === userId.toString())) {
         Logger.error("No permissions");
         response = { status: false, message: "No permissions" };
         return res.status(200).json(response);
@@ -259,7 +270,7 @@ class ChallengeController {
       const { challengeId, email } = req.body;
       // Verificar se o user existe
       const userExists = await User.exists({ email: email });
-      
+
       if (!userExists) {
         return res.json({ status: false, message: "User not found" });
       }
@@ -267,7 +278,7 @@ class ChallengeController {
       // Verificar se o user já é um admin
       const challenge = await Challenge.findById(challengeId);
       if (challenge) {
-        if (challenge.admins.some(admin => admin._id.toString() === userExists._id.toString())) {
+        if (challenge.admins.some((admin) => admin._id.toString() === userExists._id.toString())) {
           return res.status(400).json({ status: false, message: "User is already an admin of this challenge" });
         }
 
@@ -298,7 +309,7 @@ class ChallengeController {
       }
 
       // Verificar se o user é um administrador do desafio
-      if (!challenge.admins.some(admin => admin._id.toString() === userId.toString())) {
+      if (!challenge.admins.some((admin) => admin._id.toString() === userId.toString())) {
         return res.status(400).json({ status: false, message: "User is not an admin of this challenge" });
       }
 

@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { notifications } from "@mantine/notifications";
+import { UserType } from "@/services/auth.service";
 
 export interface User {
   _id: string;
@@ -11,6 +12,7 @@ export interface User {
   studentId: string;
   email: string;
   avatar: string;
+  type: UserType;
   adminChallenges?: string[];
   score?: number
 }
@@ -92,6 +94,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             adminChallenges: decodedToken.adminChallenges,
             type: decodedToken.type,
           };
+          console.log(userData)
           sessionLogin(userData, accessToken, refreshToken, false);
         }
       } else {
