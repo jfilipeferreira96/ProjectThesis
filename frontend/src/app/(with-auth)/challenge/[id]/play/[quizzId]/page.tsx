@@ -5,25 +5,24 @@ import Quizz, { Question } from "@/components/quizz";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
-import { EvalutionType, getSingleQuizz } from "@/services/quizz.service";
+import { EvalutionType, getSingleQuizz, IQuestion, QuizzData } from "@/services/quizz.service";
 
 interface PlayPageProps {
   params: {
     id: string;
     quizzId: string;
-    isAutomatic?: boolean
+    isAutomatic?: boolean;
   };
 }
 
-export const shuffleArray = (array: any[]) => {
-  const newArray = [...array]; 
+const shuffleArray = (array: any[]) => {
+  const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
 };
-
 
 const PlayPage = (props: PlayPageProps) => {
   const { id, quizzId, isAutomatic } = props.params;
@@ -36,16 +35,21 @@ const PlayPage = (props: PlayPageProps) => {
 
   const getQuestions = async (id: string) => {
     try {
-    
       const response = await getSingleQuizz(quizzId);
       if (response.status) {
         let questions = response.questions;
-        
-        if (response.shuffle) {
 
+        if (response.shuffle) {
           questions = shuffleArray(response.questions);
+
+           questions = questions.map((q: IQuestion) => {
+             if (q.type === "MultipleQuestions") {
+               q.choices = shuffleArray(q.choices); 
+             }
+             return q; 
+           });
         }
-        
+
         setQuestions(questions);
 
         setShouldShuffle(response.shuffle);
@@ -88,12 +92,7 @@ const PlayPage = (props: PlayPageProps) => {
 
   return (
     <>
-      <Quizz
-        questions={questions}
-        quizId={quizzId}
-        sounds={sounds}
-        isAutomatic={evaluationType === EvalutionType.Automatic}
-      />
+      <Quizz questions={questions} quizId={quizzId} sounds={sounds} isAutomatic={evaluationType === EvalutionType.Automatic} />
     </>
   );
 };
