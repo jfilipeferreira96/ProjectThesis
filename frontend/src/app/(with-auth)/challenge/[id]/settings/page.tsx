@@ -51,6 +51,23 @@ const schema = z.object({
   type: z.string(),
 });
 
+interface ActiveQuizz {
+  id: string | null;
+  completed: boolean;
+}
+
+interface Quizz {
+  _id: string;
+  rows: any[]; 
+  type?: any; 
+  title: string;
+  description: string;
+  admins: string[]; 
+  participants: string[];
+  status: number;
+  activeQuizz: ActiveQuizz;
+}
+
 const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter();
   const [state, setState] = useState({
@@ -74,7 +91,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const [activeTab, setActiveTab] = useState<"Quizzes" | "Answers" | "settings">("Quizzes");
   const [isLoading, setIsLoading] = useState(false);
   const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
-  const ativeQuizz = state.rows.filter((quiz:any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
+  const ativeQuizz: Quizz[] = state.rows.filter((quiz: any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
   const [quizzes, setQuizzes] = useState([]);
   
   const GetSingleChallenge = async (id: string) => {
@@ -171,10 +188,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   };
 
   const EditQuizzStatus = async (quizId: string, status: QuizzStatus) => {
-    try {
-      // Se já houver um quiz em andamento, exiba uma mensagem ou impeça a alteração do status
-      if (ativeQuizz.length > 0) {
-        
+    try {      
+      if (ativeQuizz.length > 0 && ativeQuizz[0]?._id !== quizId) {
         notifications.show({
           title: "Oops",
           message: "Only one quiz can be active at a time.",

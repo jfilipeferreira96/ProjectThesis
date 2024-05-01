@@ -78,7 +78,6 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
     try {
       const response = await getSingleChallenge(id);
       if (response.status) {
-        console.log(response);
         setState(response.challenge);
 
         const sortedParticipants = response.challenge.participants.sort((a: User, b: User) => {

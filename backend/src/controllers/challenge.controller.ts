@@ -132,9 +132,10 @@ class ChallengeController {
         // Loop through quizzes of the challenge
         for (const quiz of challenge.quizzes) {
           const quizResponse = await QuizResponse.findOne({ quiz: quiz, user: participant._id });
-
+          
           if (quizResponse) {
             totalScore += quizResponse.score;
+            participant.badges = quizResponse?.badges;
           }
         }
 

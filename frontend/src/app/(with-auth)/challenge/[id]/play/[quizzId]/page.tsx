@@ -42,8 +42,8 @@ const PlayPage = (props: PlayPageProps) => {
         let questions = response.questions;
         
         if (response.shuffle) {
+
           questions = shuffleArray(response.questions);
-          
         }
         
         setQuestions(questions);
@@ -88,7 +88,12 @@ const PlayPage = (props: PlayPageProps) => {
 
   return (
     <>
-      <Quizz questions={questions} quizId={quizzId} sounds={sounds} isAutomatic={evaluationType === EvalutionType.Automatic} shuffle={shouldShuffle} />
+      <Quizz
+        questions={questions}
+        quizId={quizzId}
+        sounds={sounds}
+        isAutomatic={evaluationType === EvalutionType.Automatic}
+      />
     </>
   );
 };

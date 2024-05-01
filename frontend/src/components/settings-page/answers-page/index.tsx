@@ -52,8 +52,8 @@ const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {
     const fetchAnswers = async (quizId: string) => {
       try {
         const response = await getAnswers(quizId);
-
-        if (response.status === true) {
+        
+        if (response.status === true && response.data) {
           setState(response.data);
         }
 

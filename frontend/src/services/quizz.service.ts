@@ -139,7 +139,7 @@ export const deleteQuizz = async (id: string) =>
   }
 };
 
-export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnswer }) =>
+export const SaveQuizAnswer = async (data: { quizId?: string; userAnswers: IAnswer, seconds: number }) =>
 {
   try
   {

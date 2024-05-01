@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { IBadge } from "./quizzResponse.model";
 
 export enum UserType{
   STUDENT = "Student",
@@ -14,7 +15,7 @@ export interface IUser extends Document {
   studentId?: number | string;
   type: UserType; 
   createdAt: Date;
-  score?: number
+  score?: number;
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({

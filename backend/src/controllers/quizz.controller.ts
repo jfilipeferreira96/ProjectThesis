@@ -255,7 +255,7 @@ class QuizzController {
 
   static async SaveQuizAnswer(req: Request, res: Response, next: NextFunction) {
     try {
-      const { quizId, userAnswers } = req.body;
+      const { quizId, userAnswers, seconds } = req.body;
 
       let answersArray = userAnswers;
       const user: any = req.user;
@@ -363,6 +363,7 @@ class QuizzController {
         user: user._id,
         answers: answersToSave,
         score: score,
+        seconds: seconds,
       };
 
       const quizResponse = await QuizResponse.create(quizResponseData);
@@ -476,7 +477,7 @@ class QuizzController {
       const quizResponses: IQuizResponse[] = await QuizResponse.find({ quiz: quizId }).populate("user").exec();
 
       if (!quizResponses || quizResponses.length === 0) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return res.status(StatusCodes.OK).json({
           status: true,
           message: "No responses found for this quiz",
         });
@@ -606,7 +607,7 @@ class QuizzController {
       let superstars: IQuizResponse[] = [];
 
       const quiz = await Quizz.findById(quizzId);
-
+      
       for (const response of quizResponses) {
         if (quizResponses.length > 1) {
           // Find user with best time
@@ -621,11 +622,11 @@ class QuizzController {
         }
         // Check for superstars
         let superstar = true;
-        
+
         if (Array.isArray(response.answers)) {
           for (const answer of response.answers) {
-            const question = quiz.questions.find((q) => q._id === answer._id);
-            if (!question || answer.pontuation! < question.pontuation!) {
+            const question = quiz.questions.find((q) => q._id.toString() === answer._id.toString());
+            if (!question || answer.pontuation < question.pontuation) {
               superstar = false;
               break;
             }
@@ -639,19 +640,19 @@ class QuizzController {
 
       // Update badge for best time user
       if (bestTimeUser) {
-        bestTimeUser.badges.push({ badge: "The Flash", img: "/badges/flash.png" });
+        bestTimeUser.badges.push({ badge: "Quick as a flash, first to the finish line!", img: "/badges/flash.png" });
         await bestTimeUser.save();
       }
 
       // Update badge for worst time user
       if (worstTimeUser) {
-        worstTimeUser.badges.push({ badge: "The Sloth", img: "/badges/sloth.png" });
+        worstTimeUser.badges.push({ badge: "Took it slow and steady like a sloth!", img: "/badges/sloth.png" });
         await worstTimeUser.save();
       }
 
       // Update badge for superstars
       for (const superstar of superstars) {
-        superstar.badges.push({ badge: "Superstar", img: "/badges/superstar.png" });
+        superstar.badges.push({ badge: "Nailed every single answer, a true superstar!", img: "/badges/superstar.png" });
         await superstar.save();
       }
 

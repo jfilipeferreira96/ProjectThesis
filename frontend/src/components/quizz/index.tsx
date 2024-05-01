@@ -7,7 +7,6 @@ import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.se
 import { IconFile, IconDownload } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 import { User } from "@/providers/SessionProvider";
-import { shuffleArray } from "@/app/(with-auth)/challenge/[id]/play/[quizzId]/page";
 
 export interface Question {
   _id?: number | string;
@@ -39,11 +38,10 @@ interface Props {
   answer?: IAnswer | any | undefined;
   setAnswerPontuation?: (answerId: string, pontuation: number | undefined) => void;
   user?: User | null | undefined;
-  shuffle?: boolean;
 }
 
 const Quizz = (props: Props) => {
-  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation, user, shuffle } = props;
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation, user } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
     seconds: 0,
@@ -57,8 +55,7 @@ const Quizz = (props: Props) => {
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-  console.log("interval", interval);
-  console.log("seconds", seconds);
+
   useEffect(() => {
     if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
@@ -137,7 +134,7 @@ const Quizz = (props: Props) => {
     const answers: IAnswer = userAnswers.map((ans: IAnswer) => ({ ...ans, pontuation: 0 }));
 
     try {
-      const response = await SaveQuizAnswer({ userAnswers: answers, quizId });
+      const response = await SaveQuizAnswer({ userAnswers: answers, quizId, seconds });
 
       if (response.status && response?.data) {
         setResult({
@@ -304,29 +301,17 @@ const Quizz = (props: Props) => {
     return (
       <div className={classes.answerDiv}>
         <ul>
-          {shuffle
-            ? shuffleArray(choices ?? []).map((answer, index) => {
-                if (!answer) return <></>;
+          {choices?.map((answer, index) => {
+            if (!answer) return <></>;
 
-                return (
-                  <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-                    <Text size="md" span>
-                      {answer}
-                    </Text>
-                  </li>
-                );
-              })
-            : choices?.map((answer, index) => {
-                if (!answer) return <></>;
-
-                return (
-                  <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-                    <Text size="md" span>
-                      {answer}
-                    </Text>
-                  </li>
-                );
-              })}
+            return (
+              <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+                <Text size="md" span>
+                  {answer}
+                </Text>
+              </li>
+            );
+          })}
         </ul>
       </div>
     );

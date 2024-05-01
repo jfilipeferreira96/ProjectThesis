@@ -13,6 +13,7 @@ export interface User {
   adminChallenges?: string[];
   type?: UserType;
   score?: number;
+  badges?: any[];
 }
 
 interface RefreshToken {

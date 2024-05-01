@@ -94,7 +94,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
             adminChallenges: decodedToken.adminChallenges,
             type: decodedToken.type,
           };
-          console.log(userData)
+          
           sessionLogin(userData, accessToken, refreshToken, false);
         }
       } else {
