@@ -24,7 +24,9 @@ services:
       - '27017:27017'
     networks:
       - mynet
-    command: ["mongod", "--bind_ip_all"]
+    command: ["mongod", "--bind_ip_all", "--auth"]
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
 networks:
   mynet:
