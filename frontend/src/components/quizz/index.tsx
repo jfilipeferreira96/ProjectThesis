@@ -7,9 +7,9 @@ import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.se
 import { IconFile, IconDownload } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 import { User } from "@/providers/SessionProvider";
+import { shuffleArray } from "@/app/(with-auth)/challenge/[id]/play/[quizzId]/page";
 
-export interface Question
-{
+export interface Question {
   _id?: number | string;
   key: number | string;
   question: string;
@@ -20,8 +20,8 @@ export interface Question
   file?: File | any | string;
 }
 
-interface Result
-{
+interface Result {
+  seconds: number;
   score: number;
   correctAnswers: number;
   wrongAnswers: number;
@@ -39,12 +39,14 @@ interface Props {
   answer?: IAnswer | any | undefined;
   setAnswerPontuation?: (answerId: string, pontuation: number | undefined) => void;
   user?: User | null | undefined;
+  shuffle?: boolean;
 }
 
 const Quizz = (props: Props) => {
-  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation, user } = props;
+  const { questions, preview, quizId, isAutomatic, sounds, reviewMode, questionNumber, answer, setAnswerPontuation, user, shuffle } = props;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState<Result>({
+    seconds: 0,
     score: 0,
     correctAnswers: 0,
     wrongAnswers: 0,
@@ -55,7 +57,8 @@ const Quizz = (props: Props) => {
   const [seconds, setSeconds] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
-  
+  console.log("interval", interval);
+  console.log("seconds", seconds);
   useEffect(() => {
     if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
@@ -64,31 +67,27 @@ const Quizz = (props: Props) => {
       };
       setResult(resultWithAnswer);
     }
-  }, [reviewMode, answer])
+  }, [reviewMode, answer]);
 
-  useEffect( () => {
-    if (!preview)
-    {
+  useEffect(() => {
+    if (!preview) {
       interval.start();
       return interval.stop;
     }
   }, []);
 
   const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
-  
+
   const handleChoiceSelection = (chosenAnswer: string) => {
     if (reviewMode) return;
 
-    setResult((prevResult) =>
-    {
+    setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice(); // Create a copy of the array
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
-      
-      if (existingAnswer)
-      {
+
+      if (existingAnswer) {
         existingAnswer.answer = chosenAnswer;
-      } else
-      {
+      } else {
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: chosenAnswer } : { _id: key, answer: chosenAnswer });
       }
 
@@ -98,26 +97,21 @@ const Quizz = (props: Props) => {
       };
     });
 
-    if (sounds)
-    {
+    if (sounds) {
       new Audio("/sounds/popclick.mp3").play();
     }
   };
 
-  const handleFile = (file: File | null | string) =>
-  {
+  const handleFile = (file: File | null | string) => {
     if (reviewMode) return;
 
-    setResult((prevResult) =>
-    {
+    setResult((prevResult) => {
       const updatedUserAnswers = prevResult.userAnswers.slice();
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
 
-      if (existingAnswer)
-      {
+      if (existingAnswer) {
         existingAnswer.answer = file; // Assuming you want to store the file object
-      } else
-      {
+      } else {
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: file } : { _id: key, answer: file });
       }
 
@@ -128,10 +122,8 @@ const Quizz = (props: Props) => {
     });
   };
 
-  const onClickNext = (id: number) =>
-  {
-    if (sounds)
-    {
+  const onClickNext = (id: number) => {
+    if (sounds) {
       new Audio("/sounds/click.mp3").play();
     }
     setCurrentQuestion(id);
@@ -144,33 +136,29 @@ const Quizz = (props: Props) => {
 
     const answers: IAnswer = userAnswers.map((ans: IAnswer) => ({ ...ans, pontuation: 0 }));
 
-    try
-    {
+    try {
       const response = await SaveQuizAnswer({ userAnswers: answers, quizId });
 
-      if (response.status && response?.data)
-      {
+      if (response.status && response?.data) {
         setResult({
           score: response.data.score,
           correctAnswers: response.data.correctAnswers,
           wrongAnswers: response.data.wrongAnswers,
           userAnswers: response.data.userAnswers,
+          seconds: seconds,
         });
 
-        if (sounds)
-        {
+        if (sounds) {
           new Audio("/sounds/finish.mp3").play(); // Som ao finalizar
         }
       }
-    } catch (error)
-    {
+    } catch (error) {
       notifications.show({
         title: "Error",
         message: "Something went wrong",
         color: "red",
       });
-    } finally
-    {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -184,32 +172,23 @@ const Quizz = (props: Props) => {
 
     interval.stop();
 
-    if (preview === true)
-    {
-      result.userAnswers.forEach((userAnswer) =>
-      {
+    if (preview === true) {
+      result.userAnswers.forEach((userAnswer) => {
         const question = questions.find((q) => q._id === userAnswer._id);
 
-        if (question)
-        {
-          if (question.type === "FillInBlank")
-          {
-            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase())
-            {
+        if (question) {
+          if (question.type === "FillInBlank") {
+            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
               score += 5;
               correctAnswers += 1;
-            } else
-            {
+            } else {
               wrongAnswers += 1;
             }
-          } else
-          {
-            if (userAnswer.answer === question.correctAnswer)
-            {
+          } else {
+            if (userAnswer.answer === question.correctAnswer) {
               score += 5;
               correctAnswers += 1;
-            } else
-            {
+            } else {
               wrongAnswers += 1;
             }
           }
@@ -217,13 +196,13 @@ const Quizz = (props: Props) => {
       });
 
       setResult({
+        seconds,
         score,
         correctAnswers,
         wrongAnswers,
         userAnswers: result.userAnswers,
       });
-    } else
-    {
+    } else {
       //Submete para o backend e seta o resultado
       SendAndSaveAnswer(result.userAnswers);
     }
@@ -246,12 +225,10 @@ const Quizz = (props: Props) => {
       // Check if the current question id is already in userAnswers
       const existingAnswer = updatedUserAnswers.find((answer) => answer._id === questionId || answer._id === key);
 
-      if (existingAnswer)
-      {
+      if (existingAnswer) {
         // If it exists, update the answer
         existingAnswer.answer = userInput;
-      } else
-      {
+      } else {
         // If it doesn't exist, add a new entry
         updatedUserAnswers.push(questionId ? { _id: questionId, answer: userInput } : { _id: key, answer: userInput });
       }
@@ -265,6 +242,7 @@ const Quizz = (props: Props) => {
 
   const handleTryAgain = () => {
     setResult({
+      seconds: 0,
       score: 0,
       correctAnswers: 0,
       wrongAnswers: 0,
@@ -277,26 +255,16 @@ const Quizz = (props: Props) => {
     interval.start();
   };
 
-  const getAnswerUI = () =>
-  {
-    if (type === "FillInBlank")
-    {
+  const getAnswerUI = () => {
+    if (type === "FillInBlank") {
       return (
         <div className={classes.answerDiv}>
-          <Textarea
-            className="specialinput"
-            size={"lg"}
-            value={result.userAnswers[currentQuestion]?.answer || ""}
-            onChange={handleInputChange}
-            mb={10}
-            disabled={reviewMode ? true : false}
-          />
+          <Textarea className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} disabled={reviewMode ? true : false} />
         </div>
       );
     }
 
-    if (type === "FileUpload")
-    {
+    if (type === "FileUpload") {
       return (
         <div className={classes.answerDiv}>
           {reviewMode ? (
@@ -336,17 +304,29 @@ const Quizz = (props: Props) => {
     return (
       <div className={classes.answerDiv}>
         <ul>
-          {choices?.map((answer, index) => {
-            if (!answer) return <></>;
+          {shuffle
+            ? shuffleArray(choices ?? []).map((answer, index) => {
+                if (!answer) return <></>;
 
-            return (
-              <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
-                <Text size="md" span>
-                  {answer}
-                </Text>
-              </li>
-            );
-          })}
+                return (
+                  <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+                    <Text size="md" span>
+                      {answer}
+                    </Text>
+                  </li>
+                );
+              })
+            : choices?.map((answer, index) => {
+                if (!answer) return <></>;
+
+                return (
+                  <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+                    <Text size="md" span>
+                      {answer}
+                    </Text>
+                  </li>
+                );
+              })}
         </ul>
       </div>
     );
@@ -408,7 +388,7 @@ const Quizz = (props: Props) => {
 
               <div className={classes.body}>
                 {/* Secção Body */}
-                
+
                 <div dangerouslySetInnerHTML={{ __html: question }} />
 
                 {getAnswerUI()}

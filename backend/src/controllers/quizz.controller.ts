@@ -70,7 +70,7 @@ class QuizzController {
         });
       }
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -98,7 +98,7 @@ class QuizzController {
         id: quiz._id,
       });
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -150,7 +150,7 @@ class QuizzController {
         });
       }
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -200,7 +200,7 @@ class QuizzController {
         });
       }
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -244,7 +244,7 @@ class QuizzController {
         });
       }
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -381,7 +381,7 @@ class QuizzController {
 
       return res.status(StatusCodes.OK).json(sendObj);
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -495,7 +495,7 @@ class QuizzController {
         data: responsesWithUserInfo,
       });
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -561,7 +561,7 @@ class QuizzController {
         score: totalScore,
       });
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -600,16 +600,17 @@ class QuizzController {
       const quiz = await Quizz.findById(quizzId);
 
       for (const response of quizResponses) {
-        // Find user with best time
-        if (!bestTimeUser || response.seconds! < bestTimeUser.seconds!) {
-          bestTimeUser = response;
-        }
+        if (quizResponses.length > 1) {
+          // Find user with best time
+          if (!bestTimeUser || response.seconds! < bestTimeUser.seconds!) {
+            bestTimeUser = response;
+          }
 
-        // Find user with worst time
-        if (!worstTimeUser || response.seconds! > worstTimeUser.seconds!) {
-          worstTimeUser = response;
+          // Find user with worst time
+          if (!worstTimeUser || response.seconds! > worstTimeUser.seconds!) {
+            worstTimeUser = response;
+          }
         }
-
         // Check for superstars
         let superstar = true;
         

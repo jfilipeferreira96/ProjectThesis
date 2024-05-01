@@ -26,7 +26,7 @@ class ChallengeController {
         id: challenge._id,
       });
     } catch (ex) {
-      next(ex);
+      Logger.error(ex);
     }
   }
 
@@ -80,7 +80,7 @@ class ChallengeController {
         challenge: updatedChallenge,
       });
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -104,7 +104,7 @@ class ChallengeController {
         challenges: sendObj,
       });
     } catch (error) {
-      throw new Error("Error fetching challenges: " + error);
+      Logger.error("Error fetching challenges: " + error);
     }
   }
 
@@ -166,7 +166,7 @@ class ChallengeController {
         });
 
         const responseChallenge = {
-          ...challenge.toObject(),
+          ...challenge,
           activeQuizz: {
             id: activeQuizz._id,
             completed: quizResponseCount > 0,
@@ -184,7 +184,7 @@ class ChallengeController {
         });
       }
     } catch (error) {
-      throw new Error("Error fetching challenges: " + error);
+      Logger.error("Error fetching challenges: " + error);
     }
   }
 
@@ -198,8 +198,8 @@ class ChallengeController {
       const challenge = await Challenge.findById(token);
 
       if (!user || !challenge) {
-        Logger.error("User or challenge not found");
-        response = { status: false, message: "User or challenge not found" };
+        Logger.error("Challenge not found");
+        response = { status: false, message: "Challenge not found" };
         return res.status(200).json(response);
       }
 
@@ -221,7 +221,7 @@ class ChallengeController {
 
       return res.status(200).json({ status: true, challenge: challengeUpdated });
     } catch (error) {
-      throw new Error("Error adding user to challenge: " + error);
+      Logger.error("Error adding user to challenge: " + error);
     }
   }
 
@@ -250,7 +250,7 @@ class ChallengeController {
 
       return res.status(200).json({ status: true, quizzes, type: challenge.type });
     } catch (error) {
-      throw new Error("Error fecthing all quizzes from challenge: " + error);
+      Logger.error("Error fecthing all quizzes from challenge: " + error);
     }
   }
 
@@ -283,7 +283,7 @@ class ChallengeController {
         return res.status(200).json({ status: true, message: "User added as admin successfully" });
       }
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 
@@ -309,7 +309,7 @@ class ChallengeController {
 
       return res.status(200).json({ status: true, message: "Admin removed from the challenge successfully" });
     } catch (error) {
-      next(error);
+      Logger.error(error);
     }
   }
 }

@@ -89,9 +89,9 @@ export default function SignIn(){
           <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
           <PasswordInput className="specialinput" label="Password" placeholder="Your password" required mt="md" {...form.getInputProps("password")} />
           <Group justify={"flex-end"} mt="lg">
-            <Anchor component="button" size="sm">
+            {/* <Anchor component="button" size="sm">
               Forgot password?
-            </Anchor>
+            </Anchor> */}
           </Group>
           <ThreeDButton color="blue" mt="xl" type="submit" smaller>
             Sign in

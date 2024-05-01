@@ -15,7 +15,7 @@ interface PlayPageProps {
   };
 }
 
-const shuffleArray = (array: any[]) => {
+export const shuffleArray = (array: any[]) => {
   const newArray = [...array]; 
   for (let i = newArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -88,7 +88,7 @@ const PlayPage = (props: PlayPageProps) => {
 
   return (
     <>
-      <Quizz questions={questions} quizId={quizzId} sounds={sounds} isAutomatic={evaluationType === EvalutionType.Automatic} />
+      <Quizz questions={questions} quizId={quizzId} sounds={sounds} isAutomatic={evaluationType === EvalutionType.Automatic} shuffle={shouldShuffle} />
     </>
   );
 };
