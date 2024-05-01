@@ -28,6 +28,7 @@ class ChallengeController {
       });
     } catch (ex) {
       Logger.error(ex);
+      next(ex);
     }
   }
 
@@ -79,6 +80,7 @@ class ChallengeController {
       });
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -103,6 +105,7 @@ class ChallengeController {
       });
     } catch (error) {
       Logger.error("Error fetching challenges: " + error);
+      next(error);
     }
   }
 
@@ -183,6 +186,7 @@ class ChallengeController {
       }
     } catch (error) {
       Logger.error("Error fetching challenges: " + error);
+      next(error);
     }
   }
 
@@ -262,6 +266,7 @@ class ChallengeController {
       return res.status(200).json({ status: true, quizzes, type: challenge.type });
     } catch (error) {
       Logger.error("Error fecthing all quizzes from challenge: " + error);
+      next(error);
     }
   }
 
@@ -295,6 +300,7 @@ class ChallengeController {
       }
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -321,6 +327,7 @@ class ChallengeController {
       return res.status(200).json({ status: true, message: "Admin removed from the challenge successfully" });
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 }

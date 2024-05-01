@@ -71,6 +71,7 @@ class QuizzController {
       }
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -99,6 +100,7 @@ class QuizzController {
       });
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -151,6 +153,7 @@ class QuizzController {
       }
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -201,6 +204,7 @@ class QuizzController {
       }
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -245,6 +249,7 @@ class QuizzController {
       }
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -382,6 +387,7 @@ class QuizzController {
       return res.status(StatusCodes.OK).json(sendObj);
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -496,6 +502,7 @@ class QuizzController {
       });
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
@@ -562,6 +569,7 @@ class QuizzController {
       });
     } catch (error) {
       Logger.error(error);
+      next(error);
     }
   }
 
