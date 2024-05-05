@@ -1,7 +1,7 @@
 import { useDisclosure } from "@mantine/hooks";
 import { Modal, Button, Group, Text, Badge, Title, Grid, NumberInput, Center } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { editQuizzPontuation, IAnswer, IQuestion, QuestionType, QuizzData } from "@/services/quizz.service";
+import { editQuizzPontuation, EvalutionType, IAnswer, IQuestion, QuestionType, QuizzData } from "@/services/quizz.service";
 import Quizz from "@/components/quizz";
 import { User } from "@/providers/SessionProvider";
 import classes from "./modal.module.scss";
@@ -13,7 +13,7 @@ interface ModalProps {
   answers: IAnswer | undefined;
   isOpen: boolean;
   onClose: (shouldRefresh?: boolean) => void;
-  quizz?: { label: string; value: string; questions: IQuestion[] } | undefined;
+  quizz?: { label: string; value: string; questions: IQuestion[]; evaluation: EvalutionType.Automatic | EvalutionType.Manual } | undefined;
 }
 
 function AnswersModal(props: ModalProps) {
@@ -128,6 +128,7 @@ function AnswersModal(props: ModalProps) {
                 reviewMode
                 questionNumber={{ total: quizz?.questions.length, atual: index }}
                 user={selectedUser}
+                isAutomatic={quizz?.evaluation === EvalutionType.Automatic}
               />
             </div>
           );

@@ -4,7 +4,7 @@ import { User, useSession } from "@/providers/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Text, Badge, Button, Group, Center, Grid, Title, TextInput, Flex, Loader, Table, ActionIcon, Tabs, rem, Paper, Tooltip, Radio, List, CheckIcon, Textarea, Modal, Select, Avatar } from "@mantine/core";
 import { IconDatabaseOff, IconEye, IconEyeCheck } from "@tabler/icons-react";
-import { getAnswers, IAnswer, IQuestion } from "@/services/quizz.service";
+import { EvalutionType, getAnswers, IAnswer, IQuestion } from "@/services/quizz.service";
 import { notifications } from "@mantine/notifications";
 import AnswersModal from "./modal-answers";
 
@@ -32,7 +32,7 @@ type DataItem = {
 };
 
 interface AnswersProps {
-  quizzes?: { label: string; value: string; questions: IQuestion[] }[];
+  quizzes?: { label: string; value: string; questions: IQuestion[]; evaluation: EvalutionType.Automatic | EvalutionType.Manual }[];
 }
 
 const Answers: React.FC<AnswersProps> = (props: AnswersProps) => {

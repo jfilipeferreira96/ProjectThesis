@@ -73,7 +73,7 @@ const Quizz = (props: Props) => {
     }
   }, []);
 
-  const { _id: questionId, key, question, choices, type, pontuation, file } = questions[currentQuestion];
+  const { _id: questionId, key, question, choices, type, correctAnswer, pontuation, file } = questions[currentQuestion];
 
   const handleChoiceSelection = (chosenAnswer: string) => {
     if (reviewMode) return;
@@ -256,7 +256,15 @@ const Quizz = (props: Props) => {
     if (type === "FillInBlank") {
       return (
         <div className={classes.answerDiv}>
-          <Textarea className="specialinput" size={"lg"} value={result.userAnswers[currentQuestion]?.answer || ""} onChange={handleInputChange} mb={10} disabled={reviewMode ? true : false} />
+          <Textarea
+            className={`specialinput 
+            ${reviewMode && isAutomatic ? result.userAnswers[currentQuestion]?.answer === correctAnswer ? classes.correct : classes.wrong  : ""}`}
+            size={"lg"}
+            value={result.userAnswers[currentQuestion]?.answer || ""}
+            onChange={handleInputChange}
+            mb={10}
+            disabled={reviewMode ? true : false}
+          />
         </div>
       );
     }
@@ -305,7 +313,13 @@ const Quizz = (props: Props) => {
             if (!answer) return <></>;
 
             return (
-              <li onClick={() => handleChoiceSelection(answer)} key={index} className={result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : undefined}>
+              <li
+                onClick={() => handleChoiceSelection(answer)}
+                key={index}
+                className={`${result.userAnswers[currentQuestion]?.answer === answer ? classes.selectedAnswer : ""} ${
+                  reviewMode ? (answer === correctAnswer ? classes.correct : result.userAnswers[currentQuestion]?.answer !== correctAnswer && result.userAnswers[currentQuestion]?.answer === answer ? classes.wrong : "") : ""
+                }`}
+              >
                 <Text size="md" span>
                   {answer}
                 </Text>

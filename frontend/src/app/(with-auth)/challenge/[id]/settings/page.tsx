@@ -133,10 +133,11 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     setIsLoading(true);
     try {
       const response = await getAllChallengeQuizzes(id);
+      
       if (response.status) {
         setState((prevState) => ({ ...prevState, rows: response.quizzes, type: response.type }));
         if (response.quizzes.length > 0) {
-          let quizzes = response.quizzes.map((quizz: any) => ({ label: quizz.name, value: quizz._id, questions: quizz.questions })); 
+          let quizzes = response.quizzes.map((quizz: any) => ({ label: quizz.name, value: quizz._id, questions: quizz.questions, evaluation: quizz.evaluation })); 
           setQuizzes(quizzes)
         } 
       }

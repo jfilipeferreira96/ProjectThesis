@@ -68,6 +68,17 @@ $disabled: #9c9c9c;
       filter: brightness(90%);
       transition: filter 0.2s ease; 
     }
+
+    .wrong{
+      border: 2px solid rgb(139, 15, 15)!important;
+      background: rgb(189, 64, 26)!important;
+      font-weight: 700;
+    }
+    .correct{
+      border: 2px solid green!important;
+      background: #40c057!important;
+      font-weight: 700;
+    }
   }
   }
 
@@ -118,4 +129,16 @@ $disabled: #9c9c9c;
   &:hover{
     color: var(--mantine-color-blue-filled);
   }
+}
+
+.wrong{
+  border: 2px solid rgb(139, 15, 15)!important;
+  font-weight: 700;
+  border-radius: 1rem;
+}
+
+.correct{
+  border: 2px solid green!important;
+  font-weight: 700;
+  border-radius: 1rem;
 }
