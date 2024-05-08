@@ -10,7 +10,7 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL;
 const isServer = typeof window === "undefined";
 
 const api = axios.create({
-  baseURL: baseURL || "http://localhost:5000",
+  baseURL: baseURL || "http://51.89.138.159:5000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
