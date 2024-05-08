@@ -9,7 +9,7 @@ const paramsSerializer = (params: any) => {
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL: baseURL || "http://localhost:5000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -20,16 +20,16 @@ const api = axios.create({
 // Add a request interceptor
 api.interceptors.request.use((config) =>
 {
+  if (typeof window === "undefined") return config; // Skip localStorage on server-side rendering
+
   const accessToken = localStorage?.getItem("accessToken");
   const refreshToken = localStorage?.getItem("refreshToken");
-  
-  if (accessToken)
-  {
+
+  if (accessToken) {
     config.headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  if (refreshToken)
-  {
+  if (refreshToken) {
     config.headers["Refresh-Token"] = "refreshToken";
   }
 
