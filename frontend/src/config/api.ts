@@ -7,6 +7,7 @@ const paramsSerializer = (params: any) => {
 };
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const isServer = typeof window === "undefined";
 
 const api = axios.create({
   baseURL: baseURL || "http://localhost:5000",
@@ -18,19 +19,24 @@ const api = axios.create({
 } as AxiosRequestConfig);
 
 // Add a request interceptor
-api.interceptors.request.use((config) =>
-{
-  if (typeof window === "undefined") return config; // Skip localStorage on server-side rendering
+api.interceptors.request.use(async (config) => {
+  if (isServer) {
+    const { cookies } = await import("next/headers");
+    const token = cookies().get("token")?.value;
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+  } else {
+    const accessToken = localStorage?.getItem("accessToken");
+    const refreshToken = localStorage?.getItem("refreshToken");
 
-  const accessToken = localStorage?.getItem("accessToken");
-  const refreshToken = localStorage?.getItem("refreshToken");
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
 
-  if (accessToken) {
-    config.headers["Authorization"] = `Bearer ${accessToken}`;
-  }
-
-  if (refreshToken) {
-    config.headers["Refresh-Token"] = "refreshToken";
+    if (refreshToken) {
+      config.headers["Refresh-Token"] = "refreshToken";
+    }
   }
 
   return config;
