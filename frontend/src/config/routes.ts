@@ -1,7 +1,6 @@
 
 const host = process.env.NEXT_PUBLIC_API 
-console.log(process.env.NEXT_PUBLIC_NODE_ENV);
-console.log(host)
+
 export const endpoints = {
   host: host,
   /*################## Auth #############################*/

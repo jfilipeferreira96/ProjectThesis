@@ -24,6 +24,7 @@ export interface RegisterData {
 export const login = async (data: LoginData) => {
   try
   {
+    console.log(endpoints.loginRoute, data);
     const response = await api.post(endpoints.loginRoute, data);
     return response.data;
   }
