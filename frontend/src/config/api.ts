@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { endpoints } from "./routes";
 import qs from "qs";
 
 const paramsSerializer = (params: any) => {
@@ -8,7 +7,7 @@ const paramsSerializer = (params: any) => {
 
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://51.89.138.159:5000",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://vps-90bab9fe.vps.ovh.net/",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
