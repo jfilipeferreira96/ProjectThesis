@@ -90,7 +90,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
   const { user } = useSession();
   const [activeTab, setActiveTab] = useState<"Quizzes" | "Answers" | "settings">("Quizzes");
   const [isLoading, setIsLoading] = useState(false);
-  const isTypeABlockAcess = state.type === "Type A" && state.rows.length === 1 ? true : false;
+  const isTypeExpressBlockAcess = state.type === "Express" && state.rows.length === 1 ? true : false;
   const ativeQuizz: Quizz[] = state.rows.filter((quiz: any) => quiz?.status && quiz?.status === QuizzStatus.InProgress);
   const [quizzes, setQuizzes] = useState([]);
   
@@ -290,7 +290,7 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
     initialValues: {
       title: "",
       description: "",
-      type: ChallengeType.TYPE_A,
+      type: ChallengeType.TYPE_EXPRESS,
       status: "",
     },
     validate: zodResolver(schema),
@@ -466,8 +466,8 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                     )}
                   </StyledTableContainer>
 
-                  {isTypeABlockAcess ? (
-                    <Tooltip label={"Type A challenge cannot contain multiple challenges."} withArrow>
+                  {isTypeExpressBlockAcess ? (
+                    <Tooltip label={"Express challenge cannot contain multiple challenges."} withArrow>
                       <ThreeDButton color="blue" mt="lg" smaller animationOnHover={false} disabled={true} onClick={() => router.push(`${routes.challenge.url}/${id}/add`)}>
                         Add Quizz
                       </ThreeDButton>
@@ -496,16 +496,16 @@ const Settings = ({ params: { id } }: { params: { id: string } }) => {
                       <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" {...form.getInputProps("type")}>
                         <StyledList spacing="xs" size="xs" center icon={<></>}>
                           <List.Item>
-                            <b>Type A -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
+                            <b>Express -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
                           </List.Item>
                           <List.Item>
-                            <b>Type B -</b> A league-based challenge comprised of one or multiple challenges.
+                            <b>Marathon -</b> A league-based challenge comprised of one or multiple challenges.
                           </List.Item>
                         </StyledList>
 
                         <Group mt="xs" align="center" justify="center">
-                          <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked={state.type === ChallengeType.TYPE_A} icon={CheckIcon} mt="md" />
-                          <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} checked={state.type === ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
+                          <Radio value={ChallengeType.TYPE_EXPRESS} label={ChallengeType.TYPE_EXPRESS} checked={state.type === ChallengeType.TYPE_EXPRESS} icon={CheckIcon} mt="md" />
+                          <Radio value={ChallengeType.TYPE_MARATHON} label={ChallengeType.TYPE_MARATHON} checked={state.type === ChallengeType.TYPE_MARATHON} icon={CheckIcon} mt="md" />
                         </Group>
                       </Radio.Group>
 

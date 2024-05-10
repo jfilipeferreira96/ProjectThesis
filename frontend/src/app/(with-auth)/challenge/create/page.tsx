@@ -38,7 +38,7 @@ function CreateChallengePage() {
     initialValues: {
       title: "",
       description: "",
-      type: ChallengeType.TYPE_A,
+      type: ChallengeType.TYPE_EXPRESS,
     },
     validate: zodResolver(schema),
   });
@@ -80,19 +80,19 @@ function CreateChallengePage() {
 
           <Textarea className="specialinput" label="Description" placeholder="Enter a description for this challenge" mt="md" {...form.getInputProps("description")} />
 
-          <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" defaultValue={ChallengeType.TYPE_A} {...form.getInputProps("type")}>
+          <Radio.Group name="type" label="Select the challenge type" withAsterisk mt="md" defaultValue={ChallengeType.TYPE_EXPRESS} {...form.getInputProps("type")}>
             <StyledList spacing="xs" size="xs" center icon={<></>}>
               <List.Item>
-                <b>Type A -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
+                <b>Express -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
               </List.Item>
               <List.Item>
-                <b>Type B -</b> A league-based challenge comprised of one or multiple challenges.
+                <b>Marathon -</b> A league-based challenge comprised of one or multiple challenges.
               </List.Item>
             </StyledList>
 
             <Group mt="xs" align="center" justify="center">
-              <Radio value={ChallengeType.TYPE_A} label={ChallengeType.TYPE_A} checked icon={CheckIcon} mt="md" />
-              <Radio value={ChallengeType.TYPE_B} label={ChallengeType.TYPE_B} icon={CheckIcon} mt="md" />
+              <Radio value={ChallengeType.TYPE_EXPRESS} label={ChallengeType.TYPE_EXPRESS} checked icon={CheckIcon} mt="md" />
+              <Radio value={ChallengeType.TYPE_MARATHON} label={ChallengeType.TYPE_MARATHON} icon={CheckIcon} mt="md" />
             </Group>
           </Radio.Group>
 

@@ -175,7 +175,7 @@ export default function Home() {
               </Flex>
 
               <Card.Section className={classes.imageSection}>
-                <Image className={classes.challengeImage} src={challenge.type === ChallengeType.TYPE_A ? "./type1.png" : "./type2.png"} alt="Challenge Type" />
+                <Image className={classes.challengeImage} src={challenge.type === ChallengeType.TYPE_EXPRESS ? "./type1.png" : "./type2.png"} alt="Challenge Type" />
               </Card.Section>
 
               <Group justify="center" mt="md" align="center">
@@ -229,7 +229,7 @@ export default function Home() {
                 </Flex>
 
                 <Card.Section className={classes.imageSection}>
-                  <Image className={classes.challengeImage} src={challenge.type === ChallengeType.TYPE_A ? "./type1.png" : "./type2.png"} alt="Challenge Type" />
+                  <Image className={classes.challengeImage} src={challenge.type === ChallengeType.TYPE_EXPRESS ? "./type1.png" : "./type2.png"} alt="Challenge Type" />
                 </Card.Section>
 
                 <Group justify="center" mt="md" align="center">

@@ -2,8 +2,8 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import { User } from "../controllers/user.controller";
 
 export enum ChallengeType {
-    TYPE_A = 'Type A',
-    TYPE_B = 'Type B',
+  TYPE_EXPRESS = "Express",
+  TYPE_MARATHON = "Marathon",
 }
 
 export enum ChallengeStatus{

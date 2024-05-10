@@ -2,8 +2,8 @@ import api from "@/config/api";
 import { endpoints } from "@/config/routes";
 
 export enum ChallengeType {
-  TYPE_A = "Type A",
-  TYPE_B = "Type B",
+  TYPE_EXPRESS = "Express",
+  TYPE_MARATHON = "Marathon",
 }
 
 export enum ChallengeStatus {
