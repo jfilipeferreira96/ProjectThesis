@@ -86,13 +86,13 @@ function CreateChallengePage() {
                 <b>Express -</b> Fast paced challenge and short duration, perfect for a single dynamic class.
               </List.Item>
               <List.Item>
-                <b>Marathon -</b> A league-based challenge comprised of one or multiple challenges.
+                <b>League -</b> A league-based challenge comprised of one or multiple challenges.
               </List.Item>
             </StyledList>
 
             <Group mt="xs" align="center" justify="center">
               <Radio value={ChallengeType.TYPE_EXPRESS} label={ChallengeType.TYPE_EXPRESS} checked icon={CheckIcon} mt="md" />
-              <Radio value={ChallengeType.TYPE_MARATHON} label={ChallengeType.TYPE_MARATHON} icon={CheckIcon} mt="md" />
+              <Radio value={ChallengeType.TYPE_LEAGUE} label={ChallengeType.TYPE_LEAGUE} icon={CheckIcon} mt="md" />
             </Group>
           </Radio.Group>
 

@@ -3,7 +3,7 @@ import { User } from "../controllers/user.controller";
 
 export enum ChallengeType {
   TYPE_EXPRESS = "Express",
-  TYPE_MARATHON = "Marathon",
+  TYPE_LEAGUE = "League",
 }
 
 export enum ChallengeStatus{
