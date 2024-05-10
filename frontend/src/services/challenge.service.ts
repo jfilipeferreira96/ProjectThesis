@@ -3,7 +3,7 @@ import { endpoints } from "@/config/routes";
 
 export enum ChallengeType {
   TYPE_EXPRESS = "Express",
-  TYPE_LEAGE = "League",
+  TYPE_LEAGUE = "League",
 }
 
 export enum ChallengeStatus {
