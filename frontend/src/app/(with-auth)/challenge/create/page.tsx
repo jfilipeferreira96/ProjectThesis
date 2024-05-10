@@ -52,7 +52,6 @@ function CreateChallengePage() {
           message: "",
           color: "green",
         });
-
         addToAdminChallenge(response.id);
 
         //redirect

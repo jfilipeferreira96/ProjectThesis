@@ -177,7 +177,7 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
               </Title>
 
               <Text c="dimmed" size="md" ta="center" mt={5}>
-                Share this enchanted token with fellow players.
+                Share this enchanted token with fellow {userIsAdmin ? "students" : "players"}.
               </Text>
 
               <Input

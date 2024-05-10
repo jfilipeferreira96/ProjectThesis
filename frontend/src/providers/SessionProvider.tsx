@@ -5,6 +5,7 @@ import { routes } from "@/config/routes";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { notifications } from "@mantine/notifications";
 import { UserType } from "@/services/auth.service";
+import { getChallenges } from "@/services/challenge.service";
 
 export interface User {
   _id: string;
@@ -42,7 +43,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const pathname = usePathname();
-
+  console.log(user)
   const sessionLogin: sessionProps = (userData, accessToken, refreshToken, redirect = true) => {
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
@@ -64,7 +65,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     }
   };
 
-  const getSession = () => {
+  const getSession = async  () => {
     try {
       const accessToken = localStorage.getItem("accessToken") ?? "";
       const refreshToken = localStorage.getItem("refreshToken") ?? "";
@@ -85,16 +86,29 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
           logout();
         } else {
+          //fetch challenges for setting the adminChallenges
+          const userChallenges = await getChallenges();
+
+          let adminChallenges = decodedToken.adminChallenges;
+          if (userChallenges.challenges.length > 0) {
+            adminChallenges = userChallenges.challenges.reduce((acc: string[], challenge: any) => {
+              if (challenge.admins.includes(decodedToken._id)) {
+                acc.push(challenge._id);
+              }
+              return acc;
+            }, []);
+          }
+
           const userData = {
             _id: decodedToken._id,
             fullname: decodedToken.fullname,
             studentId: decodedToken.studentId,
             email: decodedToken.email,
             avatar: avatar,
-            adminChallenges: decodedToken.adminChallenges,
+            adminChallenges: adminChallenges,
             type: decodedToken.type,
           };
-          
+
           sessionLogin(userData, accessToken, refreshToken, false);
         }
       } else {
