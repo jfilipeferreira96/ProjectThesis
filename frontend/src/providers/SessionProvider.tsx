@@ -43,7 +43,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const pathname = usePathname();
-  console.log(user)
+ 
   const sessionLogin: sessionProps = (userData, accessToken, refreshToken, redirect = true) => {
     setUser(userData);
     localStorage.setItem("accessToken", accessToken);
