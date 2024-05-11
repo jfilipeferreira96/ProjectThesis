@@ -179,7 +179,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
   }, []);
 
   return (
-    <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+    <>
       <title>Add Challenge</title>
       <Modal opened={opened} onClose={close} title="" size={"calc(100vw - 3rem)"}>
         <Title>Quizz Preview</Title>
@@ -194,221 +194,224 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           <ThreeDButton color="gray" evensmaller mt="sm" onClick={open} mr="sm">
             Preview
           </ThreeDButton>
-          <ThreeDButton color="blue" evensmaller mt="sm" type="submit">
+
+          <ThreeDButton color="blue" evensmaller mt="sm" type="submit" onClick={form.onSubmit((values) => onSubmitHandler(values))}>
             Save Quizz
           </ThreeDButton>
         </Flex>
       </Flex>
 
-      <Title>Create Quizz</Title>
-      <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
+      <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+        <Title>Create Quizz</Title>
+        <Text c="dimmed">Create a challenge for your students using the area above. To preview it, simply click on the preview button.</Text>
 
-      <Grid style={{ marginBottom: "3rem" }}>
-        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
-            <Title order={3}>Configurations</Title>
+        <Grid style={{ marginBottom: "3rem" }}>
+          <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 3 }} style={{ display: "flex", flexDirection: "column" }}>
+            <Paper withBorder shadow="md" p={30} mt={10} radius="md" style={{ flex: 1 }}>
+              <Title order={3}>Configurations</Title>
 
-            <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} mt="lg" />
-            <Group grow mt="lg">
-              <DateTimePicker className="specialinput" label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
+              <TextInput className="specialinput" label="Quizz name" placeholder="Quizz xpto" required {...form.getInputProps("name")} mt="lg" />
+              <Group grow mt="lg">
+                <DateTimePicker className="specialinput" label="Pick start date" placeholder="Pick start date" minDate={new Date()} {...form.getInputProps("startdate")} error={form.errors.startdate} />
 
-              <DateTimePicker className="specialinput" label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
-            </Group>
-
-            <Radio.Group
-              name="evaluation"
-              label="Evaluation type"
-              withAsterisk
-              defaultValue={EvalutionType.Automatic}
-              {...form.getInputProps(`evaluation`)}
-              onChange={(type) => handleRadioChangeEvalution(type as EvalutionType)}
-              mt="lg"
-            >
-              <StyledList spacing="xs" size="xs" center icon={<></>}>
-                <List.Item>
-                  <b>Automatic:</b> Multiple questions and Fill in the blank
-                </List.Item>
-                <List.Item>
-                  <b>Manual:</b> Multiple questions, Fill in the blank and File Upload
-                </List.Item>
-              </StyledList>
-              <Group align="center" justify="center">
-                <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="lg" />
-                <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
+                <DateTimePicker className="specialinput" label="Pick end date" placeholder="Pick end date" minDate={new Date()} {...form.getInputProps("enddate")} error={form.errors.enddate} />
               </Group>
-            </Radio.Group>
 
-            <Checkbox defaultChecked label="Enable sounds" mt="lg" name="sounds" {...form.getInputProps(`sounds`)} />
+              <Radio.Group
+                name="evaluation"
+                label="Evaluation type"
+                withAsterisk
+                defaultValue={EvalutionType.Automatic}
+                {...form.getInputProps(`evaluation`)}
+                onChange={(type) => handleRadioChangeEvalution(type as EvalutionType)}
+                mt="lg"
+              >
+                <StyledList spacing="xs" size="xs" center icon={<></>}>
+                  <List.Item>
+                    <b>Automatic:</b> Multiple questions and Fill in the blank
+                  </List.Item>
+                  <List.Item>
+                    <b>Manual:</b> Multiple questions, Fill in the blank and File Upload
+                  </List.Item>
+                </StyledList>
+                <Group align="center" justify="center">
+                  <Radio value={EvalutionType.Automatic} label={"Automatic"} icon={CheckIcon} mt="lg" />
+                  <Radio value={EvalutionType.Manual} label={"Manual"} icon={CheckIcon} mt="lg" />
+                </Group>
+              </Radio.Group>
 
-            <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
-          </Paper>
-        </Grid.Col>
+              <Checkbox defaultChecked label="Enable sounds" mt="lg" name="sounds" {...form.getInputProps(`sounds`)} />
 
-        <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
-          <Paper withBorder shadow="md" p={30} mt={10} radius="md">
-            {form.values.questions.map((item, index) => {
-              const isManualEvaluation = form.values.evaluation === EvalutionType.Manual;
+              <Checkbox defaultChecked label="Randomize question order" description="Prevent questions from following a specific sequence" mt="lg" name="shuffle" {...form.getInputProps(`shuffle`)} />
+            </Paper>
+          </Grid.Col>
 
-              if (index !== active) {
-                return;
-              }
+          <Grid.Col span={{ md: 12, sm: 12, xs: 12, lg: 9 }}>
+            <Paper withBorder shadow="md" p={30} mt={10} radius="md">
+              {form.values.questions.map((item, index) => {
+                const isManualEvaluation = form.values.evaluation === EvalutionType.Manual;
 
-              return (
-                <div key={item.key}>
-                  <Group justify="space-between" align="center" mb={10}>
-                    <Title order={3}>Question {index + 1}</Title>
+                if (index !== active) {
+                  return;
+                }
 
-                    <div>
-                      {index !== 0 && (
-                        <Tooltip label={"Delete question"} withArrow position="right">
-                          <ActionIcon
-                            color="red"
-                            onClick={() => {
-                              form.removeListItem("questions", index), setActive((prev) => prev - 1);
-                            }}
-                            mr={5}
-                          >
-                            <IconTrash size="1rem" />
-                          </ActionIcon>
-                        </Tooltip>
-                      )}
+                return (
+                  <div key={item.key}>
+                    <Group justify="space-between" align="center" mb={10}>
+                      <Title order={3}>Question {index + 1}</Title>
 
-                      {active === form.values.questions.length - 1 && (
-                        <Tooltip label={"Add question"} withArrow position="right">
-                          <ActionIcon
-                            color="green"
-                            onClick={() => {
-                              nextStep(true);
-                            }}
-                          >
-                            <IconPlus size="1rem" />
-                          </ActionIcon>
-                        </Tooltip>
-                      )}
-                    </div>
-                  </Group>
+                      <div>
+                        {index !== 0 && (
+                          <Tooltip label={"Delete question"} withArrow position="right">
+                            <ActionIcon
+                              color="red"
+                              onClick={() => {
+                                form.removeListItem("questions", index), setActive((prev) => prev - 1);
+                              }}
+                              mr={5}
+                            >
+                              <IconTrash size="1rem" />
+                            </ActionIcon>
+                          </Tooltip>
+                        )}
 
-                  <Group grow mb={40}>
-                    <Radio.Group
-                      name="type"
-                      label="Select the question type"
-                      withAsterisk
-                      defaultValue={item.type}
-                      {...form.getInputProps(`questions.${index}.type`)}
-                      onChange={(type) => handleRadioChange(index, type as QuestionType)}
-                    >
-                      <Group align="center" justify="center">
-                        <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
-                        <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
-                        {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
-                      </Group>
-                    </Radio.Group>
+                        {active === form.values.questions.length - 1 && (
+                          <Tooltip label={"Add question"} withArrow position="right">
+                            <ActionIcon
+                              color="green"
+                              onClick={() => {
+                                nextStep(true);
+                              }}
+                            >
+                              <IconPlus size="1rem" />
+                            </ActionIcon>
+                          </Tooltip>
+                        )}
+                      </div>
+                    </Group>
 
-                    <NumberInput
-                      label="Pontuation"
-                      className="specialinput"
-                      description="Select the points awarded for this question when answered correctly"
-                      mt={10}
-                      withAsterisk
-                      placeholder="Enter the points (e.g., 10)"
-                      defaultValue={item.pontuation}
-                      {...form.getInputProps(`questions.${index}.pontuation`)}
-                    />
-                  </Group>
-
-                  <Box mt={10}>
-                    <RichTextEditor
-                      label={"Question"}
-                      placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
-                      {...form.getInputProps(`questions.${index}.question`)}
-                      value={form.values.questions[index].question}
-                      onChange={(value) => form.setFieldValue(`questions.${index}.question`, value)}
-                    />
-                  </Box>
-
-                  {item.type === QuestionType.MultipleQuestions &&
-                    item.choices.map((choice, choiceIndex) => {
-                      return (
-                        <TextInput
-                          className="specialinput"
-                          key={choiceIndex}
-                          placeholder={`Awnser nº ${choiceIndex + 1}`}
-                          defaultValue={choice}
-                          rightSectionPointerEvents="all"
-                          mt="md"
-                          label={choiceIndex === 0 ? "Answers" : ""}
-                          withAsterisk={choiceIndex === 0 ? true : false}
-                          onChange={(e) => handleChoiceInputChange(index, choiceIndex, e.currentTarget.value)}
-                          rightSection={
-                            <Tooltip label={item.correctAnswer === choice && choice !== "" ? "Correct choice" : "Choose the correct choice"} withArrow position="right">
-                              <ActionIcon color={item.correctAnswer === choice && choice !== "" ? "teal" : "gray"} variant="subtle" onClick={() => handleCorrectAnswerClick(index, choice)}>
-                                <IconCheck style={{ width: rem(16) }} />
-                              </ActionIcon>
-                            </Tooltip>
-                          }
-                        />
-                      );
-                    })}
-
-                  {item.type === QuestionType.FillInBlank && (
-                    <Textarea
-                      className="specialinput"
-                      label={isManualEvaluation ? "Answer" : "Correct answer"}
-                      withAsterisk={isManualEvaluation ? false : true}
-                      placeholder={isManualEvaluation ? "Answer" : "Correct answer"}
-                      style={{ flex: 1 }}
-                      {...form.getInputProps(`questions.${index}.correctAnswer`)}
-                      mt={10}
-                    />
-                  )}
-
-                  {item.type === QuestionType.FileUpload && (
-                    <FileInput
-                      className="specialinput"
-                      rightSection={<IconFile />}
-                      label="Upload your file"
-                      placeholder="Your file"
-                      withAsterisk={isManualEvaluation ? false : true}
-                      rightSectionPointerEvents="none"
-                      mt={10}
-                      radius="lg"
-                      onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
-                      clearable
-                      disabled
-                    />
-                  )}
-
-                  <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
-
-                  <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
-                    {active !== 0 && (
-                      <Button
-                        color="gray"
-                        onClick={() => {
-                          prevStep();
-                        }}
+                    <Group grow mb={40}>
+                      <Radio.Group
+                        name="type"
+                        label="Select the question type"
+                        withAsterisk
+                        defaultValue={item.type}
+                        {...form.getInputProps(`questions.${index}.type`)}
+                        onChange={(type) => handleRadioChange(index, type as QuestionType)}
                       >
-                        Previous Question
-                      </Button>
+                        <Group align="center" justify="center">
+                          <Radio value={QuestionType.MultipleQuestions} label={"Multiple questions"} icon={CheckIcon} mt="md" />
+                          <Radio value={QuestionType.FillInBlank} label={"Fill in the blank"} icon={CheckIcon} mt="md" />
+                          {isManualEvaluation && <Radio value={QuestionType.FileUpload} label={"File Upload"} icon={CheckIcon} mt="md" />}
+                        </Group>
+                      </Radio.Group>
+
+                      <NumberInput
+                        label="Pontuation"
+                        className="specialinput"
+                        description="Select the points awarded for this question when answered correctly"
+                        mt={10}
+                        withAsterisk
+                        placeholder="Enter the points (e.g., 10)"
+                        defaultValue={item.pontuation}
+                        {...form.getInputProps(`questions.${index}.pontuation`)}
+                      />
+                    </Group>
+
+                    <Box mt={10}>
+                      <RichTextEditor
+                        label={"Question"}
+                        placeholder={item.type === QuestionType.FillInBlank ? "What's the _ _ _ _ ?" : "Enter a question"}
+                        {...form.getInputProps(`questions.${index}.question`)}
+                        value={form.values.questions[index].question}
+                        onChange={(value) => form.setFieldValue(`questions.${index}.question`, value)}
+                      />
+                    </Box>
+
+                    {item.type === QuestionType.MultipleQuestions &&
+                      item.choices.map((choice, choiceIndex) => {
+                        return (
+                          <TextInput
+                            className="specialinput"
+                            key={choiceIndex}
+                            placeholder={`Awnser nº ${choiceIndex + 1}`}
+                            defaultValue={choice}
+                            rightSectionPointerEvents="all"
+                            mt="md"
+                            label={choiceIndex === 0 ? "Answers" : ""}
+                            withAsterisk={choiceIndex === 0 ? true : false}
+                            onChange={(e) => handleChoiceInputChange(index, choiceIndex, e.currentTarget.value)}
+                            rightSection={
+                              <Tooltip label={item.correctAnswer === choice && choice !== "" ? "Correct choice" : "Choose the correct choice"} withArrow position="right">
+                                <ActionIcon color={item.correctAnswer === choice && choice !== "" ? "teal" : "gray"} variant="subtle" onClick={() => handleCorrectAnswerClick(index, choice)}>
+                                  <IconCheck style={{ width: rem(16) }} />
+                                </ActionIcon>
+                              </Tooltip>
+                            }
+                          />
+                        );
+                      })}
+
+                    {item.type === QuestionType.FillInBlank && (
+                      <Textarea
+                        className="specialinput"
+                        label={isManualEvaluation ? "Answer" : "Correct answer"}
+                        withAsterisk={isManualEvaluation ? false : true}
+                        placeholder={isManualEvaluation ? "Answer" : "Correct answer"}
+                        style={{ flex: 1 }}
+                        {...form.getInputProps(`questions.${index}.correctAnswer`)}
+                        mt={10}
+                      />
                     )}
 
-                    {active < form.values.questions.length - 1 && (
-                      <Button
-                        onClick={() => {
-                          nextStep(false);
-                        }}
-                      >
-                        Next Question
-                      </Button>
+                    {item.type === QuestionType.FileUpload && (
+                      <FileInput
+                        className="specialinput"
+                        rightSection={<IconFile />}
+                        label="Upload your file"
+                        placeholder="Your file"
+                        withAsterisk={isManualEvaluation ? false : true}
+                        rightSectionPointerEvents="none"
+                        mt={10}
+                        radius="lg"
+                        onChange={(file) => form.setFieldValue(`questions.${index}.file`, file)}
+                        clearable
+                        disabled
+                      />
                     )}
-                  </Flex>
-                </div>
-              );
-            })}
-          </Paper>
-        </Grid.Col>
-      </Grid>
-    </form>
+
+                    <Input.Wrapper className="specialinput" size="md" error={form?.errors?.question || form?.errors?.correctAnswer} mt={10} />
+
+                    <Flex justify={active !== 0 ? "space-between" : "flex-end"} mt="md">
+                      {active !== 0 && (
+                        <Button
+                          color="gray"
+                          onClick={() => {
+                            prevStep();
+                          }}
+                        >
+                          Previous Question
+                        </Button>
+                      )}
+
+                      {active < form.values.questions.length - 1 && (
+                        <Button
+                          onClick={() => {
+                            nextStep(false);
+                          }}
+                        >
+                          Next Question
+                        </Button>
+                      )}
+                    </Flex>
+                  </div>
+                );
+              })}
+            </Paper>
+          </Grid.Col>
+        </Grid>
+      </form>
+    </>
   );
 };
 
