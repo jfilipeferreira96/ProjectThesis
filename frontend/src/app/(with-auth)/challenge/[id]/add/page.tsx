@@ -33,7 +33,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
       enddate: "",
       evaluation: EvalutionType.Automatic,
       shuffle: true,
-      sounds: false,
+      sounds: true,
       questions: [
         {
           question: "",
@@ -42,7 +42,7 @@ const Add = ({ params: { id } }: { params: { id: string } }) => {
           choices: ["", "", "", ""],
           correctAnswer: "",
           pontuation: 10,
-          file: ""
+          file: "",
         },
       ],
     },

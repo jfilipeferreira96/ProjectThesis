@@ -100,7 +100,7 @@ const Edit = ({ params: { id, quizzId } }: { params: { id: string; quizzId: stri
       enddate: "",
       evaluation: EvalutionType.Automatic,
       shuffle: true,
-      sounds: false,
+      sounds: true,
       questions: [
         {
           question: "",
