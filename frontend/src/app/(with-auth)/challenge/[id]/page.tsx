@@ -157,13 +157,13 @@ const ChallengeIdPage = ({ params: { id } }: { params: { id: string } }) => {
             </Title>
             <Grid justify="center" mt={10} mb={10} gutter={{ xl: 50 }}>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={3000} winner={winners && winners.length > 0 ? winners[0] : undefined} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.PNG" flipDelay={3000} winner={winners && winners.length > 0 ? winners[0] : undefined} />
               </Grid.Col>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={3500} winner={winners && winners.length >= 2 ? winners[1] : undefined} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.PNG" flipDelay={3500} winner={winners && winners.length >= 2 ? winners[1] : undefined} />
               </Grid.Col>
               <Grid.Col span={{ xs: 8, sm: 8, md: 5, lg: 4 }} ml={{ base: 200, xs: 200, sm: 400, md: 0, lg: 0 }}>
-                <CardFlip frontImage="/card.png" backImage="/qmark1.png" flipDelay={4000} winner={winners && winners.length >= 3 ? winners[2] : undefined} />
+                <CardFlip frontImage="/card.png" backImage="/qmark1.PNG" flipDelay={4000} winner={winners && winners.length >= 3 ? winners[2] : undefined} />
               </Grid.Col>
             </Grid>
           </div>
