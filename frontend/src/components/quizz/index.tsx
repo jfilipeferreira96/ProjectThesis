@@ -3,7 +3,7 @@ import classes from "./quizz.module.scss";
 import { Card, Image, Title, TextInput, Loader, Anchor, Group, Text, Button, Center, Flex, Stack, GridCol, Paper, Grid, Input, FileInput, Progress, AppShellAside, NumberInput, Box, Textarea } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useInterval } from "@mantine/hooks";
-import { getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
+import { EvalutionType, getFileForDownload, IAnswer, SaveQuizAnswer } from "@/services/quizz.service";
 import { IconFile, IconDownload } from "@tabler/icons-react";
 import ThreeDButton from "../3dbutton";
 import { User } from "@/providers/SessionProvider";
@@ -50,6 +50,7 @@ const Quizz = (props: Props) => {
     wrongAnswers: 0,
     userAnswers: [],
   });
+
   const [showResult, setShowResult] = useState(false);
   const [showAnswerTimer, setShowAnswerTimer] = useState(true);
   const [seconds, setSeconds] = useState(0);
@@ -57,7 +58,7 @@ const Quizz = (props: Props) => {
   const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
 
   useEffect(() => {
-    if (reviewMode && !preview && result.userAnswers.length === 0 && answer) {
+    if (reviewMode && result.userAnswers.length === 0 && answer) {
       const resultWithAnswer = {
         ...result,
         userAnswers: [answer],
@@ -161,7 +162,7 @@ const Quizz = (props: Props) => {
   };
 
   const endChallenge = () => {
-    if (reviewMode && !preview) return;
+    if (reviewMode) return;
 
     let score = 0;
     let correctAnswers = 0;
@@ -171,25 +172,27 @@ const Quizz = (props: Props) => {
 
     if (preview === true) {
       result.userAnswers.forEach((userAnswer) => {
-        const question = questions.find((q) => q._id === userAnswer._id);
-
-        if (question) {
-          if (question.type === "FillInBlank") {
-            if (userAnswer.answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
-              score += 5;
-              correctAnswers += 1;
-            } else {
-              wrongAnswers += 1;
-            }
-          } else {
-            if (userAnswer.answer === question.correctAnswer) {
-              score += 5;
-              correctAnswers += 1;
-            } else {
-              wrongAnswers += 1;
-            }
-          }
-        }
+        const question = questions.find((q) => q.key === userAnswer._id);
+        const answer = userAnswer.answer;
+        
+         if (question) {
+           let questionScore = question.pontuation || 5;
+           if (question.type === "FillInBlank") {
+             if (answer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase()) {
+               score += questionScore;
+               correctAnswers += 1;
+             } else {
+               wrongAnswers += 1;
+             }
+           } else {
+             if (answer === question.correctAnswer) {
+               score += questionScore;
+               correctAnswers += 1;
+             } else {
+               wrongAnswers += 1;
+             }
+           }
+         }
       });
 
       setResult({
@@ -212,7 +215,7 @@ const Quizz = (props: Props) => {
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (reviewMode && !preview) return;
+    if (reviewMode) return;
 
     const userInput = event.currentTarget.value;
 
@@ -462,9 +465,9 @@ const Quizz = (props: Props) => {
                     </>
                   )}
                   {preview && (
-                    <Button mt={5} size="md" variant="gradient" gradient={{ from: "blue", to: "cyan", deg: 90 }} onClick={handleTryAgain}>
-                      Preview the quiz once more
-                    </Button>
+                  <ThreeDButton mt="md" color="green" onClick={handleTryAgain}>
+                        Preview the quiz once more
+                      </ThreeDButton>
                   )}
                 </Stack>
               </Card>
