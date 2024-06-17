@@ -22,7 +22,10 @@ const StyledPaper = styled(Paper)`
 const schema = z.object({
     fullname: z.string().min(2, { message: 'Full name should have at least 2 letters' }),
     email: z.string().email({ message: 'Invalid email address' }),
-    password: z.string().min(4, { message: 'Password must be at least 4 characters long' }).optional(),
+    password: z
+    .string()
+    .optional()
+    .or(z.string().min(4, { message: 'Password must be at least 4 characters long' })),
     avatar: z.string().min(4, { message: 'Please select an avatar' })
 });
 
@@ -69,10 +72,13 @@ export default function UpdateProfile(){
         }
     }, [selectedAvatar]);
 
-    const onSubmitHandler = useCallback(async (data: Partial<User>) =>
-    {
+    const onSubmitHandler = useCallback(async (data: Partial<User>) => {
         try
         {
+            if (!data.password) {
+                delete data.password;
+            }
+
             const response = await updateAccount(user._id, data);
             if (response.status)
             {
@@ -83,7 +89,6 @@ export default function UpdateProfile(){
                 });
 
                 updateUser(response.user);
-                sessionLogin(response.user, response.accessToken, response.refreshToken);
             } else
             {
                 notifications.show({
@@ -112,36 +117,29 @@ export default function UpdateProfile(){
     }
 
     return (
-        <Center>
-            <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
-                <title>Update Profile</title>
-                <Title ta="center" mt={100}>
-                    Update your profile information
-                </Title>
+      <Center>
+        <form onSubmit={form.onSubmit((values) => onSubmitHandler(values))}>
+          <title>Update Profile</title>
 
-                <Text c="dimmed" size="sm" ta="center" mt={5}>
-                    Want to go back?
-                    <Anchor size="sm" component="a" ml={2} onClick={() => router.push(routes.home.url)}>
-                        Home
-                    </Anchor>
-                </Text>
+          <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
+            <Title ta="center" mb={20}>
+              Update your profile information
+            </Title>
+            <TextInput className="specialinput" label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
+            <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
 
-                <StyledPaper withBorder shadow="md" p={30} mt={30} radius="md">
-                    <TextInput className="specialinput" label="Full name" placeholder="Your full name" required {...form.getInputProps("fullname")} />
-                    <TextInput className="specialinput" label="Email" placeholder="you@gmail.com" required {...form.getInputProps("email")} />
+            <TextInput className="specialinput" label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
 
-                    <TextInput className="specialinput" label="Student ID" placeholder="Your student ID" {...form.getInputProps("studentId")} />
+            <PasswordInput className="specialinput" label="Password" placeholder="Your password" {...form.getInputProps("password")} />
 
-                    <PasswordInput className="specialinput" label="Password" placeholder="Your password" {...form.getInputProps("password")} />
-
-                    <Input.Wrapper className="specialinput" label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
-                        <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} initialAvatar={user.avatar} />
-                    </Input.Wrapper>
-                    <ThreeDButton color="blue" mt="xl" type="submit" smaller>
-                        Update Profile
-                    </ThreeDButton>
-                </StyledPaper>
-            </form>
-        </Center>
+            <Input.Wrapper className="specialinput" label="Avatar" withAsterisk description="Select an avatar" error={form?.errors?.avatar}>
+              <SetAvatar selectedAvatar={selectedAvatar} setSelectedAvatar={setSelectedAvatar} initialAvatar={user.avatar} />
+            </Input.Wrapper>
+            <ThreeDButton color="blue" mt="xl" type="submit" smaller>
+              Update Profile
+            </ThreeDButton>
+          </StyledPaper>
+        </form>
+      </Center>
     );
 }

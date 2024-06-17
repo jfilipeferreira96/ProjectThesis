@@ -39,13 +39,16 @@ export const routes = {
   register: {
     url: "/register",
   },
+  account: {
+    url: "/account",
+  },
   home: {
     url: "/home",
   },
   challenge: {
     url: "/challenge",
     create: {
-      url: "/challenge/create"
-    }
-  }
+      url: "/challenge/create",
+    },
+  },
 };
