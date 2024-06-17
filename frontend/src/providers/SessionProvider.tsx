@@ -30,6 +30,7 @@ interface SessionContextProps {
   logout: () => void;
   isReady: boolean;
   addToAdminChallenge: (challengeId: string) => void;
+  updateUser: (newUserData: Partial<User>) => void; 
 }
 
 const SessionContext = createContext<SessionContextProps | undefined>(undefined);
@@ -133,11 +134,18 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
     });
   };
 
+  const updateUser = (newUserData: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...newUserData };
+    setUser(updatedUser);
+  };
+
+
   useEffect(() => {
     getSession();
   }, []);
 
-  return <SessionContext.Provider value={{ isReady, user, sessionLogin, logout, addToAdminChallenge }}>{children}</SessionContext.Provider>;
+  return <SessionContext.Provider value={{ isReady, user, sessionLogin, logout, addToAdminChallenge, updateUser }}>{children}</SessionContext.Provider>;
 };
 
 export const useSession = (): SessionContextProps => {

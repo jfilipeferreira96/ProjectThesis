@@ -14,5 +14,8 @@ authRoutes.post("/login", UserController.login);
 // Rota responsável por retornar todos os users: (GET): localhost:5000/api/auth/allusers
 authRoutes.get("/allusers/:id", authenticateToken, UserController.getAllUsers);
 
+// Rota responsavel por dar update ao proprio utilizar (PUT): localhost:5000/api/auth/account/:id
+authRoutes.put("/account/:id", authenticateToken, UserController.updateOwnUser);
+
 
 export default authRoutes;

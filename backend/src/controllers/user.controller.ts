@@ -154,6 +154,71 @@ class UserController {
       throw new Error("An error occurred while fetching users.");
     }
   }
+
+  static async updateOwnUser(req: Request, res: Response, next: NextFunction)
+  {
+    const userId = req.params.id;
+    const { email, fullname, studentId, avatar, password } = req.body;
+
+    try
+    {
+      // Verify if the user is trying to update their own profile
+      if (req.user._id !== userId)
+      {
+        return res.status(403).json({ error: "Permission Denied", message: "You do not have permission to update this user" });
+      }
+
+      // Verify if at least one field was provided for update
+      if (!email && !fullname && !studentId && !avatar && !password)
+      {
+        return res.status(400).json({ error: "Invalid Request", message: "No new data provided for update" });
+      }
+
+      // Check if the email is already in use by another user (if provided)
+      if (email)
+      {
+        const existingUser = await User.findOne({ email, _id: { $ne: userId } });
+        if (existingUser)
+        {
+          return res.status(409).json({ error: "Conflict", message: "The email is already in use by another user" });
+        }
+      }
+
+      // Prepare fields for update
+      const updateFields: any = {};
+
+      if (email) updateFields.email = email;
+      if (fullname) updateFields.fullname = fullname;
+      if (studentId) updateFields.studentId = studentId;
+      if (avatar) updateFields.avatar = avatar;
+      if (password)
+      {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        updateFields.password = hashedPassword;
+      }
+
+      // Execute the update if there are fields to update
+      if (Object.keys(updateFields).length > 0)
+      {
+        const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true });
+
+        if (updatedUser)
+        {
+          return res.status(200).json({ status: true, message: "Settings updated successfully", user: updatedUser });
+        } else
+        {
+          return res.status(404).json({ error: "Not Found", message: "User not found" });
+        }
+      } else
+      {
+        return res.status(400).json({ error: "Invalid Request", message: "No new data provided for update" });
+      }
+    }
+    catch (ex)
+    {
+      return res.status(500).json({ error: "Internal Server Error", message: ex.message });
+    }
+  }
 }
 
 export default UserController;

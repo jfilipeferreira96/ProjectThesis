@@ -1,5 +1,6 @@
 import api from "@/config/api";
 import { endpoints } from "@/config/routes";
+import { User } from "@/providers/SessionProvider";
 
 export interface LoginData {
   email: string;
@@ -41,6 +42,17 @@ export const register = async (data: RegisterData) => {
     return response.data;
   }
   catch (error)
+  {
+    throw error;
+  }
+};
+
+export const updateAccount = async (userId: number, data: Partial<User>) => {
+  try
+  {
+    const response = await api.put(`${endpoints.updateAccount}/${userId}`, data);
+    return response.data;
+  } catch (error)
   {
     throw error;
   }
