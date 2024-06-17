@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Avatar, Button, Loader, Center } from "@mantine/core";
+import { Avatar, Button, Loader, Center, Box, Group, Flex } from "@mantine/core";
 import classes from "./avatar.module.scss";
 
 type Props = {
@@ -66,11 +66,11 @@ const SetAvatar = ({ selectedAvatar, setSelectedAvatar, initialAvatar }: Props) 
               </div>
             ))}
           </div>
-          <Center>
-            <Button variant="light" mt="sm" onClick={() => fetchAvatars()}>
+          <div style={{display:"grid", justifyContent:"center"}}>
+            <Button variant="light" mt="sm" onClick={() => fetchAvatars()} >
               Refresh Avatars
             </Button>
-          </Center>
+            </div>
         </>
       )}
     </div>

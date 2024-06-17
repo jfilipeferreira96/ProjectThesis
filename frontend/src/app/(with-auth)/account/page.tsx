@@ -2,10 +2,11 @@
 import ThreeDButton from "@/components/3dbutton";
 import SetAvatar from "@/components/avatar";
 import { routes } from "@/config/routes";
-import { useSession } from "@/providers/SessionProvider";
+import { User, useSession } from "@/providers/SessionProvider";
 import { RegisterData, updateAccount } from "@/services/auth.service";
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Input, Center, Loader, notifications } from "@mantine/core";
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Input, Center, Loader } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -68,7 +69,7 @@ export default function UpdateProfile(){
         }
     }, [selectedAvatar]);
 
-    const onSubmitHandler = useCallback(async (data: Partial<RegisterData>) =>
+    const onSubmitHandler = useCallback(async (data: Partial<User>) =>
     {
         try
         {
