@@ -15,7 +15,15 @@ app.use("/views", express.static("views"));
 app.use(morgan("dev"));
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001", "https://project-thesis-blond.vercel.app/", "http://project-thesis-blond.vercel.app/"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "https://project-thesis-blond.vercel.app/",
+    "http://project-thesis-blond.vercel.app/",
+    "https://project-thesis-blond.vercel.app",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
