@@ -1,5 +1,6 @@
 
 const host = process.env.NEXT_PUBLIC_API_URL; 
+console.log("routes.ts", host);
 
 export const endpoints = {
   host: host,
