@@ -5,9 +5,9 @@ const paramsSerializer = (params: any) => {
   return qs.stringify(params, { arrayFormat: "brackets" });
 };
 
-console.log("api.ts", process.env.NEXT_PUBLIC_API_URL);
+console.log("api.ts", process.env.NEXT_PUBLIC_API);
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://vps-90bab9fe.vps.ovh.net/",
+  baseURL: process.env.NEXT_PUBLIC_API || "https://vps-90bab9fe.vps.ovh.net/",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
